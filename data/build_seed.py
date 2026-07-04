@@ -535,21 +535,23 @@ def admin_kpis(history, current, model, calib, hf, dept_minutes, avoidable_minut
         "n_in_window": len(pm),
         "note": "Weekday-afternoon cardiology consult queue backs up ER beds (synthesized pattern, visible across the 7-day scrubber).",
     }
-    # arrival forecast next 3h, by entry mode (historical rate at this hour-of-day)
+    # arrival rates for EVERY hour-of-day, by entry mode — the UI derives the
+    # "next 3 h" forecast from whatever moment the scrubber sits on
     hour_counts = Counter()
     hour_mode_counts = Counter()
     for h in history:
         hh = datetime.fromisoformat(h["arrival"]).hour
         hour_counts[hh] += 1
         hour_mode_counts[(hh, h["arrival_mode"])] += 1
-    fc = []
-    for dh in range(1, 4):
-        hh = (NOW + timedelta(hours=dh)).hour
-        rate = hour_counts.get(hh, 0) / HISTORY_DAYS
-        by_mode = {m: round(hour_mode_counts.get((hh, m), 0) / HISTORY_DAYS, 1)
-                   for m in ("ambulance", "walk-in", "referral")}
-        fc.append({"hour": f"{hh:02d}:00", "expected_arrivals": round(rate, 1),
-                   "by_mode": by_mode})
+    rates_by_hour = []
+    for hh in range(24):
+        rates_by_hour.append({
+            "hour": f"{hh:02d}:00",
+            "expected_arrivals": round(hour_counts.get(hh, 0) / HISTORY_DAYS, 1),
+            "by_mode": {m: round(hour_mode_counts.get((hh, m), 0) / HISTORY_DAYS, 1)
+                        for m in ("ambulance", "walk-in", "referral")},
+        })
+    fc = [rates_by_hour[(NOW + timedelta(hours=dh)).hour] for dh in range(1, 4)]
     return {
         "generated_now": NOW.isoformat(timespec="minutes"),
         "current_census": len(current),
@@ -557,6 +559,7 @@ def admin_kpis(history, current, model, calib, hf, dept_minutes, avoidable_minut
         "dept_load_minutes_7d": dict(dept_minutes),
         "recurring_bottleneck": bottleneck,
         "arrival_forecast_next_3h": fc,
+        "arrival_rates_by_hour": rates_by_hour,
         "eta_calibration": calib,
         "eta_model_quantiles_min": model,
         "hf_admissions_benchmark": {
@@ -607,6 +610,11 @@ def main():
         "note": "screening, not diagnosis",
     }
     current[1]["extra_signal_track"] = True
+    # keep her Flow overlay consistent with the Intake claim (−50 min pre-order)
+    current[1]["optimization"] = [
+        {"issue": "Wearable overnight-arrhythmia flag — cardiology consult could be pre-ordered at arrival",
+         "saving_min": 50, "tag": "sequence (wearable — illustrative source)"},
+    ]
     current[2]["near_optimal_track"] = True
     current[4]["optimization"] = [
         {"issue": "Labs ordered 18 min after bed assignment; could start at triage",

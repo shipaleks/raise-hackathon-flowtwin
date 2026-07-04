@@ -15,7 +15,7 @@
   --surface-2: #f1f1ee; /* inset wells, scrubber track */
   --ink: #16181d;
   --ink-2: #4e5560;
-  --ink-3: #8a9099; /* decorative/large only — pair small text with --ink-2 */
+  --ink-3: #626d7d; /* 4.6:1 on surface — safe for the small captions that use it */
   --border: rgba(22, 24, 29, 0.1);
   --border-strong: rgba(22, 24, 29, 0.18);
   --grid: #e7e7e2;
@@ -31,7 +31,7 @@
 
   /* --- status (state only — never a series) --- */
   --ok: #0ca30c;
-  --warn: #fab219;
+  --warn: #b8770a; /* 3.7:1 on white — the at-risk ring must clear non-text contrast */
   --crit: #d03b3b;
   --ok-text: #006300;
   --warn-text: #8a5a00;
@@ -44,11 +44,15 @@
   --sex-m: #2a78d6;
   --sex-f: #e87ba4;
   --sex-u: #6b7280;
+  /* letter ink per fill so the mandated non-color cue itself clears contrast */
+  --sex-m-ink: rgba(255, 255, 255, 0.97);
+  --sex-f-ink: #43102a;
+  --sex-u-ink: rgba(255, 255, 255, 0.97);
 
-  /* --- categorical series (fixed order, never cycled) --- */
+  /* --- categorical series (fixed order, never cycled; ≥3:1 on white) --- */
   --cat-1: #2a78d6; /* ambulance */
-  --cat-2: #1baf7a; /* walk-in   */
-  --cat-3: #eda100; /* referral  */
+  --cat-2: #0e8f62; /* walk-in   */
+  --cat-3: #b97e00; /* referral  */
 
   /* --- ghost/overlay (optimized path) --- */
   --ghost: rgba(15, 118, 110, 0.16);
@@ -73,7 +77,7 @@
   --surface-2: #1c222b;
   --ink: #f2f4f7;
   --ink-2: #b8bfc9;
-  --ink-3: #7c8592;
+  --ink-3: #8b95a3; /* ≥4.5:1 on the dark surface */
   --border: rgba(242, 244, 247, 0.10);
   --border-strong: rgba(242, 244, 247, 0.20);
   --grid: #262b33;
@@ -99,6 +103,9 @@
   --sex-m: #3987e5;
   --sex-f: #d55181;
   --sex-u: #9aa2ad;
+  --sex-m-ink: #0c1b33;
+  --sex-f-ink: #33081b;
+  --sex-u-ink: #161b22;
 
   --cat-1: #3987e5;
   --cat-2: #199e70;

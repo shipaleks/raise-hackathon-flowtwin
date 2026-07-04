@@ -43,6 +43,9 @@ function useKeyboard() {
           if (escapeStep()) e.preventDefault()
           break
         case ' ':
+          // Space on a focused control must activate the control, never hijack
+          // it to drive the sim clock (keyboard-navigable is a deliverable)
+          if ((e.target as HTMLElement)?.closest('button, a, [role="switch"], [tabindex]')) return
           e.preventDefault()
           s.setPlaying(!s.playing)
           break
@@ -64,6 +67,9 @@ function useKeyboard() {
         case '2':
         case '3':
         case '4': {
+          // preset jumps are meaningless (and jarring) while the scrubber is
+          // scoped to one patient's journey — the presets are hidden then too
+          if (s.selectedId && s.view === 'doctor') break
           const p = PRESETS[Number(e.key) - 1]
           if (p) s.setSimMin(p.simMin)
           break

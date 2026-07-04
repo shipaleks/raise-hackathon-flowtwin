@@ -7,6 +7,14 @@ const SEX_VAR: Record<Sex | 'unknown', string> = {
   unknown: 'var(--sex-u)',
 }
 
+/* the letter is the mandated non-color cue — its ink is chosen per fill
+   (and per theme, via tokens) so it always clears contrast on the token */
+const SEX_INK: Record<Sex | 'unknown', string> = {
+  male: 'var(--sex-m-ink)',
+  female: 'var(--sex-f-ink)',
+  unknown: 'var(--sex-u-ink)',
+}
+
 const SEX_LETTER: Record<Sex | 'unknown', string> = { male: 'M', female: 'F', unknown: '–' }
 
 const RISK_VAR: Record<Risk, string> = {
@@ -87,7 +95,7 @@ export function AgentGlyph({ sex, risk, size = 16, variant = 'map', pulse = fals
         textAnchor="middle"
         fontSize="11"
         fontWeight="700"
-        fill="rgba(255,255,255,0.97)"
+        fill={SEX_INK[sex]}
       >
         {SEX_LETTER[sex]}
       </text>

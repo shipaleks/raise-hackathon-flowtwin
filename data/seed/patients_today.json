@@ -258,7 +258,13 @@
         "vocal_biomarker": null,
         "_note": "pluggable sources — mention only, not built"
       },
-      "optimization": [],
+      "optimization": [
+        {
+          "issue": "Wearable overnight-arrhythmia flag — cardiology consult could be pre-ordered at arrival",
+          "saving_min": 50,
+          "tag": "sequence (wearable — illustrative source)"
+        }
+      ],
       "guard": {
         "topic_ok": true,
         "safety_ok": true

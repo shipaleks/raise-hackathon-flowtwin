@@ -1,7 +1,8 @@
 /* Typed access to the committed seed (data/seed/*.json).
-   Identity/complaint/arrival = real (Synthea sample); LOS-days/outcomes = real
-   (HF HospitalAdmissions); station times, vitals, and the afternoon cardiology
-   backup = synthesized and labeled per-record (see data/README.md). */
+   Identity/complaint = real (Synthea sample); LOS-days/outcomes = real
+   (HF HospitalAdmissions); arrival hours (ED diurnal curve), station times,
+   vitals, and the afternoon cardiology backup = synthesized and labeled
+   per-record (see data/README.md). */
 
 import patientsJson from '@seed/patients_today.json'
 import historyJson from '@seed/history_7d.json'

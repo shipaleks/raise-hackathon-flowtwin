@@ -129,6 +129,12 @@ export interface AdminKpis {
     expected_arrivals: number
     by_mode: Record<string, number>
   }>
+  /** all 24 hour-of-day rate buckets — the UI derives the live forecast */
+  arrival_rates_by_hour?: Array<{
+    hour: string
+    expected_arrivals: number
+    by_mode: Record<string, number>
+  }>
   eta_calibration: {
     interval: string
     coverage_pct: number

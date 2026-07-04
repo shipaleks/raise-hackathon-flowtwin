@@ -44,14 +44,14 @@ Pathways: `Chest Pain Rule-Out`, `Minor Injury / Trauma`, `Tox / Overdose`, `Sep
 ## Ops-state schema (per current patient)
 Superset of [PLAN §2.1](../PLAN.md): `patient_id, name, age, sex, complaint, pathway, acuity, arrival_mode, arrival_time, current_department, current_area, elapsed_min, vitals, events[], resources, predicted_exit, predicted_exit_ci{low,high,interval}, predicted_los_min, delay_risk, blocker, recommendation{action,explanation,impact_min}, signals{wearable,vocal_biomarker,_note}, guard{topic_ok,safety_ok}, provenance{}`. The hero (Sarah, `P-1042`) also has `optimization[]` (the −35/−50/−40 min flow-view callouts).
 
-## Verified output (last run)
-- 7 current patients (unique IDs: hero `P-1042`, background `P-1050`–`P-1055`), 371 historical journeys (~48/day + 5 oversampled afternoon cardiac/day).
-- **FlowTwin ETA calibration: 81.9% interval coverage, ±14 min median error** (from `admin_kpis.json`, target 80%).
-- **Recurring bottleneck now measurable:** Chest-Pain LOS when the consult queues 14:00–17:00 = **338 min vs 256 min otherwise** (n=29 in-window; classified by consult-request hour, matching how the synthesized backup applies).
-- Sarah: predicted exit 14:20, 80% CI 13:04→16:03, `delay_risk=high`, `blocker=cardiology_queue`.
-- Arrival forecast next 3h is broken down **by entry mode** (ambulance / walk-in / referral).
+## Verified output (last run — regenerate with `python3 data/build_seed.py` and re-check)
+- 7 current patients (unique IDs: hero `P-1042`, background `P-1050`–`P-1055`) + 10 scheduled today-arrivals (`P-1060`+), **455 historical journeys** (~60/day + 5 oversampled afternoon cardiac/day).
+- **FlowTwin ETA calibration: 81.3% interval coverage, ±14 min median error, n=455** (from `admin_kpis.json`, target 80%).
+- **Recurring bottleneck measurable:** Chest-Pain LOS when the consult queues 14:00–17:00 = **312 min vs 251 min otherwise** (n=25 in-window; classified by consult-request hour, matching how the synthesized backup applies).
+- Sarah: predicted exit 13:52, 80% CI 12:51→15:07, `delay_risk=high`, `blocker=cardiology_queue` (the frontend's demo beats present her risk per the scripted arc).
+- Arrival rates for **all 24 hours by entry mode** (`arrival_rates_by_hour`) — the UI derives the "next 3 h" forecast from the scrubbed moment; `arrival_forecast_next_3h` keeps the 11:00 snapshot.
 - Each historical journey carries its `events` (station starts) so the frontend can place agents at any scrubber moment; Admin KPIs are aggregated from the *same* spans that produced each journey (no RNG-stream drift).
-- Demo tracks (DESIGN §11): `P-1050` Gerda W. = extra-signal track (example wearable import, "screening, not diagnosis"); `P-1051` Jacquelin P. = near-optimal control (`optimization: []`); `P-1053` Amos C. = one small sequence callout.
+- Demo tracks (DESIGN §11): `P-1050` Gerda W. = extra-signal track (example wearable import, "screening, not diagnosis", −50 min callout on both Intake and Flow); `P-1051` Jacquelin P. = near-optimal control (`optimization: []`); `P-1053` Amos C. = one small sequence callout.
 
 ## Known TODOs for the implementing model
 1. **Vitals & ED boarding times are synthesized** — if MIMIC-IV-ED gets credentialed, replace with real triage vitals + ED LOS and drop the synthesized flags.

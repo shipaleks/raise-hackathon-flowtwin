@@ -3,10 +3,10 @@
    here is random, so scrubbing is perfectly reversible. */
 
 import { adminKpis, HERO_ID, history7d, todayCast } from '../data/seed'
-import type { JourneyEvent, OpsPatient, Risk, Sex } from '../types'
+import type { JourneyEvent, OpsPatient, Optimization, Risk, Sex } from '../types'
 import { BEAT_MIN, sarahAt, sarahBaseEvents, type SarahPresentation } from './beats'
 import { DEPTS, deptById, areaById, placeOccupants, zoneIdsFor } from './layout'
-import { SIM_END_MIN, fmtClock, fmtDur, parseT } from './time'
+import { SIM_END_MIN, fmtClock, fmtDur, parseT, simToDate } from './time'
 
 // ---------------------------------------------------------------- tracks
 
@@ -122,6 +122,10 @@ export interface MapAgent {
   exitMin: number
   exitIsActual: boolean
   blocked: boolean
+  /** discharged within the last few sim-minutes — fading off the map */
+  exiting: boolean
+  /** admitted and settled on the ward (ED prediction closed) */
+  onWard: boolean
 }
 
 function eventIndexAt(events: TrackEvent[], tMin: number): number {
@@ -143,10 +147,27 @@ function riskFor(track: Track, tMin: number, cur: TrackEvent): Risk {
   return 'on_track'
 }
 
-function predictedExitMin(track: Track): number {
+/** Prediction that never sits in the past: escalate up the quantile ladder as
+    the stay outruns each estimate — exactly what a live model would do. */
+function predictedExitMin(track: Track, tMin: number): number {
   const q = quantiles[track.pathway]
-  return track.arrivalMin + (q ? q.p50 : 120)
+  if (!q) return Math.max(track.arrivalMin + 120, tMin + 10)
+  const elapsed = tMin - track.arrivalMin
+  let est = q.p50
+  if (elapsed > q.p90) est = elapsed + 15
+  else if (elapsed > q.p80) est = q.p90
+  else if (elapsed > q.p50) est = q.p80
+  return track.arrivalMin + est
 }
+
+// the hero's dwell anchor = her last real move in the seed (consult request)
+const heroBaseEvents = sarahBaseEvents()
+const heroLastMoveMin = heroBaseEvents.length
+  ? parseT(heroBaseEvents[heroBaseEvents.length - 1].t)
+  : 0
+
+/** Discharged glyphs linger this long while they fade off the map. */
+export const EXIT_GRACE_MIN = 8
 
 /** All agents on the floor at sim-minute t, positioned. */
 export function agentsAt(tMin: number, resolvedAtMin: number | null): MapAgent[] {
@@ -154,14 +175,16 @@ export function agentsAt(tMin: number, resolvedAtMin: number | null): MapAgent[]
   const raw: Array<Omit<MapAgent, 'x' | 'y'>> = []
 
   for (const track of [...todayTracks, ...historyTracks]) {
-    if (track.arrivalMin > tMin || track.endMin <= tMin) continue
+    if (track.arrivalMin > tMin || track.endMin + EXIT_GRACE_MIN <= tMin) continue
+    const exiting = tMin >= track.endMin
     const isHero = track.id === HERO_ID
     let deptId: string
     let areaId: string | null
     let since: number
     let risk: Risk
     let exitMin: number
-    let exitIsActual = track.kind === 'history'
+    let onWard = false
+    const exitIsActual = track.kind === 'history'
 
     if (isHero && sarah) {
       const { deptId: d, areaId: a } = zoneIdsFor(sarah.position.dept, sarah.position.area)
@@ -169,8 +192,7 @@ export function agentsAt(tMin: number, resolvedAtMin: number | null): MapAgent[]
       areaId = a
       risk = sarah.risk
       exitMin = sarah.exitMin
-      // dwell since the consult was requested (her last real move) or the resolve
-      since = sarah.resolved && resolvedAtMin != null ? resolvedAtMin : parseT('2026-07-04T10:36')
+      since = sarah.resolved && resolvedAtMin != null ? resolvedAtMin : heroLastMoveMin
       if (sarah.resolved) {
         deptId = 'emergency'
         areaId = 'observation'
@@ -183,10 +205,14 @@ export function agentsAt(tMin: number, resolvedAtMin: number | null): MapAgent[]
       areaId = cur.areaId
       since = cur.tMin
       risk = riskFor(track, tMin, cur)
-      exitMin = track.kind === 'history' ? track.endMin : predictedExitMin(track)
+      exitMin = track.kind === 'history' ? track.endMin : predictedExitMin(track, tMin)
       // admitted + past their track = settled on the ward
       if (track.admitted && idx === track.events.length - 1) {
         risk = 'on_track'
+        if (track.kind === 'today') {
+          onWard = true
+          exitMin = cur.tMin // the admit moment — ED prediction is closed
+        }
       }
     }
 
@@ -204,10 +230,12 @@ export function agentsAt(tMin: number, resolvedAtMin: number | null): MapAgent[]
       pathway: track.pathway,
       arrivalMode: track.arrivalMode,
       waitMin: Math.max(0, tMin - since),
-      elapsedMin: Math.max(0, tMin - track.arrivalMin),
+      elapsedMin: Math.max(0, Math.min(tMin, track.endMin) - track.arrivalMin),
       exitMin,
       exitIsActual,
-      blocked: risk === 'high',
+      blocked: risk === 'high' && !exiting,
+      exiting,
+      onWard,
     })
   }
 
@@ -274,6 +302,7 @@ export function zoneLoadsAt(agents: MapAgent[], tMin: number, resolvedAtMin: num
   const areaCount = new Map<string, { count: number; longest: number }>()
   const deptCount = new Map<string, { count: number; longest: number }>()
   for (const a of agents) {
+    if (a.exiting) continue // fading glyphs no longer occupy capacity
     const dk = a.deptId
     const d = deptCount.get(dk) ?? { count: 0, longest: 0 }
     d.count++
@@ -348,14 +377,15 @@ export interface HospitalStatus {
 }
 
 export function hospitalStatusAt(agents: MapAgent[]): HospitalStatus {
-  const blocked = agents.filter((a) => a.risk === 'high').length
-  const atRisk = agents.filter((a) => a.risk === 'elevated').length
+  const present = agents.filter((a) => !a.exiting)
+  const blocked = present.filter((a) => a.risk === 'high').length
+  const atRisk = present.filter((a) => a.risk === 'elevated').length
   const cal = adminKpis.eta_calibration
   return {
-    onFloor: agents.length,
+    onFloor: present.length,
     blocked,
     atRisk,
-    line: `${agents.length} on floor · ${blocked} blocked · ${atRisk} at risk · ETA calibration ${cal.coverage_pct}% @ 80%`,
+    line: `${present.length} on floor · ${blocked} blocked · ${atRisk} at risk · ETA calibration ${cal.coverage_pct}% @ 80%`,
   }
 }
 
@@ -397,8 +427,11 @@ export interface FlowSegment {
   note?: string
   current: boolean
   predicted: boolean
-  /** minutes the optimized path would shave off this segment */
+  /** minutes the optimized path claims for this segment (the callout figure) */
   savedMin: number
+  /** the compression actually drawable here: min(savedMin, minutes) — a ghost
+      bar must never claim to save more time than the stop contained */
+  appliedMin: number
   savedWhy?: string
 }
 
@@ -417,6 +450,8 @@ export interface SheetVM {
   onFloor: boolean
   notArrivedYet: boolean
   departed: boolean
+  /** admitted and settled on the ward — the ED prediction is closed */
+  admittedNow: boolean
   risk: Risk
   elapsedMin: number
   exitMin: number
@@ -439,6 +474,8 @@ export interface SheetVM {
     canResolve: boolean
   } | null
   segments: FlowSegment[]
+  /** the raw callout list — per-item, independent of segment anchoring */
+  optimizations: Optimization[]
   totalSavedMin: number
   nearOptimal: boolean
   vitals: OpsPatient['vitals'] | null
@@ -460,13 +497,14 @@ const RECOMMEND_TITLES: Record<string, string> = {
   confirm_discharge_or_bed: 'Confirm disposition to free the bay',
 }
 
-/** Match hero optimization callouts to the segment they would compress. */
-function optimizationAnchor(issue: string): (s: FlowSegment) => boolean {
+/** Segment types an optimization would compress, in priority order — later
+    entries are fallbacks so the saving lands on a stop that can absorb it. */
+function optimizationAnchors(issue: string): string[] {
   const t = issue.toLowerCase()
-  if (t.includes('troponin') || t.includes('lab')) return (s) => s.eventType === 'labs_ordered'
+  if (t.includes('troponin') || t.includes('lab')) return ['labs_ordered', 'bed_assigned']
   if (t.includes('consult') || t.includes('wearable') || t.includes('arrhythmia'))
-    return (s) => s.eventType === 'consult_requested'
-  return (s) => s.eventType === 'observation' || s.eventType === 'bed_assigned'
+    return ['consult_requested', 'labs_ordered']
+  return ['observation', 'consult_requested', 'bed_assigned']
 }
 
 function buildSegments(events: TrackEvent[], upTo: number | null, notes?: Map<number, string>): FlowSegment[] {
@@ -492,6 +530,7 @@ function buildSegments(events: TrackEvent[], upTo: number | null, notes?: Map<nu
       current: isCurrent,
       predicted: false,
       savedMin: 0,
+      appliedMin: 0,
     })
     if (isCurrent) break
   }
@@ -540,6 +579,7 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
         current: false,
         predicted: true,
         savedMin: 0,
+      appliedMin: 0,
       })
     })
   } else if (track.kind === 'history') {
@@ -566,6 +606,7 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
         current: false,
         predicted: true,
         savedMin: 0,
+      appliedMin: 0,
       })
     }
   }
@@ -574,13 +615,20 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
   const optimization = p?.optimization ?? []
   let totalSavedMin = 0
   for (const opt of optimization) {
-    const match = segments.find(optimizationAnchor(opt.issue))
+    let match: FlowSegment | undefined
+    for (const type of optimizationAnchors(opt.issue)) {
+      match =
+        segments.find((s) => !s.predicted && s.eventType === type) ??
+        segments.find((s) => s.eventType === type)
+      if (match) break
+    }
     if (match) {
       match.savedMin += opt.saving_min
       match.savedWhy = match.savedWhy ? `${match.savedWhy} · ${opt.issue}` : opt.issue
     }
     totalSavedMin += opt.saving_min
   }
+  for (const s of segments) s.appliedMin = Math.min(s.savedMin, s.minutes)
 
   // --- prediction numbers ---
   const onFloor = track.arrivalMin <= tMin && tMin < track.endMin
@@ -629,7 +677,7 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
     rec = null
   } else {
     risk = cur ? riskFor(track, Math.min(tMin, track.endMin - 1), cur) : 'on_track'
-    exitMin = predictedExitMin(track)
+    exitMin = predictedExitMin(track, Math.min(tMin, track.endMin))
     ciLowMin = q ? track.arrivalMin + q.p10 : null
     ciHighMin = q ? track.arrivalMin + q.p90 : null
     const remainingTypes = track.events.filter((e) => e.tMin > tMin).map((e) => eventLabel(e.type))
@@ -645,6 +693,26 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
             canResolve: false,
           }
         : null
+    // the hero before the 11:00 anchor is mid-intake — her seed snapshot's
+    // blocker/recommendation describe the scripted NOW, not this past moment
+    if (isHero) {
+      blockerLabel = null
+      rec = null
+      pendingSteps = pendingSteps.length ? pendingSteps : []
+    }
+  }
+
+  // admitted-and-settled: the ED prediction is closed, the exit chip should
+  // say "Admitted", not a time that already passed
+  const lastEvent = track.events[track.events.length - 1]
+  const admittedNow =
+    track.kind === 'today' && track.admitted && tMin >= lastEvent.tMin
+  if (admittedNow) {
+    exitMin = lastEvent.tMin
+    ciLowMin = null
+    ciHighMin = null
+    pendingSteps = []
+    blockerLabel = 'Admitted — ward care continues outside the ED scope'
   }
 
   const ciLabel =
@@ -667,6 +735,7 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
     onFloor,
     notArrivedYet,
     departed: tMin >= track.endMin,
+    admittedNow,
     risk,
     elapsedMin: Math.max(0, Math.min(tMin, track.endMin) - track.arrivalMin),
     exitMin,
@@ -675,13 +744,19 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
     ciLabel,
     ciLowMin,
     ciHighMin,
-    losPredictedMin: q?.p50 ?? track.endMin - track.arrivalMin,
+    // the hero's LOS follows her beat-driven exit — a frozen p50 would
+    // contradict the sliding prediction chip right above it
+    losPredictedMin:
+      isHero && sarah
+        ? Math.round(sarah.exitMin - track.arrivalMin)
+        : (q?.p50 ?? track.endMin - track.arrivalMin),
     losBenchmarkMin: p?.benchmark_los_min ?? q?.p50 ?? 0,
     losActualMin: track.kind === 'history' ? track.endMin - track.arrivalMin : null,
     pendingSteps,
     blockerLabel,
     recommendation: rec,
     segments,
+    optimizations: optimization,
     totalSavedMin,
     nearOptimal: !!p?.near_optimal_track,
     vitals: p?.vitals ?? null,
@@ -755,22 +830,33 @@ export function adminModelAt(
   const cost = Math.round((overstayMin / 60) * adminKpis.assumptions.bed_hour_cost_eur)
   const resolved = resolvedAtMin != null && tMin >= resolvedAtMin
 
-  const waits = agents.filter((a) => a.kind === 'today' || tMin < 0)
+  const present = agents.filter((a) => !a.exiting)
+  const waits = present.filter((a) => a.kind === 'today' || tMin < 0)
   const avgWait = waits.length ? waits.reduce((s, a) => s + a.waitMin, 0) / waits.length : 0
 
+  // the forecast follows the scrubbed clock: next 3 hour-of-day buckets from
+  // the historical rate table (falls back to the static 11:00 snapshot)
+  const rates = adminKpis.arrival_rates_by_hour
+  const hourNow = simToDate(tMin).getHours()
+  const forecast = rates?.length === 24
+    ? [1, 2, 3].map((dh) => rates[(hourNow + dh) % 24])
+    : adminKpis.arrival_forecast_next_3h
+
   return {
-    censusNow: agents.length,
+    censusNow: present.length,
     bedOccupancyPct: bedCap ? Math.round((beds / bedCap) * 100) : 0,
     dischargedToday: dischargedTodayCount(tMin),
     avgWaitNowMin: Math.round(avgWait),
-    arrivalForecast: adminKpis.arrival_forecast_next_3h,
+    arrivalForecast: forecast,
     avoidableRank: adminKpis.avoidable_wait_rank,
     bottleneck: adminKpis.recurring_bottleneck,
     calibration: adminKpis.eta_calibration,
     benchmark: adminKpis.hf_admissions_benchmark,
     assumptions: adminKpis.assumptions,
     play: {
-      active: over && !resolved,
+      // the live play is a TODAY affordance — scrubbing a historic afternoon
+      // must not offer to resolve a queue that no longer exists
+      active: tMin >= 0 && over && !resolved,
       queued,
       blockedBeds: queued,
       overstayMin,

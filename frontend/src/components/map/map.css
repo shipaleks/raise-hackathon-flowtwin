@@ -120,6 +120,13 @@
   opacity: 0.7;
 }
 
+.map-slot__name {
+  font-size: 3.2px;
+  font-weight: 550;
+  fill: var(--ink-2);
+  opacity: 0.85;
+}
+
 @keyframes map-fade {
   from {
     opacity: 0;
@@ -137,6 +144,15 @@
   transition:
     transform var(--dur-zone) var(--ease),
     opacity var(--dur-med) var(--ease);
+}
+
+/* discharged — gliding to the exit and fading out; no longer interactive */
+.map-agent.is-exiting {
+  cursor: default;
+  pointer-events: none;
+  transition:
+    transform var(--dur-zone) var(--ease),
+    opacity calc(var(--dur-zone) * 1.5) var(--ease);
 }
 
 .map-agent__hit {

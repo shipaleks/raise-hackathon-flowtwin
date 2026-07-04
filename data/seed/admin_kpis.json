@@ -72,6 +72,224 @@
       }
     }
   ],
+  "arrival_rates_by_hour": [
+    {
+      "hour": "00:00",
+      "expected_arrivals": 1.3,
+      "by_mode": {
+        "ambulance": 0.0,
+        "walk-in": 1.0,
+        "referral": 0.3
+      }
+    },
+    {
+      "hour": "01:00",
+      "expected_arrivals": 0.3,
+      "by_mode": {
+        "ambulance": 0.0,
+        "walk-in": 0.3,
+        "referral": 0.0
+      }
+    },
+    {
+      "hour": "02:00",
+      "expected_arrivals": 0.9,
+      "by_mode": {
+        "ambulance": 0.1,
+        "walk-in": 0.4,
+        "referral": 0.3
+      }
+    },
+    {
+      "hour": "03:00",
+      "expected_arrivals": 0.6,
+      "by_mode": {
+        "ambulance": 0.3,
+        "walk-in": 0.3,
+        "referral": 0.0
+      }
+    },
+    {
+      "hour": "04:00",
+      "expected_arrivals": 0.4,
+      "by_mode": {
+        "ambulance": 0.0,
+        "walk-in": 0.4,
+        "referral": 0.0
+      }
+    },
+    {
+      "hour": "05:00",
+      "expected_arrivals": 1.1,
+      "by_mode": {
+        "ambulance": 0.0,
+        "walk-in": 0.7,
+        "referral": 0.4
+      }
+    },
+    {
+      "hour": "06:00",
+      "expected_arrivals": 0.9,
+      "by_mode": {
+        "ambulance": 0.0,
+        "walk-in": 0.7,
+        "referral": 0.1
+      }
+    },
+    {
+      "hour": "07:00",
+      "expected_arrivals": 2.1,
+      "by_mode": {
+        "ambulance": 0.0,
+        "walk-in": 1.6,
+        "referral": 0.6
+      }
+    },
+    {
+      "hour": "08:00",
+      "expected_arrivals": 2.6,
+      "by_mode": {
+        "ambulance": 0.3,
+        "walk-in": 1.3,
+        "referral": 1.0
+      }
+    },
+    {
+      "hour": "09:00",
+      "expected_arrivals": 2.4,
+      "by_mode": {
+        "ambulance": 0.1,
+        "walk-in": 1.6,
+        "referral": 0.7
+      }
+    },
+    {
+      "hour": "10:00",
+      "expected_arrivals": 4.7,
+      "by_mode": {
+        "ambulance": 0.7,
+        "walk-in": 2.7,
+        "referral": 1.3
+      }
+    },
+    {
+      "hour": "11:00",
+      "expected_arrivals": 5.0,
+      "by_mode": {
+        "ambulance": 0.1,
+        "walk-in": 4.4,
+        "referral": 0.4
+      }
+    },
+    {
+      "hour": "12:00",
+      "expected_arrivals": 5.1,
+      "by_mode": {
+        "ambulance": 1.6,
+        "walk-in": 2.6,
+        "referral": 1.0
+      }
+    },
+    {
+      "hour": "13:00",
+      "expected_arrivals": 4.3,
+      "by_mode": {
+        "ambulance": 1.3,
+        "walk-in": 2.6,
+        "referral": 0.4
+      }
+    },
+    {
+      "hour": "14:00",
+      "expected_arrivals": 4.0,
+      "by_mode": {
+        "ambulance": 1.1,
+        "walk-in": 2.7,
+        "referral": 0.1
+      }
+    },
+    {
+      "hour": "15:00",
+      "expected_arrivals": 5.0,
+      "by_mode": {
+        "ambulance": 0.9,
+        "walk-in": 3.3,
+        "referral": 0.9
+      }
+    },
+    {
+      "hour": "16:00",
+      "expected_arrivals": 4.3,
+      "by_mode": {
+        "ambulance": 0.1,
+        "walk-in": 2.6,
+        "referral": 1.6
+      }
+    },
+    {
+      "hour": "17:00",
+      "expected_arrivals": 2.4,
+      "by_mode": {
+        "ambulance": 0.1,
+        "walk-in": 1.7,
+        "referral": 0.6
+      }
+    },
+    {
+      "hour": "18:00",
+      "expected_arrivals": 4.4,
+      "by_mode": {
+        "ambulance": 0.7,
+        "walk-in": 2.9,
+        "referral": 0.9
+      }
+    },
+    {
+      "hour": "19:00",
+      "expected_arrivals": 4.0,
+      "by_mode": {
+        "ambulance": 0.4,
+        "walk-in": 2.9,
+        "referral": 0.7
+      }
+    },
+    {
+      "hour": "20:00",
+      "expected_arrivals": 2.7,
+      "by_mode": {
+        "ambulance": 0.4,
+        "walk-in": 1.9,
+        "referral": 0.4
+      }
+    },
+    {
+      "hour": "21:00",
+      "expected_arrivals": 2.7,
+      "by_mode": {
+        "ambulance": 0.3,
+        "walk-in": 1.0,
+        "referral": 1.4
+      }
+    },
+    {
+      "hour": "22:00",
+      "expected_arrivals": 2.0,
+      "by_mode": {
+        "ambulance": 0.0,
+        "walk-in": 1.6,
+        "referral": 0.4
+      }
+    },
+    {
+      "hour": "23:00",
+      "expected_arrivals": 1.7,
+      "by_mode": {
+        "ambulance": 0.1,
+        "walk-in": 1.1,
+        "referral": 0.4
+      }
+    }
+  ],
   "eta_calibration": {
     "interval": "p10-p90 (target 80%)",
     "coverage_pct": 81.3,

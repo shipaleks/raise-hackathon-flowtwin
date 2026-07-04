@@ -103,14 +103,24 @@ function SheetPanel({ vm, simMin }: { vm: SheetVM; simMin: number }) {
         <div className="sheet-exit">
           <div className="sheet-exit__info">
             <span className="sheet-exit__label">
-              {vm.exitIsActual ? (vm.departed ? 'Exited' : 'Exit') : 'Predicted exit'}
+              {vm.admittedNow
+                ? 'Admitted'
+                : vm.exitIsActual
+                  ? vm.departed
+                    ? 'Exited'
+                    : 'Exit'
+                  : 'Predicted exit'}
             </span>
             {/* keyed on the value so a prediction shift gets a quick fade/slide swap */}
             <span key={vm.exitClock} className="sheet-exit__time tnum">
               {vm.exitClock}
             </span>
             <span className="sheet-exit__sub">
-              {vm.exitIsActual ? 'actual · from the 7-day log' : (vm.ciLabel ?? '')}
+              {vm.admittedNow
+                ? 'on the ward — ED prediction closed'
+                : vm.exitIsActual
+                  ? 'actual · from the 7-day log'
+                  : (vm.ciLabel ?? '')}
             </span>
           </div>
           <div className="sheet-exit__side">

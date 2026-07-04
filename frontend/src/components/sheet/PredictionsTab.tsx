@@ -20,12 +20,15 @@ export function PredictionsTab({ vm }: { vm: SheetVM }) {
     <div className="sheet-pred">
       <div className="sheet-pred__hero">
         <span className="sheet-pred__hero-label">
-          {vm.exitIsActual ? 'Exited · actual' : 'Predicted exit'}
+          {vm.admittedNow ? 'Admitted' : vm.exitIsActual ? 'Exited · actual' : 'Predicted exit'}
         </span>
         <span key={vm.exitClock} className="sheet-pred__hero-time tnum">
           {vm.exitClock}
         </span>
-        {vm.ciLabel && <span className="sheet-pred__hero-ci">{vm.ciLabel}</span>}
+        {vm.admittedNow && (
+          <span className="sheet-pred__hero-ci">ward care continues — ED prediction closed</span>
+        )}
+        {!vm.admittedNow && vm.ciLabel && <span className="sheet-pred__hero-ci">{vm.ciLabel}</span>}
         <p className="sheet-pred__hero-model">{vm.modelLine}</p>
         {vm.notArrivedYet && vm.kind === 'today' && (
           <p className="sheet-pred__hero-note">

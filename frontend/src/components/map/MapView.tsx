@@ -86,6 +86,22 @@ function slotRadius(a: AreaDef): number {
   return Math.min(16, Math.min(w / cols, h / rows) * 0.32)
 }
 
+/** What one slot in this area is called — the room-level naming. */
+const SLOT_NOUN: Record<string, string> = {
+  'er-bay': 'Bay',
+  observation: 'Obs',
+  waiting: 'Seat',
+  consult: 'Slot',
+  telemetry: 'Tele',
+  'medical-ward': 'Bed',
+  'surgical-ward': 'Bed',
+  chemistry: 'Bench',
+  microbiology: 'Bench',
+  toxicology: 'Bench',
+  recovery: 'Bed',
+}
+const slotNoun = (areaId: string) => SLOT_NOUN[areaId] ?? 'Spot'
+
 // ---------------------------------------------------------------- copy
 
 function zoneNameFor(a: MapAgent): string {
@@ -99,7 +115,11 @@ function zoneNameFor(a: MapAgent): string {
 const sexLetter = (a: MapAgent) => (a.sex === 'male' ? 'M' : 'F')
 
 const exitPhrase = (a: MapAgent) =>
-  a.exitIsActual ? `Exit ${fmtClock(a.exitMin)} · from the log` : `Predicted exit ${fmtClock(a.exitMin)}`
+  a.onWard
+    ? `Admitted ${fmtClock(a.exitMin)} · on the ward`
+    : a.exitIsActual
+      ? `Exit ${fmtClock(a.exitMin)} · from the log`
+      : `Predicted exit ${fmtClock(a.exitMin)}`
 
 /** Tooltip summary as one sentence — doubles as the agent's aria-label. */
 function agentSummary(a: MapAgent): string {
@@ -197,7 +217,6 @@ export function MapView() {
     <section
       ref={wrapRef}
       className="map-wrap"
-      role="application"
       aria-label="Hospital map"
       onClick={onBackgroundClick}
       onMouseMove={(e) => {
@@ -287,17 +306,32 @@ export function MapView() {
                         onKeyDown={inDept ? (e) => onActionKey(e, () => toggleArea(d.id, a.id)) : undefined}
                       />
                       {isFocused ? (
-                        <g className="map-slots" aria-hidden="true">
-                          {slotCenters(a).map((p, i) => (
-                            <circle
-                              key={i}
-                              className="map-slot"
-                              cx={p.x}
-                              cy={p.y}
-                              r={slotRadius(a)}
-                              vectorEffect="non-scaling-stroke"
-                            />
-                          ))}
+                        <g
+                          className="map-slots"
+                          role="list"
+                          aria-label={`${a.name} — ${a.capacity} ${slotNoun(a.id).toLowerCase()}s`}
+                        >
+                          {slotCenters(a)
+                            .slice(0, a.capacity)
+                            .map((p, i) => (
+                              <g key={i} role="listitem" aria-label={`${slotNoun(a.id)} ${i + 1}`}>
+                                <circle
+                                  className="map-slot"
+                                  cx={p.x}
+                                  cy={p.y}
+                                  r={slotRadius(a)}
+                                  vectorEffect="non-scaling-stroke"
+                                />
+                                <text
+                                  className="map-slot__name"
+                                  x={p.x}
+                                  y={p.y + slotRadius(a) + 3.6}
+                                  textAnchor="middle"
+                                >
+                                  {slotNoun(a.id)} {i + 1}
+                                </text>
+                              </g>
+                            ))}
                         </g>
                       ) : null}
                       <g
@@ -324,25 +358,28 @@ export function MapView() {
 
           {orderedAgents.map((a) => {
             const dimmed = selectedId != null && a.id !== selectedId
-            const opacity = (a.kind === 'history' ? 0.85 : 1) * (dimmed ? 0.45 : 1)
+            // discharged glyphs fade off the map over the grace window
+            const opacity = a.exiting ? 0 : (a.kind === 'history' ? 0.85 : 1) * (dimmed ? 0.45 : 1)
             return (
               <g
                 key={a.id}
-                className="map-agent"
+                className={`map-agent${a.exiting ? ' is-exiting' : ''}`}
                 style={{
                   transform: `translate(${a.x}px, ${a.y}px) scale(${glyphScale(view.k, a.isHero)})`,
                   opacity,
                 }}
-                role="button"
-                tabIndex={0}
-                aria-label={agentSummary(a)}
-                aria-pressed={a.id === selectedId}
+                role={a.exiting ? undefined : 'button'}
+                tabIndex={a.exiting ? -1 : 0}
+                aria-hidden={a.exiting || undefined}
+                aria-label={a.exiting ? undefined : agentSummary(a)}
+                aria-pressed={a.exiting ? undefined : a.id === selectedId}
                 onClick={(e) => {
                   e.stopPropagation()
-                  select(a.id)
+                  if (!a.exiting) select(a.id)
                 }}
                 onKeyDown={(e) => onActionKey(e, () => select(a.id))}
                 onMouseEnter={(e) => {
+                  if (a.exiting) return
                   hoverOn(a.id)
                   moveTip(e.clientX, e.clientY)
                 }}

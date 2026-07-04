@@ -76,20 +76,22 @@ const OVERLOAD_EVENT: JourneyEvent & { note: string } = {
   note: 'Cardiology overload — 4 consults queued, 1 cardiologist on duty',
 }
 
+// moved_to_observation LAST so it becomes the open "now" segment on the Flow
+// bar — Sarah's current stop after the resolve is Observation, not Consult
 const resolveEvents = (resolvedAtMin: number): Array<JourneyEvent & { note: string }> => [
-  {
-    t: atClock(resolvedAtMin),
-    type: 'moved_to_observation',
-    dept: 'Emergency',
-    area: 'Observation',
-    note: 'Moved to Observation — bed O-12 assigned',
-  },
   {
     t: atClock(resolvedAtMin),
     type: 'consult_escalated',
     dept: 'Cardiology',
     area: 'Consult',
     note: 'Consult escalated — second cardiologist covering 60 min',
+  },
+  {
+    t: atClock(resolvedAtMin),
+    type: 'moved_to_observation',
+    dept: 'Emergency',
+    area: 'Observation',
+    note: 'Moved to Observation — bed O-12 assigned',
   },
 ]
 
@@ -135,7 +137,9 @@ export function sarahAt(tMin: number, resolvedAtMin: number | null): SarahPresen
           'Stable, first troponin negative. Move to Observation (bed O-12 free) and escalate consult coverage — she stops holding ER Bay 4 while she waits.',
         impact_min: 45,
       },
-      canResolve: true,
+      // one-shot: after the presenter resolves once, rewinding into the
+      // overload window must not re-offer a button that would silently no-op
+      canResolve: resolvedAtMin == null,
       resolved: false,
       position: IN_CONSULT,
       extraEvents: [LAB_DELAY_EVENT, OVERLOAD_EVENT],

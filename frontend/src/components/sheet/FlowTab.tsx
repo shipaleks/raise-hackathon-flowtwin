@@ -62,7 +62,9 @@ export function FlowTab({ vm, simMin }: { vm: SheetVM; simMin: number }) {
   const annotations = vm.segments.filter(
     (s) => !s.predicted && (s.note || KEY_EVENTS.has(s.eventType)),
   )
-  const callouts = vm.segments.filter((s) => s.savedMin > 0)
+  // callouts come from the raw optimization list — one row per finding,
+  // independent of how the savings anchor onto (and get capped by) segments
+  const callouts = vm.optimizations
 
   return (
     <div className="sheet-flow">
@@ -133,14 +135,14 @@ export function FlowTab({ vm, simMin }: { vm: SheetVM; simMin: number }) {
             <>
               <GhostBar segments={vm.segments} />
               <ul className="sheet-flow__callouts">
-                {callouts.map((seg, i) => (
+                {callouts.map((opt, i) => (
                   <li key={i} className="sheet-flow__callout">
                     <Chip tone="ok" className="tnum">
-                      −{Math.round(seg.savedMin)} min
+                      −{Math.round(opt.saving_min)} min
                     </Chip>
                     <span className="sheet-flow__callout-text">
-                      {seg.savedWhy}
-                      {seg.savedWhy && isWearableCallout(seg.savedWhy) && (
+                      {opt.issue}
+                      {isWearableCallout(`${opt.issue} ${opt.tag}`) && (
                         <Chip tone="ghost">illustrative source — mention only</Chip>
                       )}
                     </span>
@@ -174,24 +176,26 @@ function GhostBar({ segments }: { segments: FlowSegment[] }) {
       aria-label="Optimized path — same journey, compressed where a step could move earlier"
     >
       {segments.map((seg, i) => {
-        const minutes = Math.max(0, seg.minutes - seg.savedMin)
+        // appliedMin is capped at the segment's real length — the ghost bar
+        // never claims to compress a stop by more time than it contained
+        const minutes = Math.max(0, seg.minutes - seg.appliedMin)
         return (
           <div
             key={i}
             role="listitem"
-            className={`sheet-flow__gseg${seg.savedMin > 0 ? ' is-saved' : ''}`}
+            className={`sheet-flow__gseg${seg.appliedMin > 0 ? ' is-saved' : ''}`}
             style={{ flexGrow: minutes }}
             title={
-              seg.savedMin > 0
-                ? `${seg.zoneLabel} · ${fmtDur(minutes)} (−${Math.round(seg.savedMin)} min)`
+              seg.appliedMin > 0
+                ? `${seg.zoneLabel} · compressed by ${Math.round(seg.appliedMin)} min here`
                 : `${seg.zoneLabel} · ${fmtDur(minutes)}`
             }
-            aria-label={`${seg.zoneLabel}, ${fmtDur(minutes)}${seg.savedMin > 0 ? `, saves ${Math.round(seg.savedMin)} minutes` : ''}`}
+            aria-label={`${seg.zoneLabel}, ${fmtDur(minutes)}${seg.appliedMin > 0 ? `, compressed by ${Math.round(seg.appliedMin)} minutes` : ''}`}
           >
-            {seg.savedMin > 0 ? (
+            {seg.appliedMin > 0 ? (
               // a compressed segment is too narrow for both texts — the delta
               // carries the story; the callout list below names the zone
-              <span className="sheet-flow__gseg-delta tnum">−{Math.round(seg.savedMin)}m</span>
+              <span className="sheet-flow__gseg-delta tnum">−{Math.round(seg.appliedMin)}m</span>
             ) : (
               <span className="sheet-flow__gseg-zone">{seg.zoneLabel}</span>
             )}
