@@ -152,25 +152,33 @@ A slim **timeline scrubber** pinned to the bottom. Dragging it re-renders the *e
 
 The scrubber *is* the sim clock — it unifies "presenter pacing control" (PLAN §2.2) with "historical playback."
 
+### 7.1 Open dataset backbone (real data, not synthetic)
+
+The 7-day history and the patients are **seeded from open hospital datasets**, so LOS distributions, acuity mix, and arrival patterns are real. Options, best-fidelity first:
+
+| Dataset | What it gives us | Access | Use |
+|---|---|---|---|
+| **MIMIC-IV-ED** (PhysioNet, ~425k ED stays, BIDMC 2011–2019) | Triage acuity (ESI 1–5), chief complaint, vitals, ED arrival/discharge times → real journeys + LOS | Free but **credentialed** (short CITI training + DUA); redistribution-restricted, so we load locally, never commit | Primary if a teammate gets credentialed in time |
+| **Synthea** (synthetic, fully open, license-free) | Full longitudinal encounters with timestamps; generate any volume of realistic journeys | Open, no credentialing | Fast, safe fallback for the flow view + scrubber |
+| **`infinite-dataset-hub/HospitalAdmissions`** (Hugging Face) | Demographics, diagnosis, admit/discharge dates, LOS, outcome label | Open, immediate `datasets.load_dataset` | Quick LOS/ETA-model + Admin KPIs (lacks intra-stay event times) |
+| Iran teaching-hospital ED (ScienceDirect, open-access) | `ED_triage` / `ED_admission` / `services` event tables | Open download | Extra event-level flow texture |
+
+**Honesty note:** MIMIC data is *not* redistributable — it stays local and is gitignored (never pushed). Where we synthesize to fill gaps (e.g. exact room-level positions the datasets don't record), we say so. See §14 for the "which dataset" decision.
+
 ---
 
-## 8. Intake & Signals — vocal biomarkers + wearables
+## 8. Intake & data sources
 
-**The idea:** when a patient first speaks to reception, a short passive **vocal-biomarker screening** runs on that audio, producing *non-diagnostic risk flags* (e.g. stress/fatigue, respiratory, or neuro/cognitive markers). Combined with **wearable data** the patient opts to share, this gives the incoming agent a richer starting picture than a complaint line alone — and can *suggest an operational step earlier* (e.g. pre-order a consult, prioritize a scan).
+**The real data backbone is an open hospital dataset** (see §7.1 below), not synthetic. Every patient's intake — demographics, arrival mode, chief complaint, triage acuity, vitals, timestamps, and length-of-stay outcome — comes from real records, which is what makes the flow view and the predictions credible on stage.
 
-**Grounding (real research direction — cite responsibly, this is screening, not diagnosis):**
-- **Klick Labs (2023, Mayo Clinic Proceedings: Digital Health)** — detecting type-2 diabetes from 6–10 s of voice.
-- **Sonde Health / Canary Speech / Vocalis Health** — vocal biomarkers for respiratory, mental-health (depression, anxiety, stress), and cognitive/neuro signals.
+The **Intake & Signals** tab surfaces those fields, and *names additional data sources the platform can plug in* — we **mention** these to show the vision; we do **not build** them for the demo:
 
-> ⚠️ **TO VERIFY before it goes in the pitch:** the specific company the team remembers — *"Swiss founder, used on insurance phone lines, Microsoft startup-of-the-year 2023, name like a 'voice vibrator'"* — is not yet confirmed. Candidates: **Canary Speech**, **Vocalis Health**, **audEERING**, **PeakProfiling**. We should confirm the exact source (or present it as "the emerging vocal-biomarker field") rather than name a company we can't cite. See §14 Q7.
+- **Wearable / fitness-tracker** data (HR, HRV, SpO₂, overnight arrhythmia flags, activity) — one example extra input a patient could share at intake.
+- **Vocal biomarkers** — an emerging field where a short reception conversation yields *non-diagnostic screening flags* (stress, respiratory, cognitive). Grounded in real work (e.g. **Klick Labs 2023** diabetes-from-voice; Sonde/Canary/Vocalis). **Mention only** — presented as "one more signal we could fuse in," always labelled *"screening, not diagnosis,"* and (like everything) it would run **on-prem** so voice never leaves the building.
 
-**Design & framing rules (non-negotiable for a medical audience):**
-- Always labelled **"Screening signal — not a diagnosis. Supports operational triage only."**
-- Passes the **NemoGuard** ops-only gate like everything else.
-- Fully **on-prem** — voice never leaves the building (ties into §10). This is also *why* a hospital would accept it.
-- Demo can use our own lightweight voice-variation heuristic (honest about what it is) and/or a hosted model; we're explicit about which.
+Framing rule for any mentioned source: operational triage support, never diagnosis; ops-gated by NemoGuard; sovereign by design (§10).
 
-**Demo beat:** a patient arrives, greets reception → a subtle "listening" indicator → the Intake tab populates a stress/respiratory flag → the agent's prediction and suggested step update. One authentic, futuristic beat.
+**Demo beat:** open a patient's **Intake** tab → the real dataset fields populate; a small "additional sources" row shows *example* wearable / vocal-biomarker inputs as pluggable (greyed "available" chips), making the point without us building them.
 
 ---
 
@@ -205,16 +213,15 @@ Place the Gemma line on the **closing/roadmap slide** and mention it once when e
 
 ---
 
-## 11. Simulated patient tracks (for the demo)
+## 11. Patient tracks (for the demo)
 
-Pre-scripted so the demo is deterministic (PLAN §2.2), but each track showcases a different capability:
+Seeded from the open dataset (§7.1) and pinned so the demo is deterministic (PLAN §2.2); each track showcases a different capability:
 
 1. **Sarah M., 58, chest pain — the hero, fixable delay.** Clean arrival, then lab delay + cardiology overload push her exit out; the "See flow" optimization overlay shows −35/−50 min opportunities; one tap (Computer Use) resolves it. Voiced via PersonaPlex.
-2. **Optimal track — a control.** A patient whose journey was near-ideal, so the optimization overlay shows almost no waste — proves the tool isn't just crying wolf.
-3. **Wearable-changes-the-path track.** Patient shares a fitness tracker showing overnight arrhythmia; FlowTwin suggests pre-ordering the cardiology consult at arrival → visibly shorter predicted stay. Showcases §8.
-4. *(optional)* **Vocal-biomarker track.** Reception conversation raises a respiratory/stress flag that reprioritizes a scan.
+2. **Near-optimal track — a control.** A patient whose journey was near-ideal, so the optimization overlay shows almost no waste — proves the tool isn't just crying wolf.
+3. **Extra-signal track (illustrative).** A patient whose Intake tab shows an *example* pluggable source (wearable arrhythmia flag) that *would* let FlowTwin pre-order a consult earlier. We **mention** the source, not build it — it makes the "richer inputs" point without new scope.
 
-All tracks are visible across the 7-day scrubber as historical journeys too, so the hospital-history story (recurring 14:00–17:00 cardiology backup) is real, not a slide.
+All tracks appear across the 7-day scrubber as historical journeys too, so the hospital-history story (recurring 14:00–17:00 cardiology backup) is grounded in real data, not a slide.
 
 ---
 
@@ -237,21 +244,24 @@ All tracks are visible across the 7-day scrubber as historical journeys too, so 
 4. **Flow view** with actual + optimized overlay and callouts.
 5. **Administrator view** — hospital KPIs, bottleneck + reallocation play, arrival forecast, cost-of-delay.
 6. **Time scrubber** with the four preset jumps and beat markers.
-7. **Intake moment** — vocal-biomarker "listening" + result populating the Intake tab.
+7. **Intake moment** — a patient's Intake tab populating from the open dataset, with example wearable / vocal-biomarker sources shown as greyed "pluggable" chips (mention, not built).
 8. **Resolve-delay moment** — recommendation → one tap → agent moves on the map (ties to the Computer Use beat).
 9. **Import-history moment** — the "load last 7 days" ingestion that visibly calibrates the models.
 10. **Closing/architecture + sovereignty/Gemma-roadmap** slide surface.
 
 ---
 
-## 14. Open questions (need the team's answers)
+## 14. Decisions (locked from team feedback) + what's still open
 
-1. **Name:** go with **FlowTwin**, or pick from §0? (Recommend FlowTwin.)
-2. **Views:** are Doctor + Administrator the right two, or do we also want a **Nurse / charge-nurse** view (bed board + assignments)? Two is cleaner for a 7-min demo.
-3. **Agent glyph:** confirm blue = male / pink = female is acceptable for a medical audience (some prefer a neutral, non-gendered scheme — e.g. sex shown as a small label, color reserved for risk). Which do we want the accent color to encode — **sex** or **risk**? (We can't cleanly do both with color alone.)
-4. **Map source:** hand-drawn stylized floor plan (fast, on-brand) vs. a realistic hospital layout? Recommend stylized.
-5. **Time range:** is **7 days** the right history window for the demo, or a single representative day looped? 7 days is more impressive but heavier to fake convincingly.
-6. **Wearable input:** do we want a live "connect a fitness tracker" gesture in the demo, or pre-loaded wearable data revealed on click?
-7. **Vocal biomarker source (§8):** which specific company/paper are we citing? I'll verify the "Swiss founder / insurance / MS-startup-2023" recollection or reframe as the general field — please confirm you want me to research and lock a citation.
-8. **Fable target:** is "Fable" here a UI-prototyping tool that outputs an interactive web prototype (my assumption in FABLE_PROMPT.md), or something else? That changes how the prompt is phrased.
-9. **Real vs. simulated for judging:** how much must be genuinely wired to Gemini/Nemotron on stage vs. a high-fidelity scripted prototype? (Affects how much of this design is "live" vs. "shown".)
+**Locked:**
+1. **Name** — decide later; **FlowTwin** stays as the working name (alternatives in §0).
+2. **Views** — **Doctor + Administrator only.** No nurse view.
+3. **Agent glyph** — **color = sex** (blue M / pink F / grey unknown), delay-**risk on the ring**, always paired with a label so color isn't the sole signal.
+4. **Data** — **real open datasets** (§7.1), downloaded (HF / PhysioNet), **not synthetic**. Kept local, gitignored.
+5. **Wearables + vocal biomarkers** — **mention only, do not build.** Shown as greyed "pluggable source" chips on the Intake tab (§8).
+6. **Fable** — the target is the **Fable model** (Anthropic); FABLE_PROMPT.md is written for a model that generates the prototype/code directly.
+7. **Live, not scripted** — genuinely wired to Gemini + Nemotron on stage. **API keys go in `.env` (already gitignored — never pushed).**
+
+**Still open (not blocking):**
+- **Which dataset to commit to:** start on **Synthea + `infinite-dataset-hub/HospitalAdmissions`** (open, immediate), and swap in **MIMIC-IV-ED** *if* a teammate completes PhysioNet credentialing in time. Confirm who owns the download.
+- **Map source:** stylized floor plan (recommended, fast) vs. realistic layout.
