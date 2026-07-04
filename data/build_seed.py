@@ -934,13 +934,16 @@ def main():
     now_iso = NOW.isoformat(timespec="minutes")
     in_house_ed = [p for p in flow
                    if p["arrival_time"] <= now_iso and p["events"][-1]["t"] > now_iso]
+    # the wearable story only makes sense on a cardiac journey
+    cardiac = [p for p in in_house_ed
+               if p["pathway"] in ("Chest Pain Rule-Out", "Arrhythmia")] or in_house_ed
     if in_house_ed:
-        in_house_ed[0]["signals"]["wearable"] = {
+        cardiac[0]["signals"]["wearable"] = {
             "source": "patient fitness tracker (shared at intake)",
             "overnight_arrhythmia_flag": True, "resting_hr_7d_avg": 71,
             "hrv_trend": "declining", "note": "screening, not diagnosis"}
-        in_house_ed[0]["extra_signal_track"] = True
-        in_house_ed[0]["optimization"] = [
+        cardiac[0]["extra_signal_track"] = True
+        cardiac[0]["optimization"] = [
             {"issue": "Wearable overnight-arrhythmia flag — cardiology consult could be pre-ordered at arrival",
              "saving_min": 50, "tag": "sequence (wearable — illustrative source)"}]
         if len(in_house_ed) > 1:

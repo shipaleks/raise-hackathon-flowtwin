@@ -256,23 +256,11 @@
     "impact_min": 0
    },
    "signals": {
-    "wearable": {
-     "source": "patient fitness tracker (shared at intake)",
-     "overnight_arrhythmia_flag": true,
-     "resting_hr_7d_avg": 71,
-     "hrv_trend": "declining",
-     "note": "screening, not diagnosis"
-    },
+    "wearable": null,
     "vocal_biomarker": null,
     "_note": "pluggable sources — mention only, not built"
    },
-   "optimization": [
-    {
-     "issue": "Wearable overnight-arrhythmia flag — cardiology consult could be pre-ordered at arrival",
-     "saving_min": 50,
-     "tag": "sequence (wearable — illustrative source)"
-    }
-   ],
+   "optimization": [],
    "guard": {
     "topic_ok": true,
     "safety_ok": true
@@ -286,8 +274,7 @@
     "vitals": "sampled from MIMIC-IV-ED Demo 2.2 (open access) triage quartiles",
     "eta": "FlowTwin ETA — MIMIC LOS quantiles per pathway band"
    },
-   "real_wait_draw_min": 25,
-   "extra_signal_track": true
+   "real_wait_draw_min": 25
   },
   {
    "patient_id": "P-2473",
@@ -2274,11 +2261,23 @@
     "impact_min": 30
    },
    "signals": {
-    "wearable": null,
+    "wearable": {
+     "source": "patient fitness tracker (shared at intake)",
+     "overnight_arrhythmia_flag": true,
+     "resting_hr_7d_avg": 71,
+     "hrv_trend": "declining",
+     "note": "screening, not diagnosis"
+    },
     "vocal_biomarker": null,
     "_note": "pluggable sources — mention only, not built"
    },
-   "optimization": [],
+   "optimization": [
+    {
+     "issue": "Wearable overnight-arrhythmia flag — cardiology consult could be pre-ordered at arrival",
+     "saving_min": 50,
+     "tag": "sequence (wearable — illustrative source)"
+    }
+   ],
    "guard": {
     "topic_ok": true,
     "safety_ok": true
@@ -2292,7 +2291,8 @@
     "vitals": "sampled from MIMIC-IV-ED Demo 2.2 (open access) triage quartiles",
     "eta": "FlowTwin ETA — MIMIC LOS quantiles per pathway band"
    },
-   "real_wait_draw_min": 14
+   "real_wait_draw_min": 14,
+   "extra_signal_track": true
   },
   {
    "patient_id": "P-2490",

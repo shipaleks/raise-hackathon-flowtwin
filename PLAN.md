@@ -1,3 +1,10 @@
+> **PIVOT NOTE (Jul 4, evening).** The data plane changed: FlowTwin is now a
+> live twin of a REAL hospital — Queen Mary Hospital, Hong Kong — driven by the
+> Hospital Authority's public A&E waiting-time feed (live + 48 h/7 d archive)
+> with patient-level statistics from MIMIC-IV-ED. Sections below about
+> Synthea/HF seed data are superseded by `data/README.md`; the live
+> architecture (Gemini / Nemotron / NemoGuard) is unchanged.
+
 # FlowTwin — 2-Day Hackathon Build Plan
 
 > **RAISE hackathon · Google DeepMind track (Statement Four, in-person) · NVIDIA mentorship (Nemotron prize)**
