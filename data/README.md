@@ -33,8 +33,9 @@ Optional higher-fidelity source: **MIMIC-IV-ED** (PhysioNet, free but credential
 ## What is REAL vs SYNTHESIZED (kept honest)
 | Field | Source |
 |---|---|
-| Patient name, sex, age, chief complaint/reason, ED arrival hour-of-day | **Real** — Synthea sample |
+| Patient name, sex, age, chief complaint/reason | **Real** — Synthea sample |
 | Admission length-of-stay (days) + outcome mix (Admin KPI benchmark) | **Real** — HF HospitalAdmissions |
+| ED arrival hour-of-day | **Synthesized** — typical ED diurnal curve (`ED_HOUR_WEIGHTS`); the Synthea sample's encounter START hours are generator batch artifacts (03:00/10:00 spikes, near-empty evenings) |
 | Intra-stay station sequence, per-station minutes, ED boarding hours | **Synthesized** — pathway templates (neither open source records ED station-level boarding times) |
 | Vitals, the recurring 14:00–17:00 cardiology backup, ETA numbers | **Synthesized** — labeled in each record's `provenance` block |
 
