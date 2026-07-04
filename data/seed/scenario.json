@@ -37,12 +37,12 @@
     "current_area": "Consult",
     "elapsed_min": 100,
     "vitals": {
-      "hr": 112,
-      "sbp": 127,
-      "spo2": 92,
-      "rr": 21,
-      "temp_c": 37.1,
-      "pain": 5
+      "hr": 116,
+      "sbp": 117,
+      "spo2": 97,
+      "rr": 22,
+      "temp_c": 38.0,
+      "pain": 6
     },
     "events": [
       {
@@ -58,13 +58,13 @@
         "area": "Triage"
       },
       {
-        "t": "2026-07-04T09:33",
+        "t": "2026-07-04T09:36",
         "type": "bed_assigned",
         "dept": "Emergency",
         "area": "ER Bay"
       },
       {
-        "t": "2026-07-04T09:47",
+        "t": "2026-07-04T09:44",
         "type": "labs_ordered",
         "dept": "Labs",
         "area": "Chemistry"
@@ -76,51 +76,51 @@
         "area": "ER Bay"
       },
       {
-        "t": "2026-07-04T10:36",
+        "t": "2026-07-04T10:34",
         "type": "consult_requested",
         "dept": "Cardiology",
         "area": "Consult"
       },
       {
-        "t": "2026-07-04T11:47",
+        "t": "2026-07-04T11:12",
         "type": "consult_done",
         "dept": "Cardiology",
         "area": "Consult"
       },
       {
-        "t": "2026-07-04T12:12",
+        "t": "2026-07-04T11:32",
         "type": "observation",
         "dept": "Emergency",
         "area": "Observation"
       },
       {
-        "t": "2026-07-04T13:27",
+        "t": "2026-07-04T12:48",
         "type": "decision",
         "dept": "Emergency",
         "area": "Observation"
       },
       {
-        "t": "2026-07-04T13:36",
+        "t": "2026-07-04T13:07",
         "type": "discharge",
         "dept": "Discharge",
         "area": "Exit"
       }
     ],
     "resources": {
-      "er_bed_min": 123,
-      "nurse_min": 43,
-      "doctor_min": 24,
+      "er_bed_min": 129,
+      "nurse_min": 45,
+      "doctor_min": 25,
       "labs": 1,
       "imaging": 0
     },
-    "predicted_exit": "2026-07-04T13:28",
+    "predicted_exit": "2026-07-04T14:20",
     "predicted_exit_ci": {
-      "low": "2026-07-04T12:20",
-      "high": "2026-07-04T15:15",
+      "low": "2026-07-04T13:04",
+      "high": "2026-07-04T16:03",
       "interval": "80%"
     },
-    "predicted_los_min": 248,
-    "benchmark_los_min": 248,
+    "predicted_los_min": 300,
+    "benchmark_los_min": 300,
     "delay_risk": "high",
     "blocker": "cardiology_queue",
     "recommendation": {
@@ -132,17 +132,6 @@
       "wearable": null,
       "vocal_biomarker": null,
       "_note": "pluggable sources — mention only, not built"
-    },
-    "guard": {
-      "topic_ok": true,
-      "safety_ok": true
-    },
-    "provenance": {
-      "identity": "Synthea",
-      "complaint": "Synthea",
-      "stations_and_times": "synthesized",
-      "vitals": "synthesized",
-      "eta": "FlowTwin ETA (empirical quantiles over 7-day history)"
     },
     "optimization": [
       {
@@ -161,6 +150,17 @@
         "tag": "timing"
       }
     ],
+    "guard": {
+      "topic_ok": true,
+      "safety_ok": true
+    },
+    "provenance": {
+      "identity": "Synthea",
+      "complaint": "Synthea",
+      "stations_and_times": "synthesized",
+      "vitals": "synthesized",
+      "eta": "FlowTwin ETA (empirical quantiles over 7-day history)"
+    },
     "hero": true
   }
 }

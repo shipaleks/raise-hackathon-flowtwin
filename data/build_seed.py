@@ -31,6 +31,7 @@ RNG = random.Random(42)
 NOW = datetime(2026, 7, 4, 11, 0)        # demo "now": mid-morning, afternoon still ahead
 HISTORY_DAYS = 7
 BED_HOUR_COST_EUR = 45                    # stated assumption for cost-of-delay (Admin view)
+LEAN_TARGETS_MIN = {"Emergency": 30, "Cardiology": 25, "Imaging": 25, "Labs": 30, "Wards": 60}
 
 # ---------------------------------------------------------------- pathways
 # Zones mirror the DESIGN drill-down: (department, area). Durations in minutes.
@@ -192,7 +193,7 @@ def build_journey(pathway, arrival, admitted, afternoon_backup):
             dur = max(3, int(RNG.gauss(dur, dur * 0.28)))
         # recurring bottleneck: cardiology consults queued in 14:00-17:00 wait longer
         if s["type"] == "consult_requested" and afternoon_backup and 14 <= t.hour < 17:
-            dur += RNG.randint(35, 75)
+            dur += RNG.randint(55, 110)
         # boarding after decision if admitted
         if s["type"] in ("decision", "observation") and admitted:
             dur += RNG.randint(30, 90)
@@ -216,36 +217,73 @@ def resources_from_spans(spans):
     }
 
 # ---------------------------------------------------------------- history
-def make_history(enc_rows, hf):
-    """~24 completed journeys/day for 7 days, remapped into the 7-day window,
-    preserving hour-of-day so the diurnal + afternoon-cardiology pattern is real-ish."""
+def arrival_mode_for(acuity):
+    r = RNG.random()
+    if acuity <= 2:
+        return "ambulance" if r < 0.65 else "walk-in"
+    if acuity == 3:
+        return "walk-in" if r < 0.80 else ("ambulance" if r < 0.90 else "referral")
+    return "walk-in" if r < 0.75 else "referral"
+
+def make_history(enc_rows):
+    """~48 completed journeys/day for 7 days, remapped into the 7-day window,
+    preserving hour-of-day so the diurnal pattern is real-ish. Cardiac pathways are
+    additionally oversampled into the 14:00-17:00 window so the recurring afternoon
+    cardiology backup is visible on the scrubber and measurable in the KPIs
+    (synthesized pattern — labeled as such everywhere it surfaces).
+
+    Also aggregates department load + avoidable-wait minutes from the SAME spans
+    that produced each journey (so Admin KPIs match the recorded journeys), and
+    includes per-journey `events` so the frontend can position agents at any
+    historical moment on the time scrubber."""
     hist = []
-    per_day = 24
+    dept_minutes, avoidable_minutes = Counter(), Counter()
+    per_day = 48
+    extra_cardiac_per_day = 5
+    cardiac_rows = [r for r in enc_rows if pathway_for(r["reason"]) == "Chest Pain Rule-Out"] or enc_rows
     idx = 0
+
+    def add_journey(src, pathway, arrival):
+        nonlocal idx
+        idx += 1
+        admitted = pathway in ("Sepsis",) or RNG.random() < 0.18
+        events, spans, los = build_journey(pathway, arrival, admitted, afternoon_backup=True)
+        for s in spans:
+            dept_minutes[s["dept"]] += s["min"]
+            avoidable_minutes[s["dept"]] += max(0, s["min"] - LEAN_TARGETS_MIN.get(s["dept"], 30))
+        hist.append({
+            "patient_id": f"H-{arrival.strftime('%m%d')}-{idx:04d}",
+            "name": clean_name(src["first"], src["last"]),
+            "age": age_of(src["birth"], arrival),
+            "sex": "female" if src["sex"] == "F" else "male",
+            "pathway": pathway,
+            "complaint": COMPLAINT[pathway],
+            "acuity": PATHWAYS[pathway]["acuity"],
+            "arrival_mode": arrival_mode_for(PATHWAYS[pathway]["acuity"]),
+            "arrival": arrival.isoformat(timespec="minutes"),
+            "los_min": los,
+            "admitted": admitted,
+            "disposition": "admitted" if admitted else "discharged",
+            "events": events,
+        })
+
     for day in range(HISTORY_DAYS, 0, -1):
         day_date = (NOW - timedelta(days=day)).date()
         for _ in range(per_day):
-            src = enc_rows[idx % len(enc_rows)]; idx += 1
+            src = enc_rows[idx % len(enc_rows)]
             pathway = pathway_for(src["reason"])
-            hour = src["start"].hour
             arrival = datetime(day_date.year, day_date.month, day_date.day,
-                               hour, RNG.randint(0, 59))
-            admitted = pathway in ("Sepsis",) or RNG.random() < 0.18
-            events, spans, los = build_journey(pathway, arrival, admitted, afternoon_backup=True)
-            hist.append({
-                "patient_id": f"H-{arrival.strftime('%m%d')}-{idx:04d}",
-                "name": clean_name(src["first"], src["last"]),
-                "age": age_of(src["birth"], arrival),
-                "sex": "female" if src["sex"] == "F" else "male",
-                "pathway": pathway,
-                "complaint": COMPLAINT[pathway],
-                "acuity": PATHWAYS[pathway]["acuity"],
-                "arrival": arrival.isoformat(timespec="minutes"),
-                "los_min": los,
-                "admitted": admitted,
-                "disposition": "admitted" if admitted else "discharged",
-            })
-    return hist
+                               src["start"].hour, RNG.randint(0, 59))
+            add_journey(src, pathway, arrival)
+        # the recurring weekday-afternoon cardiology backup (synthesized, labeled);
+        # arrivals 12:00-15:59 so the consult (~70 min after arrival) queues inside
+        # the 14:00-17:00 window where build_journey applies the backup delay
+        for _ in range(extra_cardiac_per_day):
+            src = cardiac_rows[idx % len(cardiac_rows)]
+            arrival = datetime(day_date.year, day_date.month, day_date.day,
+                               RNG.randint(12, 15), RNG.randint(0, 59))
+            add_journey(src, "Chest Pain Rule-Out", arrival)
+    return hist, dept_minutes, avoidable_minutes
 
 def eta_model(history):
     """FlowTwin ETA: empirical quantiles of LOS per pathway -> point + 80% interval."""
@@ -281,7 +319,9 @@ def calibrate(history, model):
 
 # ---------------------------------------------------------------- current patients
 def make_current(enc_rows, model, start_idx=500):
-    """~6 patients currently in-hospital (arrived within the last few hours, not discharged)."""
+    """~6 patients currently in-hospital (arrived within the last few hours, not discharged).
+    IDs start at P-1050 so the hero's P-1042 (referenced by scenario.json and PLAN §2.1)
+    can never collide with a background patient."""
     current = []
     picks = [("Chest Pain Rule-Out", 205), ("Minor Injury / Trauma", 95),
              ("Sepsis", 150), ("General Medical", 70),
@@ -298,7 +338,7 @@ def make_current(enc_rows, model, start_idx=500):
             src = enc_rows[idx % len(enc_rows)]; idx += 1
         arrival = NOW - timedelta(minutes=elapsed)
         events, spans, los = build_journey(want_pw, arrival, admitted=False, afternoon_backup=True)
-        current.append(_ops_state(f"P-{1040+k}", clean_name(src["first"], src["last"]),
+        current.append(_ops_state(f"P-{1050+k}", clean_name(src["first"], src["last"]),
                                    age_of(src["birth"], arrival),
                                    "female" if src["sex"] == "F" else "male",
                                    want_pw, arrival, events, spans, los, model))
@@ -340,6 +380,7 @@ def _ops_state(pid, name, age, sex, pathway, arrival, events, spans, los, model)
         "delay_risk": risk, "blocker": blocker, "recommendation": rec,
         "signals": {"wearable": None, "vocal_biomarker": None,
                     "_note": "pluggable sources — mention only, not built"},
+        "optimization": [],
         "guard": {"topic_ok": True, "safety_ok": True},
         "provenance": {"identity": "Synthea", "complaint": "Synthea",
                        "stations_and_times": "synthesized", "vitals": "synthesized",
@@ -396,46 +437,50 @@ def build_sarah(model):
     return st
 
 # ---------------------------------------------------------------- admin KPIs
-def admin_kpis(history, current, model, calib, hf):
-    # avoidable-wait ranking by department (sum of station minutes beyond a lean target)
-    lean = {"Emergency": 30, "Cardiology": 25, "Imaging": 25, "Labs": 30, "Wards": 60}
-    avoidable = Counter()
-    dept_load = Counter()
-    for h in history:
-        _, spans, _ = build_journey(h["pathway"], datetime.fromisoformat(h["arrival"]),
-                                    h["admitted"], afternoon_backup=True)
-        for s in spans:
-            dept_load[s["dept"]] += s["min"]
-            avoidable[s["dept"]] += max(0, s["min"] - lean.get(s["dept"], 30))
+def admin_kpis(history, current, model, calib, hf, dept_minutes, avoidable_minutes):
+    # avoidable-wait ranking by department (station minutes beyond a lean target),
+    # aggregated in make_history from the SAME spans that produced each journey.
     rank = [{"dept": d, "avoidable_wait_min": m,
              "cost_of_delay_eur": round(m / 60 * BED_HOUR_COST_EUR)}
-            for d, m in avoidable.most_common(6)]
-    # recurring afternoon cardiology backup
-    card_by_hour = defaultdict(list)
+            for d, m in avoidable_minutes.most_common(6)]
+    # recurring afternoon cardiology backup — classified by when the consult was
+    # queued (the moment the backup applies), not by arrival hour
+    pm, other = [], []
     for h in history:
-        if h["pathway"] == "Chest Pain Rule-Out":
-            card_by_hour[datetime.fromisoformat(h["arrival"]).hour].append(h["los_min"])
-    pm = [x for hh, xs in card_by_hour.items() if 14 <= hh < 17 for x in xs]
-    other = [x for hh, xs in card_by_hour.items() if not (14 <= hh < 17) for x in xs]
+        if h["pathway"] != "Chest Pain Rule-Out":
+            continue
+        consult = next((e for e in h["events"] if e["type"] == "consult_requested"), None)
+        if not consult:
+            continue
+        hh = datetime.fromisoformat(consult["t"]).hour
+        (pm if 14 <= hh < 17 else other).append(h["los_min"])
     bottleneck = {
         "dept": "Cardiology", "window": "14:00-17:00",
         "avg_los_in_window_min": int(statistics.mean(pm)) if pm else None,
         "avg_los_other_min": int(statistics.mean(other)) if other else None,
+        "n_in_window": len(pm),
         "note": "Weekday-afternoon cardiology consult queue backs up ER beds (synthesized pattern, visible across the 7-day scrubber).",
     }
-    # arrival forecast next 3h by mode (historical rate at this hour-of-day)
+    # arrival forecast next 3h, by entry mode (historical rate at this hour-of-day)
     hour_counts = Counter()
+    hour_mode_counts = Counter()
     for h in history:
-        hour_counts[datetime.fromisoformat(h["arrival"]).hour] += 1
+        hh = datetime.fromisoformat(h["arrival"]).hour
+        hour_counts[hh] += 1
+        hour_mode_counts[(hh, h["arrival_mode"])] += 1
     fc = []
     for dh in range(1, 4):
         hh = (NOW + timedelta(hours=dh)).hour
         rate = hour_counts.get(hh, 0) / HISTORY_DAYS
-        fc.append({"hour": f"{hh:02d}:00", "expected_arrivals": round(rate, 1)})
+        by_mode = {m: round(hour_mode_counts.get((hh, m), 0) / HISTORY_DAYS, 1)
+                   for m in ("ambulance", "walk-in", "referral")}
+        fc.append({"hour": f"{hh:02d}:00", "expected_arrivals": round(rate, 1),
+                   "by_mode": by_mode})
     return {
         "generated_now": NOW.isoformat(timespec="minutes"),
         "current_census": len(current),
         "avoidable_wait_rank": rank,
+        "dept_load_minutes_7d": dict(dept_minutes),
         "recurring_bottleneck": bottleneck,
         "arrival_forecast_next_3h": fc,
         "eta_calibration": calib,
@@ -446,7 +491,7 @@ def admin_kpis(history, current, model, calib, hf):
             "source": "infinite-dataset-hub/HospitalAdmissions (Hugging Face)",
         },
         "assumptions": {"bed_hour_cost_eur": BED_HOUR_COST_EUR,
-                        "lean_targets_min": lean},
+                        "lean_targets_min": LEAN_TARGETS_MIN},
     }
 
 # ---------------------------------------------------------------- scenario
@@ -469,14 +514,32 @@ def main():
     enc = load_ed_encounters(pts)
     hf = load_hf_admissions()
 
-    history = make_history(enc, hf)
+    history, dept_minutes, avoidable_minutes = make_history(enc)
     model = eta_model(history)
     calib = calibrate(history, model)
 
     sarah = build_sarah(model)
     current = [sarah] + make_current(enc, model)
 
-    kpis = admin_kpis(history, current, model, calib, hf)
+    # Demo tracks (DESIGN §11): the extra-signal patient carries an example
+    # wearable import (mention-only pluggable source, "screening, not diagnosis");
+    # the near-optimal control keeps optimization=[] so the Flow overlay shows
+    # almost no waste. One mid patient gets a single small sequence callout.
+    current[1]["signals"]["wearable"] = {
+        "source": "patient fitness tracker (shared at intake)",
+        "overnight_arrhythmia_flag": True,
+        "resting_hr_7d_avg": 71,
+        "hrv_trend": "declining",
+        "note": "screening, not diagnosis",
+    }
+    current[1]["extra_signal_track"] = True
+    current[2]["near_optimal_track"] = True
+    current[4]["optimization"] = [
+        {"issue": "Labs ordered 18 min after bed assignment; could start at triage",
+         "saving_min": 18, "tag": "sequence"},
+    ]
+
+    kpis = admin_kpis(history, current, model, calib, hf, dept_minutes, avoidable_minutes)
 
     def dump(name, obj):
         (SEED / name).write_text(json.dumps(obj, indent=2, ensure_ascii=False))

@@ -12,9 +12,9 @@ data/
     synthea_csv.zip
   seed/           (committed — the demo backbone)
     patients_today.json   # 7 current patients (ops-state), Sarah = hero, index 0
-    history_7d.json       # 168 completed journeys across the last 7 days
+    history_7d.json       # 371 completed journeys across the last 7 days (with per-journey events for the scrubber)
     scenario.json         # Sarah's scripted track + beats (lab delay / cardio overload / resolve)
-    admin_kpis.json       # avoidable-wait rank, bottleneck, arrival forecast, ETA calibration
+    admin_kpis.json       # avoidable-wait rank, bottleneck, arrival forecast by entry mode, ETA calibration
 ```
 
 ## Re-download the raw data
@@ -44,15 +44,18 @@ Pathways: `Chest Pain Rule-Out`, `Minor Injury / Trauma`, `Tox / Overdose`, `Sep
 Superset of [PLAN §2.1](../PLAN.md): `patient_id, name, age, sex, complaint, pathway, acuity, arrival_mode, arrival_time, current_department, current_area, elapsed_min, vitals, events[], resources, predicted_exit, predicted_exit_ci{low,high,interval}, predicted_los_min, delay_risk, blocker, recommendation{action,explanation,impact_min}, signals{wearable,vocal_biomarker,_note}, guard{topic_ok,safety_ok}, provenance{}`. The hero (Sarah, `P-1042`) also has `optimization[]` (the −35/−50/−40 min flow-view callouts).
 
 ## Verified output (last run)
-- 7 current patients, 168 historical journeys.
-- **FlowTwin ETA calibration: 83.3% interval coverage, ±11 min median error** (from `admin_kpis.json`).
-- Sarah: predicted exit 13:28, 80% CI 12:20→15:15, `delay_risk=high`, `blocker=cardiology_queue`.
+- 7 current patients (unique IDs: hero `P-1042`, background `P-1050`–`P-1055`), 371 historical journeys (~48/day + 5 oversampled afternoon cardiac/day).
+- **FlowTwin ETA calibration: 81.9% interval coverage, ±14 min median error** (from `admin_kpis.json`, target 80%).
+- **Recurring bottleneck now measurable:** Chest-Pain LOS when the consult queues 14:00–17:00 = **338 min vs 256 min otherwise** (n=29 in-window; classified by consult-request hour, matching how the synthesized backup applies).
+- Sarah: predicted exit 14:20, 80% CI 13:04→16:03, `delay_risk=high`, `blocker=cardiology_queue`.
+- Arrival forecast next 3h is broken down **by entry mode** (ambulance / walk-in / referral).
+- Each historical journey carries its `events` (station starts) so the frontend can place agents at any scrubber moment; Admin KPIs are aggregated from the *same* spans that produced each journey (no RNG-stream drift).
+- Demo tracks (DESIGN §11): `P-1050` Gerda W. = extra-signal track (example wearable import, "screening, not diagnosis"); `P-1051` Jacquelin P. = near-optimal control (`optimization: []`); `P-1053` Amos C. = one small sequence callout.
 
 ## Known TODOs for the implementing model
-1. **Recurring-bottleneck stat returns `None`** — too few `Chest Pain Rule-Out` encounters land in the 14:00–17:00 window across the 168-journey sample, so `admin_kpis.recurring_bottleneck.avg_los_in_window_min` is empty. Fix by oversampling cardiac pathways into that window (or widening the window / boosting `per_day`). The delay logic itself works; only the summary metric is thin.
-2. **Vitals & ED boarding times are synthesized** — if MIMIC-IV-ED gets credentialed, replace with real triage vitals + ED LOS and drop the synthesized flags.
-3. **Names** carry occasional Synthea numeric suffixes; `clean_name()` strips trailing digits but spot-check.
-4. Seed is a static snapshot — the live app should treat `patients_today.json` as the initial state and drive changes through the orchestrator (PLAN §2).
+1. **Vitals & ED boarding times are synthesized** — if MIMIC-IV-ED gets credentialed, replace with real triage vitals + ED LOS and drop the synthesized flags.
+2. **Names** carry occasional Synthea numeric suffixes; `clean_name()` strips trailing digits but spot-check.
+3. Seed is a static snapshot — the live app should treat `patients_today.json` as the initial state and drive changes through the orchestrator (PLAN §2). The frontend prototype drives Sarah's demo beats (lab delay / cardio overload / resolve) as presentation-layer overrides keyed to sim time.
 
 ## Licenses
 Synthea: open/synthetic (Apache-2.0, no real PHI). HF `infinite-dataset-hub/HospitalAdmissions`: LLM-generated, open. MIMIC-IV-ED (if used): PhysioNet credentialed, **not** redistributable — never commit.

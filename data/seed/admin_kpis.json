@@ -4,92 +4,115 @@
   "avoidable_wait_rank": [
     {
       "dept": "Emergency",
-      "avoidable_wait_min": 2420,
-      "cost_of_delay_eur": 1815
-    },
-    {
-      "dept": "Labs",
-      "avoidable_wait_min": 1117,
-      "cost_of_delay_eur": 838
+      "avoidable_wait_min": 6702,
+      "cost_of_delay_eur": 5026
     },
     {
       "dept": "Cardiology",
-      "avoidable_wait_min": 267,
-      "cost_of_delay_eur": 200
+      "avoidable_wait_min": 4459,
+      "cost_of_delay_eur": 3344
+    },
+    {
+      "dept": "Labs",
+      "avoidable_wait_min": 2271,
+      "cost_of_delay_eur": 1703
     },
     {
       "dept": "Imaging",
-      "avoidable_wait_min": 131,
-      "cost_of_delay_eur": 98
+      "avoidable_wait_min": 272,
+      "cost_of_delay_eur": 204
     },
     {
       "dept": "Wards",
-      "avoidable_wait_min": 22,
-      "cost_of_delay_eur": 16
+      "avoidable_wait_min": 38,
+      "cost_of_delay_eur": 28
     }
   ],
+  "dept_load_minutes_7d": {
+    "Emergency": 26052,
+    "Labs": 11830,
+    "Imaging": 1086,
+    "Wards": 433,
+    "Cardiology": 6389
+  },
   "recurring_bottleneck": {
     "dept": "Cardiology",
     "window": "14:00-17:00",
-    "avg_los_in_window_min": null,
-    "avg_los_other_min": 245,
+    "avg_los_in_window_min": 338,
+    "avg_los_other_min": 256,
+    "n_in_window": 29,
     "note": "Weekday-afternoon cardiology consult queue backs up ER beds (synthesized pattern, visible across the 7-day scrubber)."
   },
   "arrival_forecast_next_3h": [
     {
       "hour": "12:00",
-      "expected_arrivals": 0.4
+      "expected_arrivals": 2.1,
+      "by_mode": {
+        "ambulance": 0.9,
+        "walk-in": 0.9,
+        "referral": 0.4
+      }
     },
     {
       "hour": "13:00",
-      "expected_arrivals": 0.7
+      "expected_arrivals": 2.4,
+      "by_mode": {
+        "ambulance": 1.0,
+        "walk-in": 1.1,
+        "referral": 0.3
+      }
     },
     {
       "hour": "14:00",
-      "expected_arrivals": 0.3
+      "expected_arrivals": 2.0,
+      "by_mode": {
+        "ambulance": 1.3,
+        "walk-in": 0.7,
+        "referral": 0.0
+      }
     }
   ],
   "eta_calibration": {
     "interval": "p10-p90 (target 80%)",
-    "coverage_pct": 83.3,
-    "median_abs_error_min": 11,
-    "n": 168
+    "coverage_pct": 81.9,
+    "median_abs_error_min": 14,
+    "n": 371
   },
   "eta_model_quantiles_min": {
     "General Medical": {
       "p10": 63,
-      "p50": 83,
-      "p80": 100,
-      "p90": 137,
-      "n": 131
+      "p50": 82,
+      "p80": 110,
+      "p90": 135,
+      "n": 278
     },
     "Sepsis": {
-      "p10": 134,
+      "p10": 107,
       "p50": 161,
-      "p80": 170,
-      "p90": 182,
-      "n": 10
+      "p80": 165,
+      "p90": 193,
+      "n": 8
     },
     "Minor Injury / Trauma": {
-      "p10": 82,
-      "p50": 106,
-      "p80": 122,
-      "p90": 164,
-      "n": 10
+      "p10": 76,
+      "p50": 99,
+      "p80": 108,
+      "p90": 145,
+      "n": 27
     },
     "Chest Pain Rule-Out": {
-      "p10": 180,
-      "p50": 248,
-      "p80": 258,
-      "p90": 355,
-      "n": 7
+      "p10": 224,
+      "p50": 300,
+      "p80": 362,
+      "p90": 403,
+      "n": 44
     },
     "Tox / Overdose": {
-      "p10": 155,
-      "p50": 190,
-      "p80": 216,
-      "p90": 299,
-      "n": 10
+      "p10": 158,
+      "p50": 216,
+      "p80": 226,
+      "p90": 249,
+      "n": 14
     }
   },
   "hf_admissions_benchmark": {
