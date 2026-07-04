@@ -361,7 +361,13 @@ def make_current(enc_rows, model, start_idx=500):
         if src is None:
             src = enc_rows[idx % len(enc_rows)]; idx += 1
         arrival = NOW - timedelta(minutes=elapsed)
-        events, spans, los = build_journey(want_pw, arrival, admitted=False, afternoon_backup=True)
+        # a "current" patient must still be in-house at NOW — re-roll the duration
+        # jitter until the journey outlasts the elapsed time (deterministic: the
+        # RNG stream advances the same way on every run)
+        for _ in range(20):
+            events, spans, los = build_journey(want_pw, arrival, admitted=False, afternoon_backup=True)
+            if los > elapsed + 20:
+                break
         current.append(_ops_state(f"P-{1050+k}", clean_name(src["first"], src["last"]),
                                    age_of(src["birth"], arrival),
                                    "female" if src["sex"] == "F" else "male",
