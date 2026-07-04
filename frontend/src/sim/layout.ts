@@ -78,9 +78,11 @@ const area = (
 ): AreaDef => ({ id, name, x, y, w, h, capacity, kind, noun })
 
 /* Corridor spine + lift core — identical footprint on all floors so
-   cross-floor journeys read as one building. */
+   cross-floor journeys read as one building. The lift core sits at the
+   east end of the plate, below the corridor, in a region no floor's
+   rooms may claim (the old core at x468 slid under f2's Day Room). */
 export const CORRIDOR = { y1: 292, y2: 336 }
-export const LIFT = { x: 468, y: 336, w: 64, h: 76 }
+export const LIFT = { x: 906, y: 352, w: 70, h: 88 }
 export const CORRIDOR_MID = (CORRIDOR.y1 + CORRIDOR.y2) / 2
 
 export const DEPTS: DeptDef[] = [
@@ -90,22 +92,22 @@ export const DEPTS: DeptDef[] = [
     name: 'Ambulance Bay',
     floor: 'g',
     x: 24,
-    y: 16,
+    y: 18,
     w: 210,
-    h: 62,
+    h: 68,
     outside: true,
-    areas: [area('entrance', 'Entrance', 32, 40, 194, 30, 4, 'door', 'Stand')],
+    areas: [area('entrance', 'Entrance', 32, 58, 194, 24, 4, 'door', 'Stand')],
   },
   {
     id: 'walk-in',
     name: 'Walk-in Entrance',
     floor: 'g',
     x: 250,
-    y: 16,
+    y: 18,
     w: 190,
-    h: 62,
+    h: 68,
     outside: true,
-    areas: [area('reception', 'Reception', 258, 40, 174, 30, 4, 'desk', 'Desk')],
+    areas: [area('reception', 'Reception', 258, 58, 174, 24, 4, 'desk', 'Desk')],
   },
   {
     id: 'emergency',
@@ -298,8 +300,9 @@ export const DEPTS: DeptDef[] = [
   },
 ]
 
-/** Free lower-right region (all floors) — the HTML legend/notes overlay sits here. */
-export const NOTES_RECT = { x: 560, y: 356, w: 416, h: 240 }
+/** Free lower-right region (all floors, clear of every room and the lift
+    core) — the drawn title block / legend annotation lives here. */
+export const NOTES_RECT = { x: 546, y: 352, w: 344, h: 168 }
 
 export const deptById = new Map(DEPTS.map((d) => [d.id, d]))
 export const areaById = new Map(

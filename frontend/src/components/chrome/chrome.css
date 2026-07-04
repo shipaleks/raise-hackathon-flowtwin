@@ -8,6 +8,7 @@
   justify-content: center;
   gap: 12px;
   min-height: 30px;
+  min-width: 0;
   padding: 4px 40px 4px 14px;
   position: relative;
   background: #000;
@@ -16,6 +17,14 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   animation: chrome-announce-in var(--dur-slow) var(--ease-out);
+}
+
+/* the note may never widen the app — it truncates instead */
+.chrome-announce > span {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 @keyframes chrome-announce-in {
@@ -165,13 +174,17 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  flex: none;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 .chrome-topbar__status {
   font-size: 11px;
   color: var(--ink-2);
   white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .chrome-topbar__icon-btn {
@@ -226,7 +239,7 @@
 }
 
 /* mono runs wide — shed the decorative strings early */
-@media (max-width: 1420px) {
+@media (max-width: 1620px) {
   .chrome-topbar__tagline {
     display: none;
   }

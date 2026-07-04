@@ -10,7 +10,7 @@ import { useStore } from '../../store'
 
 const CAPTION = 'Presenter shortcuts — the same beats are pinned on the timeline.'
 
-const INLINE_MQ = '(min-width: 1280px)'
+const INLINE_MQ = '(min-width: 1460px)'
 
 /** True when the demo steps fit inline next to the presets. */
 function useInline(): boolean {

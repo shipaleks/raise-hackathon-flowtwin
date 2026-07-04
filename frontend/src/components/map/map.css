@@ -229,15 +229,38 @@
   stroke-width: 1.4;
 }
 
-.map-door {
-  stroke: var(--surface);
-  stroke-width: 3;
-  vector-effect: non-scaling-stroke;
+/* plan-drawing door symbol: opening + leaf + quarter swing arc */
+.map-doorsym {
   pointer-events: none;
 }
 
-.map-door--room {
+.map-doorsym line,
+.map-doorsym path,
+.map-lift .map-door__gap {
+  vector-effect: non-scaling-stroke;
+}
+
+.map-door__gap {
+  stroke: var(--surface);
+  stroke-width: 4;
+}
+
+.map-doorsym--room .map-door__gap {
   stroke: var(--page);
+  stroke-width: 3;
+}
+
+.map-door__leaf {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.map-door__swing {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 0.75;
+  stroke-dasharray: 2.5 3;
+  opacity: 0.7;
 }
 
 .map-area__label {

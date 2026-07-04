@@ -170,6 +170,40 @@ function furnitureSize(a: AreaDef): number {
   return Math.min(15, Math.min(g.w / g.cols, g.h / g.rows) * 0.42)
 }
 
+/** Plan-drawing door symbol: an opening in the wall, the leaf, and its
+    quarter swing arc. `into` is the leaf direction (+1 opens downward). */
+function DoorMark({
+  x,
+  y,
+  into,
+  w,
+  room,
+}: {
+  x: number
+  y: number
+  into: 1 | -1
+  w: number
+  room?: boolean
+}) {
+  const hx = x - w / 2 // hinge
+  const tipY = y + into * w
+  const sweep = into === 1 ? 0 : 1
+  return (
+    <g className={`map-doorsym${room ? ' map-doorsym--room' : ''}`} aria-hidden="true">
+      <line className="map-door__gap" x1={hx} y1={y} x2={x + w / 2} y2={y} />
+      <line className="map-door__leaf" x1={hx} y1={y} x2={hx} y2={tipY} />
+      <path
+        className="map-door__swing"
+        d={`M ${hx} ${tipY} A ${w} ${w} 0 0 ${sweep} ${x + w / 2} ${y}`}
+      />
+    </g>
+  )
+}
+
+/** Which way a zone's door leaf opens: into the room, away from the corridor. */
+const doorInto = (rect: { y: number; h: number }): 1 | -1 =>
+  rect.y + rect.h <= CORRIDOR.y1 + 1 ? -1 : 1
+
 // ---------------------------------------------------------------- copy
 
 function zoneNameFor(a: MapAgent): string {
@@ -368,19 +402,25 @@ export function MapView() {
             x2={MAP_W - 30}
             y2={(CORRIDOR.y1 + CORRIDOR.y2) / 2}
           />
+          {/* lift core — the classic plan symbol: shaft, crossed diagonals,
+              door opening on the corridor side */}
           <g className="map-lift">
-            <rect x={LIFT.x} y={LIFT.y} width={LIFT.w} height={LIFT.h} rx={6} />
-            <line x1={LIFT.x + LIFT.w / 2} y1={LIFT.y + 6} x2={LIFT.x + LIFT.w / 2} y2={LIFT.y + LIFT.h - 24} />
-            <path
-              d={`M${LIFT.x + LIFT.w / 2 - 10} ${LIFT.y + LIFT.h - 13} l5 -6 l5 6 z`}
-              className="map-lift__tri"
+            <rect x={LIFT.x} y={LIFT.y} width={LIFT.w} height={LIFT.h} />
+            <line x1={LIFT.x} y1={LIFT.y} x2={LIFT.x + LIFT.w} y2={LIFT.y + LIFT.h} />
+            <line x1={LIFT.x + LIFT.w} y1={LIFT.y} x2={LIFT.x} y2={LIFT.y + LIFT.h} />
+            <line
+              className="map-door__gap"
+              x1={LIFT.x + LIFT.w / 2 - 9}
+              y1={LIFT.y}
+              x2={LIFT.x + LIFT.w / 2 + 9}
+              y2={LIFT.y}
             />
-            <path
-              d={`M${LIFT.x + LIFT.w / 2 + 12} ${LIFT.y + LIFT.h - 19} l5 6 l-5 6 z`}
-              className="map-lift__tri"
-              transform={`rotate(90 ${LIFT.x + LIFT.w / 2 + 14.5} ${LIFT.y + LIFT.h - 15})`}
-            />
-            <text className="map-lift__label" x={LIFT.x + LIFT.w / 2} y={LIFT.y - 6} textAnchor="middle">
+            <text
+              className="map-lift__label"
+              x={LIFT.x + LIFT.w / 2}
+              y={LIFT.y + LIFT.h + 14}
+              textAnchor="middle"
+            >
               LIFT
             </text>
           </g>
@@ -410,15 +450,7 @@ export function MapView() {
                   }}
                   onKeyDown={(e) => onActionKey(e, () => toggleDept(d))}
                 />
-                {deptDoor && (
-                  <line
-                    className="map-door"
-                    x1={deptDoor.x - 9}
-                    y1={deptDoor.y}
-                    x2={deptDoor.x + 9}
-                    y2={deptDoor.y}
-                  />
-                )}
+                {deptDoor && <DoorMark x={deptDoor.x} y={deptDoor.y} into={doorInto(d)} w={11} />}
 
                 {d.areas.map((a) => {
                   const areaKey = `${d.id}/${a.id}`
@@ -453,13 +485,7 @@ export function MapView() {
                         }
                         onKeyDown={inDept ? (e) => onActionKey(e, () => toggleArea(d.id, a.id)) : undefined}
                       />
-                      <line
-                        className="map-door map-door--room"
-                        x1={door.x - 6}
-                        y1={door.y}
-                        x2={door.x + 6}
-                        y2={door.y}
-                      />
+                      <DoorMark x={door.x} y={door.y} into={doorInto(a)} w={7} room />
                       {/* furniture — always there, quieter at hospital level */}
                       <g className={`map-furniture${inDept ? ' is-close' : ''}`} aria-hidden="true">
                         {Array.from({ length: Math.max(a.capacity, 0) }, (_, i) => {
@@ -517,9 +543,11 @@ export function MapView() {
                     {d.name}
                   </text>
                   <text className="map-zone__status" y={30}>
-                    {d.w < 200 && count > 0
-                      ? `${count} · ${LEVEL_WORD[load?.level ?? 'ok']}`
-                      : (load?.status ?? '')}
+                    {d.outside
+                      ? `${count > 0 ? `${count} · ` : ''}${LEVEL_WORD[load?.level ?? 'ok']}`
+                      : d.w < 200 && count > 0
+                        ? `${count} · ${LEVEL_WORD[load?.level ?? 'ok']}`
+                        : (load?.status ?? '')}
                     {d.outside ? <tspan className="map-zone__tag"> · outside</tspan> : null}
                   </text>
                 </g>
@@ -535,12 +563,12 @@ export function MapView() {
             )
           })}
 
-          {/* ambulances parked at the bay kerb (right of the header, small) */}
+          {/* ambulances parked on the street strip above the bay */}
           {bayAmbulances.slice(0, 2).map((a, i) => (
             <g
               key={a.id}
               className="map-amb"
-              transform={`translate(${140 + i * 44} ${20}) scale(0.75)`}
+              transform={`translate(${126 + i * 50} ${0}) scale(0.72)`}
               aria-hidden="true"
             >
               <rect x={0} y={0} width={44} height={18} rx={4} />

@@ -317,7 +317,7 @@
 }
 
 /* presets yield to the demo cluster first — the demo is the hero */
-@media (max-width: 1439px) {
+@media (max-width: 1719px) {
   .scrub-presets {
     display: none;
   }
