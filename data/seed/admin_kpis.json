@@ -1,356 +1,463 @@
 {
-  "generated_now": "2026-07-04T11:00",
-  "current_census": 7,
-  "avoidable_wait_rank": [
-    {
-      "dept": "Emergency",
-      "avoidable_wait_min": 7179,
-      "cost_of_delay_eur": 5384
-    },
-    {
-      "dept": "Cardiology",
-      "avoidable_wait_min": 4072,
-      "cost_of_delay_eur": 3054
-    },
-    {
-      "dept": "Labs",
-      "avoidable_wait_min": 2612,
-      "cost_of_delay_eur": 1959
-    },
-    {
-      "dept": "Imaging",
-      "avoidable_wait_min": 871,
-      "cost_of_delay_eur": 653
-    },
-    {
-      "dept": "Wards",
-      "avoidable_wait_min": 156,
-      "cost_of_delay_eur": 117
-    }
-  ],
-  "dept_load_minutes_7d": {
-    "Emergency": 32152,
-    "Labs": 12077,
-    "Imaging": 4012,
-    "Wards": 1058,
-    "Cardiology": 6400
+ "generated_now": "2026-07-04T11:00",
+ "current_census": 64,
+ "hk": {
+  "hospital_slug": "QMH",
+  "hospital": "Queen Mary Hospital",
+  "cluster": "Hong Kong West",
+  "district": "Pok Fu Lam",
+  "live_update_raw": "5/7/2026 2:45AM",
+  "live_anchor": "2026-07-05T02:45",
+  "attendance_per_day_assumption": 300,
+  "admit_share_assumption": 0.27,
+  "triage_mix_assumption": {
+   "1": 0.01,
+   "2": 0.03,
+   "3": 0.44,
+   "4": 0.48,
+   "5": 0.04
   },
-  "recurring_bottleneck": {
-    "dept": "Cardiology",
-    "window": "14:00-17:00",
-    "avg_los_in_window_min": 312,
-    "avg_los_other_min": 251,
-    "n_in_window": 25,
-    "note": "Weekday-afternoon cardiology consult queue backs up ER beds (synthesized pattern, visible across the 7-day scrubber)."
-  },
-  "arrival_forecast_next_3h": [
-    {
-      "hour": "12:00",
-      "expected_arrivals": 5.1,
-      "by_mode": {
-        "ambulance": 1.6,
-        "walk-in": 2.6,
-        "referral": 1.0
-      }
-    },
-    {
-      "hour": "13:00",
-      "expected_arrivals": 4.3,
-      "by_mode": {
-        "ambulance": 1.3,
-        "walk-in": 2.6,
-        "referral": 0.4
-      }
-    },
-    {
-      "hour": "14:00",
-      "expected_arrivals": 4.0,
-      "by_mode": {
-        "ambulance": 1.1,
-        "walk-in": 2.7,
-        "referral": 0.1
-      }
-    }
-  ],
-  "arrival_rates_by_hour": [
-    {
-      "hour": "00:00",
-      "expected_arrivals": 1.3,
-      "by_mode": {
-        "ambulance": 0.0,
-        "walk-in": 1.0,
-        "referral": 0.3
-      }
-    },
-    {
-      "hour": "01:00",
-      "expected_arrivals": 0.3,
-      "by_mode": {
-        "ambulance": 0.0,
-        "walk-in": 0.3,
-        "referral": 0.0
-      }
-    },
-    {
-      "hour": "02:00",
-      "expected_arrivals": 0.9,
-      "by_mode": {
-        "ambulance": 0.1,
-        "walk-in": 0.4,
-        "referral": 0.3
-      }
-    },
-    {
-      "hour": "03:00",
-      "expected_arrivals": 0.6,
-      "by_mode": {
-        "ambulance": 0.3,
-        "walk-in": 0.3,
-        "referral": 0.0
-      }
-    },
-    {
-      "hour": "04:00",
-      "expected_arrivals": 0.4,
-      "by_mode": {
-        "ambulance": 0.0,
-        "walk-in": 0.4,
-        "referral": 0.0
-      }
-    },
-    {
-      "hour": "05:00",
-      "expected_arrivals": 1.1,
-      "by_mode": {
-        "ambulance": 0.0,
-        "walk-in": 0.7,
-        "referral": 0.4
-      }
-    },
-    {
-      "hour": "06:00",
-      "expected_arrivals": 0.9,
-      "by_mode": {
-        "ambulance": 0.0,
-        "walk-in": 0.7,
-        "referral": 0.1
-      }
-    },
-    {
-      "hour": "07:00",
-      "expected_arrivals": 2.1,
-      "by_mode": {
-        "ambulance": 0.0,
-        "walk-in": 1.6,
-        "referral": 0.6
-      }
-    },
-    {
-      "hour": "08:00",
-      "expected_arrivals": 2.6,
-      "by_mode": {
-        "ambulance": 0.3,
-        "walk-in": 1.3,
-        "referral": 1.0
-      }
-    },
-    {
-      "hour": "09:00",
-      "expected_arrivals": 2.4,
-      "by_mode": {
-        "ambulance": 0.1,
-        "walk-in": 1.6,
-        "referral": 0.7
-      }
-    },
-    {
-      "hour": "10:00",
-      "expected_arrivals": 4.7,
-      "by_mode": {
-        "ambulance": 0.7,
-        "walk-in": 2.7,
-        "referral": 1.3
-      }
-    },
-    {
-      "hour": "11:00",
-      "expected_arrivals": 5.0,
-      "by_mode": {
-        "ambulance": 0.1,
-        "walk-in": 4.4,
-        "referral": 0.4
-      }
-    },
-    {
-      "hour": "12:00",
-      "expected_arrivals": 5.1,
-      "by_mode": {
-        "ambulance": 1.6,
-        "walk-in": 2.6,
-        "referral": 1.0
-      }
-    },
-    {
-      "hour": "13:00",
-      "expected_arrivals": 4.3,
-      "by_mode": {
-        "ambulance": 1.3,
-        "walk-in": 2.6,
-        "referral": 0.4
-      }
-    },
-    {
-      "hour": "14:00",
-      "expected_arrivals": 4.0,
-      "by_mode": {
-        "ambulance": 1.1,
-        "walk-in": 2.7,
-        "referral": 0.1
-      }
-    },
-    {
-      "hour": "15:00",
-      "expected_arrivals": 5.0,
-      "by_mode": {
-        "ambulance": 0.9,
-        "walk-in": 3.3,
-        "referral": 0.9
-      }
-    },
-    {
-      "hour": "16:00",
-      "expected_arrivals": 4.3,
-      "by_mode": {
-        "ambulance": 0.1,
-        "walk-in": 2.6,
-        "referral": 1.6
-      }
-    },
-    {
-      "hour": "17:00",
-      "expected_arrivals": 2.4,
-      "by_mode": {
-        "ambulance": 0.1,
-        "walk-in": 1.7,
-        "referral": 0.6
-      }
-    },
-    {
-      "hour": "18:00",
-      "expected_arrivals": 4.4,
-      "by_mode": {
-        "ambulance": 0.7,
-        "walk-in": 2.9,
-        "referral": 0.9
-      }
-    },
-    {
-      "hour": "19:00",
-      "expected_arrivals": 4.0,
-      "by_mode": {
-        "ambulance": 0.4,
-        "walk-in": 2.9,
-        "referral": 0.7
-      }
-    },
-    {
-      "hour": "20:00",
-      "expected_arrivals": 2.7,
-      "by_mode": {
-        "ambulance": 0.4,
-        "walk-in": 1.9,
-        "referral": 0.4
-      }
-    },
-    {
-      "hour": "21:00",
-      "expected_arrivals": 2.7,
-      "by_mode": {
-        "ambulance": 0.3,
-        "walk-in": 1.0,
-        "referral": 1.4
-      }
-    },
-    {
-      "hour": "22:00",
-      "expected_arrivals": 2.0,
-      "by_mode": {
-        "ambulance": 0.0,
-        "walk-in": 1.6,
-        "referral": 0.4
-      }
-    },
-    {
-      "hour": "23:00",
-      "expected_arrivals": 1.7,
-      "by_mode": {
-        "ambulance": 0.1,
-        "walk-in": 1.1,
-        "referral": 0.4
-      }
-    }
-  ],
-  "eta_calibration": {
-    "interval": "p10-p90 (target 80%)",
-    "coverage_pct": 81.3,
-    "median_abs_error_min": 14,
-    "n": 455
-  },
-  "eta_model_quantiles_min": {
-    "General Medical": {
-      "p10": 65,
-      "p50": 84,
-      "p80": 102,
-      "p90": 133,
-      "n": 250
-    },
-    "Sepsis": {
-      "p10": 116,
-      "p50": 155,
-      "p80": 174,
-      "p90": 175,
-      "n": 17
-    },
-    "Chest Pain Rule-Out": {
-      "p10": 211,
-      "p50": 272,
-      "p80": 331,
-      "p90": 347,
-      "n": 53
-    },
-    "Tox / Overdose": {
-      "p10": 138,
-      "p50": 190,
-      "p80": 263,
-      "p90": 271,
-      "n": 17
-    },
-    "Minor Injury / Trauma": {
-      "p10": 77,
-      "p50": 98,
-      "p80": 116,
-      "p90": 141,
-      "n": 118
-    }
-  },
-  "hf_admissions_benchmark": {
-    "n": 91,
-    "outcome_mix": {
-      "Recovery": 38,
-      "Complication": 26,
-      "Readmission": 27
-    },
-    "median_los_days": 4,
-    "source": "infinite-dataset-hub/HospitalAdmissions (Hugging Face)"
-  },
-  "assumptions": {
-    "bed_hour_cost_eur": 45,
-    "lean_targets_min": {
-      "Emergency": 30,
-      "Cardiology": 25,
-      "Imaging": 25,
-      "Labs": 30,
-      "Wards": 60
-    }
+  "live_now": {
+   "t2_min": 12,
+   "t3p50_min": 27,
+   "t3p95_min": 60,
+   "t45p50_min": 270,
+   "t45p95_min": 390
   }
+ },
+ "avoidable_wait_rank": [],
+ "dept_load_minutes_7d": {},
+ "recurring_bottleneck": {
+  "dept": "A&E consultation queue",
+  "window": "08:00 → 17:00",
+  "avg_los_in_window_min": 283,
+  "avg_los_other_min": 128,
+  "n_in_window": 339,
+  "note": "REAL 7-day pattern from the HA feed: Queen Mary Hospital's cat-4/5 median wait climbs from 128 min (08:00) to 283 min (17:00) daily — and holds ≈273 min past midnight: the backlog never clears overnight."
+ },
+ "arrival_forecast_next_3h": [
+  {
+   "hour": "12:00",
+   "expected_arrivals": 19.2,
+   "by_mode": {
+    "ambulance": 4.8,
+    "walk-in": 13.4,
+    "referral": 1.0
+   }
+  },
+  {
+   "hour": "13:00",
+   "expected_arrivals": 13.7,
+   "by_mode": {
+    "ambulance": 3.4,
+    "walk-in": 9.6,
+    "referral": 0.7
+   }
+  },
+  {
+   "hour": "14:00",
+   "expected_arrivals": 20.5,
+   "by_mode": {
+    "ambulance": 5.1,
+    "walk-in": 14.3,
+    "referral": 1.0
+   }
+  }
+ ],
+ "arrival_rates_by_hour": [
+  {
+   "hour": "00:00",
+   "expected_arrivals": 2.7,
+   "by_mode": {
+    "ambulance": 1.2,
+    "walk-in": 1.4,
+    "referral": 0.1
+   }
+  },
+  {
+   "hour": "01:00",
+   "expected_arrivals": 4.1,
+   "by_mode": {
+    "ambulance": 1.8,
+    "walk-in": 2.0,
+    "referral": 0.2
+   }
+  },
+  {
+   "hour": "02:00",
+   "expected_arrivals": 4.1,
+   "by_mode": {
+    "ambulance": 1.8,
+    "walk-in": 2.0,
+    "referral": 0.2
+   }
+  },
+  {
+   "hour": "03:00",
+   "expected_arrivals": 2.7,
+   "by_mode": {
+    "ambulance": 1.2,
+    "walk-in": 1.4,
+    "referral": 0.1
+   }
+  },
+  {
+   "hour": "04:00",
+   "expected_arrivals": 5.5,
+   "by_mode": {
+    "ambulance": 2.5,
+    "walk-in": 2.8,
+    "referral": 0.3
+   }
+  },
+  {
+   "hour": "05:00",
+   "expected_arrivals": 6.8,
+   "by_mode": {
+    "ambulance": 3.1,
+    "walk-in": 3.4,
+    "referral": 0.3
+   }
+  },
+  {
+   "hour": "06:00",
+   "expected_arrivals": 6.8,
+   "by_mode": {
+    "ambulance": 3.1,
+    "walk-in": 3.4,
+    "referral": 0.3
+   }
+  },
+  {
+   "hour": "07:00",
+   "expected_arrivals": 2.7,
+   "by_mode": {
+    "ambulance": 1.2,
+    "walk-in": 1.4,
+    "referral": 0.1
+   }
+  },
+  {
+   "hour": "08:00",
+   "expected_arrivals": 6.8,
+   "by_mode": {
+    "ambulance": 1.7,
+    "walk-in": 4.8,
+    "referral": 0.3
+   }
+  },
+  {
+   "hour": "09:00",
+   "expected_arrivals": 9.6,
+   "by_mode": {
+    "ambulance": 2.4,
+    "walk-in": 6.7,
+    "referral": 0.5
+   }
+  },
+  {
+   "hour": "10:00",
+   "expected_arrivals": 8.2,
+   "by_mode": {
+    "ambulance": 2.0,
+    "walk-in": 5.7,
+    "referral": 0.4
+   }
+  },
+  {
+   "hour": "11:00",
+   "expected_arrivals": 19.2,
+   "by_mode": {
+    "ambulance": 4.8,
+    "walk-in": 13.4,
+    "referral": 1.0
+   }
+  },
+  {
+   "hour": "12:00",
+   "expected_arrivals": 19.2,
+   "by_mode": {
+    "ambulance": 4.8,
+    "walk-in": 13.4,
+    "referral": 1.0
+   }
+  },
+  {
+   "hour": "13:00",
+   "expected_arrivals": 13.7,
+   "by_mode": {
+    "ambulance": 3.4,
+    "walk-in": 9.6,
+    "referral": 0.7
+   }
+  },
+  {
+   "hour": "14:00",
+   "expected_arrivals": 20.5,
+   "by_mode": {
+    "ambulance": 5.1,
+    "walk-in": 14.3,
+    "referral": 1.0
+   }
+  },
+  {
+   "hour": "15:00",
+   "expected_arrivals": 17.8,
+   "by_mode": {
+    "ambulance": 4.5,
+    "walk-in": 12.5,
+    "referral": 0.9
+   }
+  },
+  {
+   "hour": "16:00",
+   "expected_arrivals": 23.3,
+   "by_mode": {
+    "ambulance": 5.8,
+    "walk-in": 16.3,
+    "referral": 1.2
+   }
+  },
+  {
+   "hour": "17:00",
+   "expected_arrivals": 19.2,
+   "by_mode": {
+    "ambulance": 4.8,
+    "walk-in": 13.4,
+    "referral": 1.0
+   }
+  },
+  {
+   "hour": "18:00",
+   "expected_arrivals": 27.4,
+   "by_mode": {
+    "ambulance": 6.8,
+    "walk-in": 19.2,
+    "referral": 1.4
+   }
+  },
+  {
+   "hour": "19:00",
+   "expected_arrivals": 19.2,
+   "by_mode": {
+    "ambulance": 4.8,
+    "walk-in": 13.4,
+    "referral": 1.0
+   }
+  },
+  {
+   "hour": "20:00",
+   "expected_arrivals": 20.5,
+   "by_mode": {
+    "ambulance": 5.1,
+    "walk-in": 14.3,
+    "referral": 1.0
+   }
+  },
+  {
+   "hour": "21:00",
+   "expected_arrivals": 20.5,
+   "by_mode": {
+    "ambulance": 5.1,
+    "walk-in": 14.3,
+    "referral": 1.0
+   }
+  },
+  {
+   "hour": "22:00",
+   "expected_arrivals": 11.0,
+   "by_mode": {
+    "ambulance": 2.8,
+    "walk-in": 7.7,
+    "referral": 0.6
+   }
+  },
+  {
+   "hour": "23:00",
+   "expected_arrivals": 8.2,
+   "by_mode": {
+    "ambulance": 3.7,
+    "walk-in": 4.1,
+    "referral": 0.4
+   }
+  }
+ ],
+ "eta_calibration": {
+  "interval": "p10-p90 (target 80%)",
+  "coverage_pct": 80.0,
+  "median_abs_error_min": null,
+  "n": 222,
+  "note": "in-sample on MIMIC-IV-ED demo quantiles; out-of-sample calibration needs the full dataset"
+ },
+ "eta_model_quantiles_min": {
+  "Chest Pain Rule-Out": {
+   "p10": 158,
+   "p50": 334,
+   "p80": 654,
+   "p90": 1025,
+   "n": 222
+  },
+  "Stroke Alert": {
+   "p10": 158,
+   "p50": 334,
+   "p80": 654,
+   "p90": 1025,
+   "n": 222
+  },
+  "Minor Injury": {
+   "p10": 421,
+   "p50": 580,
+   "p80": 580,
+   "p90": 580,
+   "n": 222
+  },
+  "Abdominal Pain Workup": {
+   "p10": 173,
+   "p50": 384,
+   "p80": 533,
+   "p90": 797,
+   "n": 222
+  },
+  "Appendicitis — OR": {
+   "p10": 158,
+   "p50": 334,
+   "p80": 654,
+   "p90": 1025,
+   "n": 222
+  },
+  "Hip Fracture": {
+   "p10": 158,
+   "p50": 334,
+   "p80": 654,
+   "p90": 1025,
+   "n": 222
+  },
+  "Sepsis": {
+   "p10": 158,
+   "p50": 334,
+   "p80": 654,
+   "p90": 1025,
+   "n": 222
+  },
+  "Tox / Overdose": {
+   "p10": 158,
+   "p50": 334,
+   "p80": 654,
+   "p90": 1025,
+   "n": 222
+  },
+  "COPD Exacerbation": {
+   "p10": 173,
+   "p50": 384,
+   "p80": 533,
+   "p90": 797,
+   "n": 222
+  },
+  "Renal Colic": {
+   "p10": 173,
+   "p50": 384,
+   "p80": 533,
+   "p90": 797,
+   "n": 222
+  },
+  "GI Bleed": {
+   "p10": 158,
+   "p50": 334,
+   "p80": 654,
+   "p90": 1025,
+   "n": 222
+  },
+  "Arrhythmia": {
+   "p10": 158,
+   "p50": 334,
+   "p80": 654,
+   "p90": 1025,
+   "n": 222
+  },
+  "General Medical": {
+   "p10": 421,
+   "p50": 580,
+   "p80": 580,
+   "p90": 580,
+   "n": 222
+  }
+ },
+ "hf_admissions_benchmark": {
+  "n": 222,
+  "outcome_mix": {
+   "1": 18,
+   "2": 97,
+   "3": 102,
+   "4": 2
+  },
+  "median_los_days": 0.28,
+  "source": "MIMIC-IV-ED Demo 2.2 (open access)"
+ },
+ "assumptions": {
+  "bed_hour_cost_hkd": 400,
+  "bed_hour_cost_eur": 47,
+  "hkd_per_eur": 8.5,
+  "lean_targets_min": {}
+ },
+ "optimize_plan": {
+  "model": "FlowTwin Optimizer — findings over the real 7-day feed + labeled assumptions",
+  "assumption_note": "HK$400/bed-hour (≈€47) is a stated assumption; every estimated share is labeled per line.",
+  "items": [
+   {
+    "id": "consult-window",
+    "change": "Shift one consultation-room doctor from the 08:00 trough to the afternoon climb",
+    "window": "12:00–17:00",
+    "evidence": "REAL 7-day pattern at Queen Mary Hospital: cat-4/5 median wait climbs from 128 min at 08:00 to 283 min at 17:00 — every day",
+    "saved_min_per_day": 2583,
+    "saved_hkd_per_day": 17224,
+    "saved_eur_per_day": 2026,
+    "basis": "measured climb × est. affected × 20% recoverable (assumption)"
+   },
+   {
+    "id": "fast-track",
+    "change": "Open a see-and-treat fast-track for cat-4/5 minors",
+    "window": "12:00–20:00",
+    "evidence": "~83 cat-4/5 attendances hit the climb window daily (share 52% — HA-published mix; volume est. 300/day)",
+    "saved_min_per_day": 2083,
+    "saved_hkd_per_day": 13890,
+    "saved_eur_per_day": 1634,
+    "basis": "25 min/patient fast-track effect is an assumed figure (literature-typical)"
+   },
+   {
+    "id": "troponin-triage",
+    "change": "Order troponin + first bloods at triage for chest-pain presentations",
+    "window": "all day",
+    "evidence": "Sequence finding on the chest-pain template — matches Sarah's journey callout (35 min)",
+    "saved_min_per_day": 630,
+    "saved_hkd_per_day": 4200,
+    "saved_eur_per_day": 494,
+    "basis": "est. 6% chest-pain share × 35 min sequence gap (synthesized station layer)"
+   },
+   {
+    "id": "ward-discharge",
+    "change": "Start ward discharge paperwork at morning rounds, not after lunch",
+    "window": "08:00–11:00",
+    "evidence": "~81 admissions/day board in A&E waiting for beds (HA ~27% admission share)",
+    "saved_min_per_day": 2430,
+    "saved_hkd_per_day": 16200,
+    "saved_eur_per_day": 1906,
+    "basis": "30 min earlier bed release is an assumed effect"
+   },
+   {
+    "id": "ct-slot",
+    "change": "Protect one CT slot for A&E cases through the afternoon",
+    "window": "12:00–18:00",
+    "evidence": "Imaging queue is part of the synthesized station layer — flagged as illustrative",
+    "saved_min_per_day": 450,
+    "saved_hkd_per_day": 3000,
+    "saved_eur_per_day": 353,
+    "basis": "illustrative (station-level queues are synthesized)"
+   }
+  ],
+  "total_saved_min_per_day": 8176,
+  "total_hkd_per_day": 54514,
+  "total_eur_per_day": 6413,
+  "total_hkd_per_year": 19897610,
+  "total_eur_per_year": 2340895
+ }
 }

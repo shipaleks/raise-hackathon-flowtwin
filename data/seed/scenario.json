@@ -1,166 +1,175 @@
 {
-  "hero": "P-1042",
-  "now": "2026-07-04T11:00",
-  "beats": [
-    {
-      "t_offset_min": 0,
-      "id": "meet_sarah",
-      "desc": "Sarah, 58, chest pain — predicted exit on track."
-    },
-    {
-      "t_offset_min": 90,
-      "id": "lab_delay",
-      "desc": "Lab delay — predicted exit slides later, ring turns amber."
-    },
-    {
-      "t_offset_min": 180,
-      "id": "cardio_overload",
-      "desc": "Cardiology overload — 4 consults queued as the recurring 14:00 backup starts; Sarah goes red."
-    },
-    {
-      "t_offset_min": 190,
-      "id": "resolve",
-      "desc": "One action: move to Observation, escalate consult coverage, assign bed O-12."
-    }
-  ],
-  "patient": {
-    "patient_id": "P-1042",
-    "name": "Sarah M.",
-    "age": 58,
-    "sex": "female",
-    "complaint": "chest pain",
-    "pathway": "Chest Pain Rule-Out",
-    "acuity": 2,
-    "arrival_mode": "ambulance",
-    "arrival_time": "2026-07-04T09:20",
-    "current_department": "Cardiology",
-    "current_area": "Consult",
-    "elapsed_min": 100,
-    "vitals": {
-      "hr": 103,
-      "sbp": 125,
-      "spo2": 95,
-      "rr": 19,
-      "temp_c": 36.6,
-      "pain": 6
-    },
-    "events": [
-      {
-        "t": "2026-07-04T09:20",
-        "type": "arrival",
-        "dept": "Ambulance Bay",
-        "area": "Entrance"
-      },
-      {
-        "t": "2026-07-04T09:20",
-        "type": "triage",
-        "dept": "Emergency",
-        "area": "Triage"
-      },
-      {
-        "t": "2026-07-04T09:28",
-        "type": "bed_assigned",
-        "dept": "Emergency",
-        "area": "ER Bay"
-      },
-      {
-        "t": "2026-07-04T09:33",
-        "type": "labs_ordered",
-        "dept": "Labs",
-        "area": "Chemistry"
-      },
-      {
-        "t": "2026-07-04T10:03",
-        "type": "ecg",
-        "dept": "Emergency",
-        "area": "ER Bay"
-      },
-      {
-        "t": "2026-07-04T10:15",
-        "type": "consult_requested",
-        "dept": "Cardiology",
-        "area": "Consult"
-      },
-      {
-        "t": "2026-07-04T11:12",
-        "type": "consult_done",
-        "dept": "Cardiology",
-        "area": "Consult"
-      },
-      {
-        "t": "2026-07-04T11:28",
-        "type": "observation",
-        "dept": "Emergency",
-        "area": "Observation"
-      },
-      {
-        "t": "2026-07-04T12:09",
-        "type": "decision",
-        "dept": "Emergency",
-        "area": "Observation"
-      },
-      {
-        "t": "2026-07-04T12:17",
-        "type": "discharge",
-        "dept": "Discharge",
-        "area": "Exit"
-      }
-    ],
-    "resources": {
-      "er_bed_min": 74,
-      "nurse_min": 25,
-      "doctor_min": 14,
-      "labs": 1,
-      "imaging": 0
-    },
-    "predicted_exit": "2026-07-04T13:52",
-    "predicted_exit_ci": {
-      "low": "2026-07-04T12:51",
-      "high": "2026-07-04T15:07",
-      "interval": "80%"
-    },
-    "predicted_los_min": 272,
-    "benchmark_los_min": 272,
-    "delay_risk": "high",
-    "blocker": "cardiology_queue",
-    "recommendation": {
-      "action": "move_to_observation",
-      "explanation": "Stable, troponin negative, waiting 100 min on cardiology while holding ER Bay 4.",
-      "impact_min": 45
-    },
-    "signals": {
-      "wearable": null,
-      "vocal_biomarker": null,
-      "_note": "pluggable sources — mention only, not built"
-    },
-    "optimization": [
-      {
-        "issue": "Troponin ordered after bed assignment, not at triage",
-        "saving_min": 35,
-        "tag": "sequence"
-      },
-      {
-        "issue": "No wearable ingested; overnight arrhythmia would have pre-ordered the consult",
-        "saving_min": 50,
-        "tag": "sequence (illustrative source — mention only)"
-      },
-      {
-        "issue": "Medically ready to move ~40 min before bed was requested",
-        "saving_min": 40,
-        "tag": "timing"
-      }
-    ],
-    "guard": {
-      "topic_ok": true,
-      "safety_ok": true
-    },
-    "provenance": {
-      "identity": "Synthea",
-      "complaint": "Synthea",
-      "stations_and_times": "synthesized",
-      "vitals": "synthesized",
-      "eta": "FlowTwin ETA (empirical quantiles over 7-day history)"
-    },
-    "hero": true
+ "hero": "P-1042",
+ "now": "2026-07-04T11:00",
+ "hospital": "Queen Mary Hospital",
+ "beats": [
+  {
+   "t_offset_min": 0,
+   "id": "meet_sarah",
+   "desc": "Sarah, 58, chest pain — predicted exit on track."
+  },
+  {
+   "t_offset_min": 90,
+   "id": "lab_delay",
+   "desc": "Lab delay — predicted exit slides later, ring turns amber."
+  },
+  {
+   "t_offset_min": 180,
+   "id": "cardio_overload",
+   "desc": "The real afternoon climb: at 14:00 Queen Mary Hospital logged cat-3 median 36 min, cat-4/5 300 min — consults queue past capacity."
+  },
+  {
+   "t_offset_min": 190,
+   "id": "resolve",
+   "desc": "One action: move to the obs ward, escalate consult coverage, assign bed O-6."
   }
+ ],
+ "patient": {
+  "patient_id": "P-1042",
+  "name": "Sarah M.",
+  "age": 58,
+  "sex": "female",
+  "complaint": "chest pain",
+  "pathway": "Chest Pain Rule-Out",
+  "acuity": 2,
+  "arrival_mode": "ambulance",
+  "arrival_time": "2026-07-04T09:20",
+  "current_department": "Cardiology",
+  "current_area": "Consult",
+  "elapsed_min": 100,
+  "vitals": {
+   "hr": 88,
+   "sbp": 145,
+   "spo2": 98,
+   "rr": 17,
+   "temp_c": 37.0,
+   "pain": 4
+  },
+  "events": [
+   {
+    "t": "2026-07-04T09:20",
+    "type": "arrival",
+    "dept": "Ambulance Bay",
+    "area": "Entrance"
+   },
+   {
+    "t": "2026-07-04T09:21",
+    "type": "triage",
+    "dept": "Emergency",
+    "area": "Triage"
+   },
+   {
+    "t": "2026-07-04T09:24",
+    "type": "waiting",
+    "dept": "Emergency",
+    "area": "Cubicles"
+   },
+   {
+    "t": "2026-07-04T09:27",
+    "type": "bed_assigned",
+    "dept": "Emergency",
+    "area": "Cubicles"
+   },
+   {
+    "t": "2026-07-04T09:47",
+    "type": "labs_ordered",
+    "dept": "Labs",
+    "area": "Chemistry"
+   },
+   {
+    "t": "2026-07-04T10:20",
+    "type": "ecg",
+    "dept": "Emergency",
+    "area": "Cubicles"
+   },
+   {
+    "t": "2026-07-04T10:35",
+    "type": "consult_requested",
+    "dept": "Cardiology",
+    "area": "Consult"
+   },
+   {
+    "t": "2026-07-04T12:10",
+    "type": "consult_done",
+    "dept": "Cardiology",
+    "area": "Consult"
+   },
+   {
+    "t": "2026-07-04T12:44",
+    "type": "observation",
+    "dept": "EMW",
+    "area": "Obs Beds"
+   },
+   {
+    "t": "2026-07-04T13:37",
+    "type": "decision",
+    "dept": "EMW",
+    "area": "Obs Beds"
+   },
+   {
+    "t": "2026-07-04T13:51",
+    "type": "discharge",
+    "dept": "Discharge",
+    "area": "Exit"
+   }
+  ],
+  "resources": {
+   "er_bed_min": 405,
+   "nurse_min": 121,
+   "doctor_min": 60,
+   "labs": 1,
+   "imaging": 0
+  },
+  "predicted_exit": "2026-07-04T14:20",
+  "predicted_exit_ci": {
+   "low": "2026-07-04T13:55",
+   "high": "2026-07-04T14:50",
+   "interval": "80%"
+  },
+  "predicted_los_min": 300,
+  "benchmark_los_min": 334,
+  "delay_risk": "high",
+  "blocker": "cardiology_queue",
+  "recommendation": {
+   "action": "move_to_observation",
+   "explanation": "Stable, troponin negative, waiting 100 min on cardiology while holding a cubicle.",
+   "impact_min": 45
+  },
+  "signals": {
+   "wearable": null,
+   "vocal_biomarker": null,
+   "_note": "pluggable sources — mention only, not built"
+  },
+  "optimization": [
+   {
+    "issue": "Troponin ordered after cubicle assignment, not at triage",
+    "saving_min": 35,
+    "tag": "sequence"
+   },
+   {
+    "issue": "No wearable ingested; overnight arrhythmia would have pre-ordered the consult",
+    "saving_min": 50,
+    "tag": "sequence (illustrative source — mention only)"
+   },
+   {
+    "issue": "Medically ready to move ~40 min before the obs bed was requested",
+    "saving_min": 40,
+    "tag": "timing"
+   }
+  ],
+  "guard": {
+   "topic_ok": true,
+   "safety_ok": true
+  },
+  "inpatient": false,
+  "provenance": {
+   "identity": "synthetic (Synthea registry — names only)",
+   "triage_category_wait": "drawn from Queen Mary Hospital's live published p50/p95",
+   "treatment_tail": "MIMIC-IV-ED Demo 2.2 (open access)",
+   "stations_and_times": "synthesized split (labeled)",
+   "vitals": "sampled from MIMIC-IV-ED Demo 2.2 (open access) triage quartiles",
+   "eta": "scripted demo window for the guided story (labeled)"
+  },
+  "hero": true
+ }
 }

@@ -1,0 +1,503 @@
+{
+ "source": "https://www.ha.org.hk/opendata/aed/aedwtdata2-en.json",
+ "fetched_at_hkt": "2026-07-05T02:45",
+ "updateTime_raw": "5/7/2026 2:45AM",
+ "hospitals": {
+  "AHNH": {
+   "name": "Alice Ho Miu Ling Nethersole Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 23,
+   "t3p95_min": 60,
+   "t45p50_min": 240,
+   "t45p50_qual": "eq",
+   "t45p95_min": 360,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": false,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "23 minutes",
+    "t3p95": "60 minutes",
+    "t45p50": "4 hours",
+    "t45p95": "6 hours"
+   }
+  },
+  "CMC": {
+   "name": "Caritas Medical Centre",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 27,
+   "t3p95_min": 54,
+   "t45p50_min": 210,
+   "t45p50_qual": "eq",
+   "t45p95_min": 360,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": false,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "27 minutes",
+    "t3p95": "54 minutes",
+    "t45p50": "3.5 hours",
+    "t45p95": "6 hours"
+   }
+  },
+  "KWH": {
+   "name": "Kwong Wah Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 42,
+   "t3p95_min": 97,
+   "t45p50_min": 300,
+   "t45p50_qual": "eq",
+   "t45p95_min": 390,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": true,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "42 minutes",
+    "t3p95": "97 minutes",
+    "t45p50": "5 hours",
+    "t45p95": "6.5 hours"
+   }
+  },
+  "NDH": {
+   "name": "North District Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 17,
+   "t3p95_min": 48,
+   "t45p50_min": 270,
+   "t45p50_qual": "eq",
+   "t45p95_min": 390,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": false,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "17 minutes",
+    "t3p95": "48 minutes",
+    "t45p50": "4.5 hours",
+    "t45p95": "6.5 hours"
+   }
+  },
+  "NLTH": {
+   "name": "North Lantau Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 22,
+   "t3p95_min": 38,
+   "t45p50_min": 60,
+   "t45p50_qual": "eq",
+   "t45p95_min": 120,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": false,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "22 minutes",
+    "t3p95": "38 minutes",
+    "t45p50": "1 hour",
+    "t45p95": "2 hours"
+   }
+  },
+  "PYNEH": {
+   "name": "Pamela Youde Nethersole Eastern Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 29,
+   "t3p95_min": 65,
+   "t45p50_min": 300,
+   "t45p50_qual": "eq",
+   "t45p95_min": 420,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": true,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "29 minutes",
+    "t3p95": "65 minutes",
+    "t45p50": "5 hours",
+    "t45p95": "7 hours"
+   }
+  },
+  "POH": {
+   "name": "Pok Oi Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 17,
+   "t3p95_min": 30,
+   "t45p50_min": 240,
+   "t45p50_qual": "eq",
+   "t45p95_min": 330,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": false,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "17 minutes",
+    "t3p95": "30 minutes",
+    "t45p50": "4 hours",
+    "t45p95": "5.5 hours"
+   }
+  },
+  "POWH": {
+   "name": "Prince of Wales Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 38,
+   "t3p95_min": 106,
+   "t45p50_min": 300,
+   "t45p50_qual": "eq",
+   "t45p95_min": 450,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": true,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "38 minutes",
+    "t3p95": "106 minutes",
+    "t45p50": "5 hours",
+    "t45p95": "7.5 hours"
+   }
+  },
+  "PMH": {
+   "name": "Princess Margaret Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 39,
+   "t3p95_min": 72,
+   "t45p50_min": 360,
+   "t45p50_qual": "eq",
+   "t45p95_min": 420,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": false,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "39 minutes",
+    "t3p95": "72 minutes",
+    "t45p50": "6 hours",
+    "t45p95": "7 hours"
+   }
+  },
+  "QEH": {
+   "name": "Queen Elizabeth Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 26,
+   "t3p95_min": 52,
+   "t45p50_min": 300,
+   "t45p50_qual": "eq",
+   "t45p95_min": 450,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": true,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "26 minutes",
+    "t3p95": "52 minutes",
+    "t45p50": "5 hours",
+    "t45p95": "7.5 hours"
+   }
+  },
+  "QMH": {
+   "name": "Queen Mary Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 27,
+   "t3p95_min": 60,
+   "t45p50_min": 270,
+   "t45p50_qual": "eq",
+   "t45p95_min": 390,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": false,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "27 minutes",
+    "t3p95": "60 minutes",
+    "t45p50": "4.5 hours",
+    "t45p95": "6.5 hours"
+   }
+  },
+  "RH": {
+   "name": "Ruttonjee Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 22,
+   "t3p95_min": 53,
+   "t45p50_min": 240,
+   "t45p50_qual": "eq",
+   "t45p95_min": 360,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": false,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "22 minutes",
+    "t3p95": "53 minutes",
+    "t45p50": "4 hours",
+    "t45p95": "6 hours"
+   }
+  },
+  "SJH": {
+   "name": "St John Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 15,
+   "t3p95_min": 28,
+   "t45p50_min": 30,
+   "t45p50_qual": "eq",
+   "t45p95_min": 60,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": false,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "15 minutes",
+    "t3p95": "28 minutes",
+    "t45p50": "0.5 hours",
+    "t45p95": "1 hour"
+   }
+  },
+  "TSWH": {
+   "name": "Tin Shui Wai Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 15,
+   "t3p95_min": 25,
+   "t45p50_min": 420,
+   "t45p50_qual": "eq",
+   "t45p95_min": 450,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": false,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "15 minutes",
+    "t3p95": "25 minutes",
+    "t45p50": "7 hours",
+    "t45p95": "7.5 hours"
+   }
+  },
+  "TKOH": {
+   "name": "Tseung Kwan O Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 11,
+   "t3p95_min": 34,
+   "t45p50_min": 390,
+   "t45p50_qual": "eq",
+   "t45p95_min": 510,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": false,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "11 minutes",
+    "t3p95": "34 minutes",
+    "t45p50": "6.5 hours",
+    "t45p95": "8.5 hours"
+   }
+  },
+  "TMH": {
+   "name": "Tuen Mun Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 20,
+   "t3p95_min": 36,
+   "t45p50_min": 330,
+   "t45p50_qual": "eq",
+   "t45p95_min": 390,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": false,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "20 minutes",
+    "t3p95": "36 minutes",
+    "t45p50": "5.5 hours",
+    "t45p95": "6.5 hours"
+   }
+  },
+  "UCH": {
+   "name": "United Christian Hospital",
+   "t1_min": 0,
+   "t2_min": null,
+   "t2_qual": null,
+   "t3p50_min": 20,
+   "t3p95_min": 72,
+   "t45p50_min": 300,
+   "t45p50_qual": "eq",
+   "t45p95_min": 360,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": false,
+   "raw": {
+    "t1wt": "Managing multiple resuscitation cases",
+    "t2wt": "Managing multiple resuscitation cases",
+    "t3p50": "20 minutes",
+    "t3p95": "72 minutes",
+    "t45p50": "5 hours",
+    "t45p95": "6 hours"
+   }
+  },
+  "YCH": {
+   "name": "Yan Chai Hospital",
+   "t1_min": 0,
+   "t2_min": 12,
+   "t2_qual": "lt",
+   "t3p50_min": 35,
+   "t3p95_min": 73,
+   "t45p50_min": 210,
+   "t45p50_qual": "eq",
+   "t45p95_min": 480,
+   "t45p95_qual": "eq",
+   "manage_t1": false,
+   "manage_t2": false,
+   "raw": {
+    "t1wt": "0 minute",
+    "t2wt": "less than 15 minutes",
+    "t3p50": "35 minutes",
+    "t3p95": "73 minutes",
+    "t45p50": "3.5 hours",
+    "t45p95": "8 hours"
+   }
+  }
+ },
+ "meta": {
+  "AHNH": {
+   "name": "Alice Ho Miu Ling Nethersole Hospital",
+   "cluster": "New Territories East",
+   "district": "Tai Po"
+  },
+  "CMC": {
+   "name": "Caritas Medical Centre",
+   "cluster": "Kowloon West",
+   "district": "Sham Shui Po"
+  },
+  "KWH": {
+   "name": "Kwong Wah Hospital",
+   "cluster": "Kowloon Central",
+   "district": "Yau Ma Tei"
+  },
+  "NDH": {
+   "name": "North District Hospital",
+   "cluster": "New Territories East",
+   "district": "Sheung Shui"
+  },
+  "NLTH": {
+   "name": "North Lantau Hospital",
+   "cluster": "Kowloon West",
+   "district": "Tung Chung"
+  },
+  "PYNEH": {
+   "name": "Pamela Youde Nethersole Eastern Hospital",
+   "cluster": "Hong Kong East",
+   "district": "Chai Wan"
+  },
+  "POH": {
+   "name": "Pok Oi Hospital",
+   "cluster": "New Territories West",
+   "district": "Yuen Long"
+  },
+  "POWH": {
+   "name": "Prince of Wales Hospital",
+   "cluster": "New Territories East",
+   "district": "Sha Tin"
+  },
+  "PMH": {
+   "name": "Princess Margaret Hospital",
+   "cluster": "Kowloon West",
+   "district": "Kwai Chung"
+  },
+  "QEH": {
+   "name": "Queen Elizabeth Hospital",
+   "cluster": "Kowloon Central",
+   "district": "Yau Ma Tei"
+  },
+  "QMH": {
+   "name": "Queen Mary Hospital",
+   "cluster": "Hong Kong West",
+   "district": "Pok Fu Lam"
+  },
+  "RH": {
+   "name": "Ruttonjee Hospital",
+   "cluster": "Hong Kong East",
+   "district": "Wan Chai"
+  },
+  "SJH": {
+   "name": "St John Hospital",
+   "cluster": "Hong Kong East",
+   "district": "Cheung Chau"
+  },
+  "TKOH": {
+   "name": "Tseung Kwan O Hospital",
+   "cluster": "Kowloon East",
+   "district": "Tseung Kwan O"
+  },
+  "TSWH": {
+   "name": "Tin Shui Wai Hospital",
+   "cluster": "New Territories West",
+   "district": "Tin Shui Wai"
+  },
+  "TMH": {
+   "name": "Tuen Mun Hospital",
+   "cluster": "New Territories West",
+   "district": "Tuen Mun"
+  },
+  "UCH": {
+   "name": "United Christian Hospital",
+   "cluster": "Kowloon East",
+   "district": "Kwun Tong"
+  },
+  "YCH": {
+   "name": "Yan Chai Hospital",
+   "cluster": "Kowloon West",
+   "district": "Tsuen Wan"
+  }
+ },
+ "parse_conventions": {
+  "less_than_X": "plotted at 0.8·X",
+  "over_X": "plotted at 1.125·X",
+  "t1": "critical — always seen at once (0 min)",
+  "t2": "emergency",
+  "t3": "urgent",
+  "t45": "semi-/non-urgent"
+ }
+}
