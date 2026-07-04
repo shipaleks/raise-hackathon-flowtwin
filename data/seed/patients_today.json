@@ -1,0 +1,776 @@
+{
+  "generated_now": "2026-07-04T11:00",
+  "count": 7,
+  "patients": [
+    {
+      "patient_id": "P-1042",
+      "name": "Sarah M.",
+      "age": 58,
+      "sex": "female",
+      "complaint": "chest pain",
+      "pathway": "Chest Pain Rule-Out",
+      "acuity": 2,
+      "arrival_mode": "ambulance",
+      "arrival_time": "2026-07-04T09:20",
+      "current_department": "Cardiology",
+      "current_area": "Consult",
+      "elapsed_min": 100,
+      "vitals": {
+        "hr": 112,
+        "sbp": 127,
+        "spo2": 92,
+        "rr": 21,
+        "temp_c": 37.1,
+        "pain": 5
+      },
+      "events": [
+        {
+          "t": "2026-07-04T09:20",
+          "type": "arrival",
+          "dept": "Ambulance Bay",
+          "area": "Entrance"
+        },
+        {
+          "t": "2026-07-04T09:20",
+          "type": "triage",
+          "dept": "Emergency",
+          "area": "Triage"
+        },
+        {
+          "t": "2026-07-04T09:33",
+          "type": "bed_assigned",
+          "dept": "Emergency",
+          "area": "ER Bay"
+        },
+        {
+          "t": "2026-07-04T09:47",
+          "type": "labs_ordered",
+          "dept": "Labs",
+          "area": "Chemistry"
+        },
+        {
+          "t": "2026-07-04T10:24",
+          "type": "ecg",
+          "dept": "Emergency",
+          "area": "ER Bay"
+        },
+        {
+          "t": "2026-07-04T10:36",
+          "type": "consult_requested",
+          "dept": "Cardiology",
+          "area": "Consult"
+        },
+        {
+          "t": "2026-07-04T11:47",
+          "type": "consult_done",
+          "dept": "Cardiology",
+          "area": "Consult"
+        },
+        {
+          "t": "2026-07-04T12:12",
+          "type": "observation",
+          "dept": "Emergency",
+          "area": "Observation"
+        },
+        {
+          "t": "2026-07-04T13:27",
+          "type": "decision",
+          "dept": "Emergency",
+          "area": "Observation"
+        },
+        {
+          "t": "2026-07-04T13:36",
+          "type": "discharge",
+          "dept": "Discharge",
+          "area": "Exit"
+        }
+      ],
+      "resources": {
+        "er_bed_min": 123,
+        "nurse_min": 43,
+        "doctor_min": 24,
+        "labs": 1,
+        "imaging": 0
+      },
+      "predicted_exit": "2026-07-04T13:28",
+      "predicted_exit_ci": {
+        "low": "2026-07-04T12:20",
+        "high": "2026-07-04T15:15",
+        "interval": "80%"
+      },
+      "predicted_los_min": 248,
+      "benchmark_los_min": 248,
+      "delay_risk": "high",
+      "blocker": "cardiology_queue",
+      "recommendation": {
+        "action": "move_to_observation",
+        "explanation": "Stable, troponin negative, waiting 100 min on cardiology while holding ER Bay 4.",
+        "impact_min": 45
+      },
+      "signals": {
+        "wearable": null,
+        "vocal_biomarker": null,
+        "_note": "pluggable sources — mention only, not built"
+      },
+      "guard": {
+        "topic_ok": true,
+        "safety_ok": true
+      },
+      "provenance": {
+        "identity": "Synthea",
+        "complaint": "Synthea",
+        "stations_and_times": "synthesized",
+        "vitals": "synthesized",
+        "eta": "FlowTwin ETA (empirical quantiles over 7-day history)"
+      },
+      "optimization": [
+        {
+          "issue": "Troponin ordered after bed assignment, not at triage",
+          "saving_min": 35,
+          "tag": "sequence"
+        },
+        {
+          "issue": "No wearable ingested; overnight arrhythmia would have pre-ordered the consult",
+          "saving_min": 50,
+          "tag": "sequence (illustrative source — mention only)"
+        },
+        {
+          "issue": "Medically ready to move ~40 min before bed was requested",
+          "saving_min": 40,
+          "tag": "timing"
+        }
+      ],
+      "hero": true
+    },
+    {
+      "patient_id": "P-1040",
+      "name": "Gerda W.",
+      "age": 81,
+      "sex": "female",
+      "complaint": "chest pain",
+      "pathway": "Chest Pain Rule-Out",
+      "acuity": 2,
+      "arrival_mode": "ambulance",
+      "arrival_time": "2026-07-04T07:35",
+      "current_department": "Emergency",
+      "current_area": "Observation",
+      "elapsed_min": 205,
+      "vitals": {
+        "hr": 96,
+        "sbp": 141,
+        "spo2": 93,
+        "rr": 18,
+        "temp_c": 38.1,
+        "pain": 9
+      },
+      "events": [
+        {
+          "t": "2026-07-04T07:35",
+          "type": "arrival",
+          "dept": "Ambulance Bay",
+          "area": "Entrance"
+        },
+        {
+          "t": "2026-07-04T07:35",
+          "type": "triage",
+          "dept": "Emergency",
+          "area": "Triage"
+        },
+        {
+          "t": "2026-07-04T07:57",
+          "type": "bed_assigned",
+          "dept": "Emergency",
+          "area": "ER Bay"
+        },
+        {
+          "t": "2026-07-04T08:05",
+          "type": "labs_ordered",
+          "dept": "Labs",
+          "area": "Chemistry"
+        },
+        {
+          "t": "2026-07-04T08:45",
+          "type": "ecg",
+          "dept": "Emergency",
+          "area": "ER Bay"
+        },
+        {
+          "t": "2026-07-04T08:56",
+          "type": "consult_requested",
+          "dept": "Cardiology",
+          "area": "Consult"
+        },
+        {
+          "t": "2026-07-04T09:32",
+          "type": "consult_done",
+          "dept": "Cardiology",
+          "area": "Consult"
+        },
+        {
+          "t": "2026-07-04T09:40",
+          "type": "observation",
+          "dept": "Emergency",
+          "area": "Observation"
+        },
+        {
+          "t": "2026-07-04T10:54",
+          "type": "decision",
+          "dept": "Emergency",
+          "area": "Observation"
+        },
+        {
+          "t": "2026-07-04T11:04",
+          "type": "discharge",
+          "dept": "Discharge",
+          "area": "Exit"
+        }
+      ],
+      "resources": {
+        "er_bed_min": 125,
+        "nurse_min": 43,
+        "doctor_min": 25,
+        "labs": 1,
+        "imaging": 0
+      },
+      "predicted_exit": "2026-07-04T11:43",
+      "predicted_exit_ci": {
+        "low": "2026-07-04T10:35",
+        "high": "2026-07-04T13:30",
+        "interval": "80%"
+      },
+      "predicted_los_min": 248,
+      "benchmark_los_min": 248,
+      "delay_risk": "on_track",
+      "blocker": "awaiting_disposition",
+      "recommendation": {
+        "action": "confirm_discharge_or_bed",
+        "explanation": "Medically progressing; confirm disposition to free the bay.",
+        "impact_min": 30
+      },
+      "signals": {
+        "wearable": null,
+        "vocal_biomarker": null,
+        "_note": "pluggable sources — mention only, not built"
+      },
+      "guard": {
+        "topic_ok": true,
+        "safety_ok": true
+      },
+      "provenance": {
+        "identity": "Synthea",
+        "complaint": "Synthea",
+        "stations_and_times": "synthesized",
+        "vitals": "synthesized",
+        "eta": "FlowTwin ETA (empirical quantiles over 7-day history)"
+      }
+    },
+    {
+      "patient_id": "P-1041",
+      "name": "Jacquelin P.",
+      "age": 9,
+      "sex": "female",
+      "complaint": "injury",
+      "pathway": "Minor Injury / Trauma",
+      "acuity": 3,
+      "arrival_mode": "walk-in",
+      "arrival_time": "2026-07-04T09:25",
+      "current_department": "Emergency",
+      "current_area": "ER Bay",
+      "elapsed_min": 95,
+      "vitals": {
+        "hr": 78,
+        "sbp": 120,
+        "spo2": 96,
+        "rr": 15,
+        "temp_c": 37.0,
+        "pain": 4
+      },
+      "events": [
+        {
+          "t": "2026-07-04T09:25",
+          "type": "arrival",
+          "dept": "Ambulance Bay",
+          "area": "Entrance"
+        },
+        {
+          "t": "2026-07-04T09:25",
+          "type": "triage",
+          "dept": "Emergency",
+          "area": "Triage"
+        },
+        {
+          "t": "2026-07-04T09:37",
+          "type": "bed_assigned",
+          "dept": "Emergency",
+          "area": "ER Bay"
+        },
+        {
+          "t": "2026-07-04T09:54",
+          "type": "imaging",
+          "dept": "Imaging",
+          "area": "X-ray"
+        },
+        {
+          "t": "2026-07-04T10:29",
+          "type": "treatment",
+          "dept": "Emergency",
+          "area": "ER Bay"
+        },
+        {
+          "t": "2026-07-04T10:53",
+          "type": "decision",
+          "dept": "Emergency",
+          "area": "ER Bay"
+        },
+        {
+          "t": "2026-07-04T11:06",
+          "type": "discharge",
+          "dept": "Discharge",
+          "area": "Exit"
+        }
+      ],
+      "resources": {
+        "er_bed_min": 66,
+        "nurse_min": 23,
+        "doctor_min": 13,
+        "labs": 0,
+        "imaging": 1
+      },
+      "predicted_exit": "2026-07-04T11:11",
+      "predicted_exit_ci": {
+        "low": "2026-07-04T10:47",
+        "high": "2026-07-04T12:09",
+        "interval": "80%"
+      },
+      "predicted_los_min": 106,
+      "benchmark_los_min": 106,
+      "delay_risk": "on_track",
+      "blocker": "awaiting_disposition",
+      "recommendation": {
+        "action": "confirm_discharge_or_bed",
+        "explanation": "Medically progressing; confirm disposition to free the bay.",
+        "impact_min": 30
+      },
+      "signals": {
+        "wearable": null,
+        "vocal_biomarker": null,
+        "_note": "pluggable sources — mention only, not built"
+      },
+      "guard": {
+        "topic_ok": true,
+        "safety_ok": true
+      },
+      "provenance": {
+        "identity": "Synthea",
+        "complaint": "Synthea",
+        "stations_and_times": "synthesized",
+        "vitals": "synthesized",
+        "eta": "FlowTwin ETA (empirical quantiles over 7-day history)"
+      }
+    },
+    {
+      "patient_id": "P-1042",
+      "name": "Elsy R.",
+      "age": 16,
+      "sex": "female",
+      "complaint": "fever / suspected infection",
+      "pathway": "Sepsis",
+      "acuity": 2,
+      "arrival_mode": "ambulance",
+      "arrival_time": "2026-07-04T08:30",
+      "current_department": "Wards",
+      "current_area": "Medical Ward",
+      "elapsed_min": 150,
+      "vitals": {
+        "hr": 117,
+        "sbp": 120,
+        "spo2": 96,
+        "rr": 20,
+        "temp_c": 36.6,
+        "pain": 7
+      },
+      "events": [
+        {
+          "t": "2026-07-04T08:30",
+          "type": "arrival",
+          "dept": "Ambulance Bay",
+          "area": "Entrance"
+        },
+        {
+          "t": "2026-07-04T08:30",
+          "type": "triage",
+          "dept": "Emergency",
+          "area": "Triage"
+        },
+        {
+          "t": "2026-07-04T08:44",
+          "type": "bed_assigned",
+          "dept": "Emergency",
+          "area": "ER Bay"
+        },
+        {
+          "t": "2026-07-04T08:58",
+          "type": "labs_ordered",
+          "dept": "Labs",
+          "area": "Microbiology"
+        },
+        {
+          "t": "2026-07-04T09:59",
+          "type": "imaging",
+          "dept": "Imaging",
+          "area": "CT"
+        },
+        {
+          "t": "2026-07-04T10:40",
+          "type": "admit",
+          "dept": "Wards",
+          "area": "Medical Ward"
+        }
+      ],
+      "resources": {
+        "er_bed_min": 28,
+        "nurse_min": 9,
+        "doctor_min": 5,
+        "labs": 1,
+        "imaging": 1
+      },
+      "predicted_exit": "2026-07-04T11:11",
+      "predicted_exit_ci": {
+        "low": "2026-07-04T10:44",
+        "high": "2026-07-04T11:32",
+        "interval": "80%"
+      },
+      "predicted_los_min": 161,
+      "benchmark_los_min": 161,
+      "delay_risk": "on_track",
+      "blocker": "none",
+      "recommendation": {
+        "action": "monitor",
+        "explanation": "On the expected pathway.",
+        "impact_min": 0
+      },
+      "signals": {
+        "wearable": null,
+        "vocal_biomarker": null,
+        "_note": "pluggable sources — mention only, not built"
+      },
+      "guard": {
+        "topic_ok": true,
+        "safety_ok": true
+      },
+      "provenance": {
+        "identity": "Synthea",
+        "complaint": "Synthea",
+        "stations_and_times": "synthesized",
+        "vitals": "synthesized",
+        "eta": "FlowTwin ETA (empirical quantiles over 7-day history)"
+      }
+    },
+    {
+      "patient_id": "P-1043",
+      "name": "Amos C.",
+      "age": 57,
+      "sex": "male",
+      "complaint": "general medical",
+      "pathway": "General Medical",
+      "acuity": 4,
+      "arrival_mode": "walk-in",
+      "arrival_time": "2026-07-04T09:50",
+      "current_department": "Emergency",
+      "current_area": "ER Bay",
+      "elapsed_min": 70,
+      "vitals": {
+        "hr": 81,
+        "sbp": 129,
+        "spo2": 99,
+        "rr": 16,
+        "temp_c": 36.8,
+        "pain": 4
+      },
+      "events": [
+        {
+          "t": "2026-07-04T09:50",
+          "type": "arrival",
+          "dept": "Ambulance Bay",
+          "area": "Entrance"
+        },
+        {
+          "t": "2026-07-04T09:50",
+          "type": "triage",
+          "dept": "Emergency",
+          "area": "Triage"
+        },
+        {
+          "t": "2026-07-04T10:07",
+          "type": "bed_assigned",
+          "dept": "Emergency",
+          "area": "ER Bay"
+        },
+        {
+          "t": "2026-07-04T10:29",
+          "type": "labs_ordered",
+          "dept": "Labs",
+          "area": "Chemistry"
+        },
+        {
+          "t": "2026-07-04T10:48",
+          "type": "decision",
+          "dept": "Emergency",
+          "area": "ER Bay"
+        },
+        {
+          "t": "2026-07-04T11:01",
+          "type": "discharge",
+          "dept": "Discharge",
+          "area": "Exit"
+        }
+      ],
+      "resources": {
+        "er_bed_min": 52,
+        "nurse_min": 18,
+        "doctor_min": 10,
+        "labs": 1,
+        "imaging": 0
+      },
+      "predicted_exit": "2026-07-04T11:13",
+      "predicted_exit_ci": {
+        "low": "2026-07-04T10:53",
+        "high": "2026-07-04T12:07",
+        "interval": "80%"
+      },
+      "predicted_los_min": 83,
+      "benchmark_los_min": 83,
+      "delay_risk": "on_track",
+      "blocker": "awaiting_disposition",
+      "recommendation": {
+        "action": "confirm_discharge_or_bed",
+        "explanation": "Medically progressing; confirm disposition to free the bay.",
+        "impact_min": 30
+      },
+      "signals": {
+        "wearable": null,
+        "vocal_biomarker": null,
+        "_note": "pluggable sources — mention only, not built"
+      },
+      "guard": {
+        "topic_ok": true,
+        "safety_ok": true
+      },
+      "provenance": {
+        "identity": "Synthea",
+        "complaint": "Synthea",
+        "stations_and_times": "synthesized",
+        "vitals": "synthesized",
+        "eta": "FlowTwin ETA (empirical quantiles over 7-day history)"
+      }
+    },
+    {
+      "patient_id": "P-1044",
+      "name": "Rich H.",
+      "age": 57,
+      "sex": "male",
+      "complaint": "possible overdose",
+      "pathway": "Tox / Overdose",
+      "acuity": 2,
+      "arrival_mode": "ambulance",
+      "arrival_time": "2026-07-04T08:20",
+      "current_department": "Emergency",
+      "current_area": "Observation",
+      "elapsed_min": 160,
+      "vitals": {
+        "hr": 106,
+        "sbp": 146,
+        "spo2": 92,
+        "rr": 18,
+        "temp_c": 38.4,
+        "pain": 8
+      },
+      "events": [
+        {
+          "t": "2026-07-04T08:20",
+          "type": "arrival",
+          "dept": "Ambulance Bay",
+          "area": "Entrance"
+        },
+        {
+          "t": "2026-07-04T08:20",
+          "type": "triage",
+          "dept": "Emergency",
+          "area": "Triage"
+        },
+        {
+          "t": "2026-07-04T08:23",
+          "type": "bed_assigned",
+          "dept": "Emergency",
+          "area": "ER Bay"
+        },
+        {
+          "t": "2026-07-04T08:32",
+          "type": "labs_ordered",
+          "dept": "Labs",
+          "area": "Toxicology"
+        },
+        {
+          "t": "2026-07-04T09:30",
+          "type": "observation",
+          "dept": "Emergency",
+          "area": "Observation"
+        },
+        {
+          "t": "2026-07-04T11:45",
+          "type": "decision",
+          "dept": "Emergency",
+          "area": "Observation"
+        },
+        {
+          "t": "2026-07-04T11:57",
+          "type": "discharge",
+          "dept": "Discharge",
+          "area": "Exit"
+        }
+      ],
+      "resources": {
+        "er_bed_min": 159,
+        "nurse_min": 55,
+        "doctor_min": 31,
+        "labs": 1,
+        "imaging": 0
+      },
+      "predicted_exit": "2026-07-04T11:30",
+      "predicted_exit_ci": {
+        "low": "2026-07-04T10:55",
+        "high": "2026-07-04T13:19",
+        "interval": "80%"
+      },
+      "predicted_los_min": 190,
+      "benchmark_los_min": 190,
+      "delay_risk": "on_track",
+      "blocker": "awaiting_disposition",
+      "recommendation": {
+        "action": "confirm_discharge_or_bed",
+        "explanation": "Medically progressing; confirm disposition to free the bay.",
+        "impact_min": 30
+      },
+      "signals": {
+        "wearable": null,
+        "vocal_biomarker": null,
+        "_note": "pluggable sources — mention only, not built"
+      },
+      "guard": {
+        "topic_ok": true,
+        "safety_ok": true
+      },
+      "provenance": {
+        "identity": "Synthea",
+        "complaint": "Synthea",
+        "stations_and_times": "synthesized",
+        "vitals": "synthesized",
+        "eta": "FlowTwin ETA (empirical quantiles over 7-day history)"
+      }
+    },
+    {
+      "patient_id": "P-1045",
+      "name": "Marquita A.",
+      "age": 101,
+      "sex": "female",
+      "complaint": "injury",
+      "pathway": "Minor Injury / Trauma",
+      "acuity": 3,
+      "arrival_mode": "walk-in",
+      "arrival_time": "2026-07-04T10:20",
+      "current_department": "Imaging",
+      "current_area": "X-ray",
+      "elapsed_min": 40,
+      "vitals": {
+        "hr": 80,
+        "sbp": 122,
+        "spo2": 99,
+        "rr": 15,
+        "temp_c": 36.5,
+        "pain": 5
+      },
+      "events": [
+        {
+          "t": "2026-07-04T10:20",
+          "type": "arrival",
+          "dept": "Ambulance Bay",
+          "area": "Entrance"
+        },
+        {
+          "t": "2026-07-04T10:20",
+          "type": "triage",
+          "dept": "Emergency",
+          "area": "Triage"
+        },
+        {
+          "t": "2026-07-04T10:28",
+          "type": "bed_assigned",
+          "dept": "Emergency",
+          "area": "ER Bay"
+        },
+        {
+          "t": "2026-07-04T10:41",
+          "type": "imaging",
+          "dept": "Imaging",
+          "area": "X-ray"
+        },
+        {
+          "t": "2026-07-04T11:12",
+          "type": "treatment",
+          "dept": "Emergency",
+          "area": "ER Bay"
+        },
+        {
+          "t": "2026-07-04T11:39",
+          "type": "decision",
+          "dept": "Emergency",
+          "area": "ER Bay"
+        },
+        {
+          "t": "2026-07-04T11:46",
+          "type": "discharge",
+          "dept": "Discharge",
+          "area": "Exit"
+        }
+      ],
+      "resources": {
+        "er_bed_min": 55,
+        "nurse_min": 19,
+        "doctor_min": 11,
+        "labs": 0,
+        "imaging": 1
+      },
+      "predicted_exit": "2026-07-04T12:06",
+      "predicted_exit_ci": {
+        "low": "2026-07-04T11:42",
+        "high": "2026-07-04T13:04",
+        "interval": "80%"
+      },
+      "predicted_los_min": 106,
+      "benchmark_los_min": 106,
+      "delay_risk": "on_track",
+      "blocker": "imaging_queue",
+      "recommendation": {
+        "action": "prioritize_imaging_slot",
+        "explanation": "Waiting on an imaging slot before treatment can proceed.",
+        "impact_min": 20
+      },
+      "signals": {
+        "wearable": null,
+        "vocal_biomarker": null,
+        "_note": "pluggable sources — mention only, not built"
+      },
+      "guard": {
+        "topic_ok": true,
+        "safety_ok": true
+      },
+      "provenance": {
+        "identity": "Synthea",
+        "complaint": "Synthea",
+        "stations_and_times": "synthesized",
+        "vitals": "synthesized",
+        "eta": "FlowTwin ETA (empirical quantiles over 7-day history)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "generated_now": "2026-07-04T11:00",
+  "current_census": 7,
+  "avoidable_wait_rank": [
+    {
+      "dept": "Emergency",
+      "avoidable_wait_min": 2420,
+      "cost_of_delay_eur": 1815
+    },
+    {
+      "dept": "Labs",
+      "avoidable_wait_min": 1117,
+      "cost_of_delay_eur": 838
+    },
+    {
+      "dept": "Cardiology",
+      "avoidable_wait_min": 267,
+      "cost_of_delay_eur": 200
+    },
+    {
+      "dept": "Imaging",
+      "avoidable_wait_min": 131,
+      "cost_of_delay_eur": 98
+    },
+    {
+      "dept": "Wards",
+      "avoidable_wait_min": 22,
+      "cost_of_delay_eur": 16
+    }
+  ],
+  "recurring_bottleneck": {
+    "dept": "Cardiology",
+    "window": "14:00-17:00",
+    "avg_los_in_window_min": null,
+    "avg_los_other_min": 245,
+    "note": "Weekday-afternoon cardiology consult queue backs up ER beds (synthesized pattern, visible across the 7-day scrubber)."
+  },
+  "arrival_forecast_next_3h": [
+    {
+      "hour": "12:00",
+      "expected_arrivals": 0.4
+    },
+    {
+      "hour": "13:00",
+      "expected_arrivals": 0.7
+    },
+    {
+      "hour": "14:00",
+      "expected_arrivals": 0.3
+    }
+  ],
+  "eta_calibration": {
+    "interval": "p10-p90 (target 80%)",
+    "coverage_pct": 83.3,
+    "median_abs_error_min": 11,
+    "n": 168
+  },
+  "eta_model_quantiles_min": {
+    "General Medical": {
+      "p10": 63,
+      "p50": 83,
+      "p80": 100,
+      "p90": 137,
+      "n": 131
+    },
+    "Sepsis": {
+      "p10": 134,
+      "p50": 161,
+      "p80": 170,
+      "p90": 182,
+      "n": 10
+    },
+    "Minor Injury / Trauma": {
+      "p10": 82,
+      "p50": 106,
+      "p80": 122,
+      "p90": 164,
+      "n": 10
+    },
+    "Chest Pain Rule-Out": {
+      "p10": 180,
+      "p50": 248,
+      "p80": 258,
+      "p90": 355,
+      "n": 7
+    },
+    "Tox / Overdose": {
+      "p10": 155,
+      "p50": 190,
+      "p80": 216,
+      "p90": 299,
+      "n": 10
+    }
+  },
+  "hf_admissions_benchmark": {
+    "n": 91,
+    "outcome_mix": {
+      "Recovery": 38,
+      "Complication": 26,
+      "Readmission": 27
+    },
+    "median_los_days": 4,
+    "source": "infinite-dataset-hub/HospitalAdmissions (Hugging Face)"
+  },
+  "assumptions": {
+    "bed_hour_cost_eur": 45,
+    "lean_targets_min": {
+      "Emergency": 30,
+      "Cardiology": 25,
+      "Imaging": 25,
+      "Labs": 30,
+      "Wards": 60
+    }
+  }
+}

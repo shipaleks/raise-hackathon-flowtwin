@@ -1,0 +1,166 @@
+{
+  "hero": "P-1042",
+  "now": "2026-07-04T11:00",
+  "beats": [
+    {
+      "t_offset_min": 0,
+      "id": "meet_sarah",
+      "desc": "Sarah, 58, chest pain — predicted exit on track."
+    },
+    {
+      "t_offset_min": 90,
+      "id": "lab_delay",
+      "desc": "Lab delay — predicted exit slides later, ring turns amber."
+    },
+    {
+      "t_offset_min": 150,
+      "id": "cardio_overload",
+      "desc": "Cardiology overload — cluster near Cardiology, Sarah goes red."
+    },
+    {
+      "t_offset_min": 160,
+      "id": "resolve",
+      "desc": "One action: move to Observation, escalate consult, assign bed O-12."
+    }
+  ],
+  "patient": {
+    "patient_id": "P-1042",
+    "name": "Sarah M.",
+    "age": 58,
+    "sex": "female",
+    "complaint": "chest pain",
+    "pathway": "Chest Pain Rule-Out",
+    "acuity": 2,
+    "arrival_mode": "ambulance",
+    "arrival_time": "2026-07-04T09:20",
+    "current_department": "Cardiology",
+    "current_area": "Consult",
+    "elapsed_min": 100,
+    "vitals": {
+      "hr": 112,
+      "sbp": 127,
+      "spo2": 92,
+      "rr": 21,
+      "temp_c": 37.1,
+      "pain": 5
+    },
+    "events": [
+      {
+        "t": "2026-07-04T09:20",
+        "type": "arrival",
+        "dept": "Ambulance Bay",
+        "area": "Entrance"
+      },
+      {
+        "t": "2026-07-04T09:20",
+        "type": "triage",
+        "dept": "Emergency",
+        "area": "Triage"
+      },
+      {
+        "t": "2026-07-04T09:33",
+        "type": "bed_assigned",
+        "dept": "Emergency",
+        "area": "ER Bay"
+      },
+      {
+        "t": "2026-07-04T09:47",
+        "type": "labs_ordered",
+        "dept": "Labs",
+        "area": "Chemistry"
+      },
+      {
+        "t": "2026-07-04T10:24",
+        "type": "ecg",
+        "dept": "Emergency",
+        "area": "ER Bay"
+      },
+      {
+        "t": "2026-07-04T10:36",
+        "type": "consult_requested",
+        "dept": "Cardiology",
+        "area": "Consult"
+      },
+      {
+        "t": "2026-07-04T11:47",
+        "type": "consult_done",
+        "dept": "Cardiology",
+        "area": "Consult"
+      },
+      {
+        "t": "2026-07-04T12:12",
+        "type": "observation",
+        "dept": "Emergency",
+        "area": "Observation"
+      },
+      {
+        "t": "2026-07-04T13:27",
+        "type": "decision",
+        "dept": "Emergency",
+        "area": "Observation"
+      },
+      {
+        "t": "2026-07-04T13:36",
+        "type": "discharge",
+        "dept": "Discharge",
+        "area": "Exit"
+      }
+    ],
+    "resources": {
+      "er_bed_min": 123,
+      "nurse_min": 43,
+      "doctor_min": 24,
+      "labs": 1,
+      "imaging": 0
+    },
+    "predicted_exit": "2026-07-04T13:28",
+    "predicted_exit_ci": {
+      "low": "2026-07-04T12:20",
+      "high": "2026-07-04T15:15",
+      "interval": "80%"
+    },
+    "predicted_los_min": 248,
+    "benchmark_los_min": 248,
+    "delay_risk": "high",
+    "blocker": "cardiology_queue",
+    "recommendation": {
+      "action": "move_to_observation",
+      "explanation": "Stable, troponin negative, waiting 100 min on cardiology while holding ER Bay 4.",
+      "impact_min": 45
+    },
+    "signals": {
+      "wearable": null,
+      "vocal_biomarker": null,
+      "_note": "pluggable sources — mention only, not built"
+    },
+    "guard": {
+      "topic_ok": true,
+      "safety_ok": true
+    },
+    "provenance": {
+      "identity": "Synthea",
+      "complaint": "Synthea",
+      "stations_and_times": "synthesized",
+      "vitals": "synthesized",
+      "eta": "FlowTwin ETA (empirical quantiles over 7-day history)"
+    },
+    "optimization": [
+      {
+        "issue": "Troponin ordered after bed assignment, not at triage",
+        "saving_min": 35,
+        "tag": "sequence"
+      },
+      {
+        "issue": "No wearable ingested; overnight arrhythmia would have pre-ordered the consult",
+        "saving_min": 50,
+        "tag": "sequence (illustrative source — mention only)"
+      },
+      {
+        "issue": "Medically ready to move ~40 min before bed was requested",
+        "saving_min": 40,
+        "tag": "timing"
+      }
+    ],
+    "hero": true
+  }
+}

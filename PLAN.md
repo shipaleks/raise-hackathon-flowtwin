@@ -114,6 +114,20 @@ The **authoritative copy lives in the Interactions chain** (the model maintains 
 - **MediTrack is optimized for Computer Use reliability:** big buttons, high contrast, stable layout, fixed 1280×800 viewport, no animations. It should *look* legacy and *behave* deterministic.
 - Name: **FlowTwin** (matches the repo; subtitle *"a live twin of your hospital's flow"*). Alternatives (Meridian, Cadence, Wayfinder) in [DESIGN.md §0](./DESIGN.md#0-naming). Decide in 5 minutes at kickoff, then never again.
 
+### 2.2a Data & seed — ALREADY BUILT ✅ (see [data/README.md](./data/README.md))
+
+The demo's data backbone exists and runs. **Two open datasets downloaded and transformed into deterministic seed tracks:**
+
+- **Sources:** **Synthea** sample CSV (real synthetic identities, sex, age, chief complaint, ED arrival hour-of-day — 817 ED encounters) + **`infinite-dataset-hub/HospitalAdmissions`** (HF, admission LOS-days + outcome mix for Admin KPIs). Raw data lives in `data/raw/` (**gitignored**); re-download commands in `data/README.md`.
+- **Builder:** `data/build_seed.py` — deterministic (`seed=42`, `now=2026-07-04T11:00`), re-run to regenerate.
+- **Seed output (committed, `data/seed/`):**
+  - `patients_today.json` — **7 current patients** in ops-state (superset of §2.1); index 0 = hero **Sarah M., 58, chest pain** (predicted exit 13:28, 80% CI 12:20→15:15, `delay_risk=high`, `blocker=cardiology_queue`, flow-view `optimization[]` = −35/−50/−40 min).
+  - `history_7d.json` — **168 completed journeys** across the last 7 days (scrubber, calibration, Admin KPIs).
+  - `scenario.json` — Sarah's scripted beats (lab delay / cardio overload / resolve).
+  - `admin_kpis.json` — avoidable-wait rank, recurring bottleneck, arrival forecast, and **FlowTwin ETA calibration = 83.3% interval coverage, ±11 min median error**.
+- **Honesty:** identity/complaint/arrival = real (Synthea); LOS-days/outcomes = real (HF); intra-stay **station times, ED boarding hours, vitals, and the afternoon-cardiology backup are synthesized** (labeled per-record in `provenance`). ED station-level times aren't in either open source.
+- **Known TODOs (for the implementing model):** the recurring-bottleneck summary stat is thin (few cardiac cases in the 14–17h window → `avg_los_in_window_min: null`); vitals/boarding synthesized until MIMIC-IV-ED is credentialed. Full list in `data/README.md`.
+
 ### 2.3 Product & UX design (full detail in [DESIGN.md](./DESIGN.md))
 
 The demo wins on how **clean and calm** it looks — clinical-grade minimalism (Linear × Apple Health × modern EHR), light+dark, meaningful motion only. Decisions that affect the build:

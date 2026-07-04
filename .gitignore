@@ -24,5 +24,8 @@ dist/
 .idea/
 .vscode/
 
+# Raw datasets — downloaded locally, not redistributed (Synthea zip, HF dump, MIMIC)
+data/raw/
+
 # Large demo media (keep fallbacks out of git unless you decide otherwise)
 # /fallbacks/
