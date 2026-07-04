@@ -25,6 +25,8 @@ interface FlowTwinState {
   aboutOpen: boolean
   /** the Day review / Optimize-the-day overlay */
   wrapOpen: boolean
+  /** the exploded axonometric building view */
+  stackOpen: boolean
   hoveredId: string | null
 
   setView: (v: View) => void
@@ -42,6 +44,7 @@ interface FlowTwinState {
   resolveNow: () => void
   setAboutOpen: (v: boolean) => void
   setWrapOpen: (v: boolean) => void
+  setStackOpen: (v: boolean) => void
   setHovered: (id: string | null) => void
   /** jump straight to a demo beat (presenter control) */
   jumpToBeat: (beat: 'meet' | 'labDelay' | 'overload' | 'resolveSuggested') => void
@@ -60,6 +63,7 @@ export const useStore = create<FlowTwinState>((set, get) => ({
   resolvedAtMin: null,
   aboutOpen: false,
   wrapOpen: false,
+  stackOpen: false,
   hoveredId: null,
 
   setView: (view) => set({ view, selectedId: view === 'admin' ? null : get().selectedId }),
@@ -74,7 +78,7 @@ export const useStore = create<FlowTwinState>((set, get) => ({
   },
   setSpeed: (speed) => set({ speed }),
 
-  setFloor: (floorId) => set({ floorId, zoomPath: [] }),
+  setFloor: (floorId) => set({ floorId, zoomPath: [], stackOpen: false }),
   cycleFloor: () => {
     const order = FLOORS.map((f) => f.id)
     const i = order.indexOf(get().floorId)
@@ -105,6 +109,7 @@ export const useStore = create<FlowTwinState>((set, get) => ({
 
   setAboutOpen: (aboutOpen) => set({ aboutOpen }),
   setWrapOpen: (wrapOpen) => set({ wrapOpen }),
+  setStackOpen: (stackOpen) => set({ stackOpen }),
   setHovered: (hoveredId) => set({ hoveredId }),
 
   jumpToBeat: (beat) => {
@@ -114,7 +119,8 @@ export const useStore = create<FlowTwinState>((set, get) => ({
   },
 }))
 
-/** Esc: wrap → about → sheet → zoom out, in that order. Returns true if it consumed the key. */
+/** Esc: wrap → about → building stack → sheet → zoom out, in that order.
+    Returns true if it consumed the key. */
 export function escapeStep(): boolean {
   const s = useStore.getState()
   if (s.wrapOpen) {
@@ -123,6 +129,10 @@ export function escapeStep(): boolean {
   }
   if (s.aboutOpen) {
     s.setAboutOpen(false)
+    return true
+  }
+  if (s.stackOpen) {
+    s.setStackOpen(false)
     return true
   }
   if (s.selectedId) {

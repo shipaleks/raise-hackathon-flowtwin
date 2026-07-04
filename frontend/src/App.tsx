@@ -46,6 +46,9 @@ function useKeyboard() {
         case 'f':
           if (s.view === 'doctor') s.cycleFloor()
           break
+        case 'b':
+          if (s.view === 'doctor') s.setStackOpen(!s.stackOpen)
+          break
         case ' ':
           // Space on a focused control must activate the control, never hijack
           // it to drive the sim clock (keyboard-navigable is a deliverable)

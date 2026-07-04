@@ -6,6 +6,7 @@
    Zooming is a viewport transform into a rect — never a re-layout. */
 
 import { useEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
 import { AgentGlyph } from '../ui/AgentGlyph'
 import { Chip, type ChipTone } from '../ui/Chip'
 import { LoadRing } from '../ui/LoadRing'
@@ -18,7 +19,6 @@ import {
 } from '../../sim/engine'
 import {
   CORRIDOR,
-  FLOORS,
   LIFT,
   MAP_H,
   MAP_W,
@@ -35,6 +35,8 @@ import { LIVE_MIN, fmtClock, fmtDur, simToDate } from '../../sim/time'
 import { HOSPITAL, hkLive } from '../../data/seed'
 import { useStore } from '../../store'
 import type { Risk } from '../../types'
+import { BuildingView } from './BuildingView'
+import { FloorStack } from './FloorStack'
 import { PlateOrnament } from './PlateOrnament'
 import './map.css'
 
@@ -241,6 +243,7 @@ export function MapView() {
   const floorId = useStore((s) => s.floorId)
   const zoomPath = useStore((s) => s.zoomPath)
   const selectedId = useStore((s) => s.selectedId)
+  const stackOpen = useStore((s) => s.stackOpen)
   const setFloor = useStore((s) => s.setFloor)
   const zoomTo = useStore((s) => s.zoomTo)
   const zoomOut = useStore((s) => s.zoomOut)
@@ -255,9 +258,41 @@ export function MapView() {
 
   const wrapRef = useRef<HTMLElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
+  const plate3dRef = useRef<HTMLDivElement>(null)
   const tipRef = useRef<HTMLDivElement>(null)
   const [hoverId, setHoverId] = useState<string | null>(null)
   const hoverAgent = (hoverId && world.agents.find((a) => a.id === hoverId)) || null
+
+  // the plate arrives in 3D when the storey changes: coming from above when
+  // you go up, from below when you go down
+  const STOREY: Record<string, number> = { g: 0, f1: 1, f2: 2 }
+  const prevFloorRef = useRef(floorId)
+  useEffect(() => {
+    const prev = prevFloorRef.current
+    prevFloorRef.current = floorId
+    if (prev === floorId || !plate3dRef.current) return
+    const dir = STOREY[floorId] > STOREY[prev] ? 1 : -1
+    gsap.fromTo(
+      plate3dRef.current,
+      {
+        rotationX: dir * -9,
+        y: dir * -52,
+        scale: 0.965,
+        opacity: 0.1,
+        transformPerspective: 1400,
+      },
+      {
+        rotationX: 0,
+        y: 0,
+        scale: 1,
+        opacity: 1,
+        duration: 0.75,
+        ease: 'power3.out',
+        clearProps: 'all',
+      },
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [floorId])
 
   // follow the selected patient: snap on selection, then track their lift
   // rides — but never fight a manual floor change while they sit still
@@ -376,6 +411,7 @@ export function MapView() {
       }}
       onMouseLeave={hoverOff}
     >
+      <div ref={plate3dRef} className="map-plate3d">
       <svg
         ref={svgRef}
         className="map-svg"
@@ -655,6 +691,7 @@ export function MapView() {
           })}
         </g>
       </svg>
+      </div>
 
       {/* night wash — real clock, the 03:00 floor looks like 03:00 */}
       <div
@@ -663,36 +700,8 @@ export function MapView() {
         aria-hidden="true"
       />
 
-      {/* ---------------- floor rail ---------------- */}
-      <nav className="map-floors" aria-label="Floors">
-        {FLOORS.map((f) => {
-          const st = world.status.perFloor[f.id]
-          const active = f.id === floorId
-          return (
-            <button
-              key={f.id}
-              type="button"
-              className={`map-floors__btn${active ? ' is-active' : ''}`}
-              aria-pressed={active}
-              aria-label={`Floor ${f.short} — ${f.name}, ${st.count} ${plural(st.count)}`}
-              onClick={(e) => {
-                e.stopPropagation()
-                setFloor(f.id)
-              }}
-            >
-              <span className="map-floors__short">{f.short}</span>
-              <span className="map-floors__meta">
-                <span className="map-floors__name">{f.name}</span>
-                <span className="map-floors__count tnum">
-                  {st.count}
-                  <span className={`map-floors__dot map-floors__dot--${st.worst}`} aria-hidden="true" />
-                </span>
-              </span>
-            </button>
-          )
-        })}
-        <p className="map-floors__note">F cycles floors</p>
-      </nav>
+      {/* ---------------- floor rail: the axonometric mini-stack ---------------- */}
+      <FloorStack countByFloor={world.status.perFloor} />
 
       {/* ---------------- live / replay badge ---------------- */}
       <div className={`map-live${isLiveEdge ? ' is-live' : ''}`} role="status">
@@ -747,6 +756,8 @@ export function MapView() {
             : 'Quiet floor'}
         </div>
       ) : null}
+
+      <BuildingView open={stackOpen} />
     </section>
   )
 }

@@ -15,6 +15,7 @@ const KEYS: Array<{ keys: string; does: string }> = [
   { keys: 'Space', does: 'play / pause' },
   { keys: '← / →', does: '±5 min (Shift ±30)' },
   { keys: 'F', does: 'cycle floors' },
+  { keys: 'B', does: 'building view' },
   { keys: 'V', does: 'switch view' },
   { keys: '1–4', does: 'presets' },
 ]
