@@ -411,7 +411,7 @@ def _blocker_rec(pathway, cur, arrival):
             "impact_min": 30}
     return "none", {"action": "monitor", "explanation": "On the expected pathway.", "impact_min": 0}
 
-def make_today_arrivals(enc_rows, model, start_idx=700):
+def make_today_arrivals(enc_rows, model, taken_names=(), start_idx=700):
     """~10 patients scheduled to arrive after NOW (11:05-14:00), so the demo-beat
     window (lab delay 12:30, cardiology overload 13:30) plays out in a living
     hospital rather than an emptying one. Volume matches the arrival forecast
@@ -432,7 +432,7 @@ def make_today_arrivals(enc_rows, model, start_idx=700):
     ]
     arrivals = []
     idx = start_idx
-    used_names = set()
+    used_names = set(taken_names)
     for k, (want_pw, hh, mm, mode) in enumerate(plan):
         src = None
         for _ in range(len(enc_rows)):
@@ -583,7 +583,7 @@ def main():
          "saving_min": 18, "tag": "sequence"},
     ]
 
-    arrivals_today = make_today_arrivals(enc, model)
+    arrivals_today = make_today_arrivals(enc, model, taken_names=[p["name"] for p in current])
 
     kpis = admin_kpis(history, current, model, calib, hf, dept_minutes, avoidable_minutes)
 
