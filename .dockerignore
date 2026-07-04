@@ -1,0 +1,7 @@
+.git
+.shots
+frontend/node_modules
+frontend/dist
+*.pdf
+*.docx
+data/raw
