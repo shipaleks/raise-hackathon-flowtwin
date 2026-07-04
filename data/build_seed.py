@@ -411,6 +411,50 @@ def _blocker_rec(pathway, cur, arrival):
             "impact_min": 30}
     return "none", {"action": "monitor", "explanation": "On the expected pathway.", "impact_min": 0}
 
+def make_today_arrivals(enc_rows, model, start_idx=700):
+    """~10 patients scheduled to arrive after NOW (11:05-14:00), so the demo-beat
+    window (lab delay 12:30, cardiology overload 13:30) plays out in a living
+    hospital rather than an emptying one. Volume matches the arrival forecast
+    (~2.2/h). Three Chest Pain arrivals at 11:55 / 12:15 / 12:40 hit the
+    cardiology consult queue on their OWN tracks at ~13:05-13:55 — the overload
+    cluster is emergent from the data, not a forced override."""
+    plan = [
+        ("General Medical",       11,  5, "walk-in"),
+        ("Minor Injury / Trauma", 11, 25, "walk-in"),
+        ("Chest Pain Rule-Out",   11, 55, "ambulance"),
+        ("General Medical",       12,  5, "referral"),
+        ("Chest Pain Rule-Out",   12, 15, "ambulance"),
+        ("Tox / Overdose",        12, 30, "ambulance"),
+        ("Chest Pain Rule-Out",   12, 40, "walk-in"),
+        ("Minor Injury / Trauma", 13,  5, "walk-in"),
+        ("Sepsis",                13, 20, "ambulance"),
+        ("General Medical",       13, 45, "walk-in"),
+    ]
+    arrivals = []
+    idx = start_idx
+    used_names = set()
+    for k, (want_pw, hh, mm, mode) in enumerate(plan):
+        src = None
+        for _ in range(len(enc_rows)):
+            cand = enc_rows[idx % len(enc_rows)]; idx += 1
+            if (pathway_for(cand["reason"]) == want_pw
+                    and clean_name(cand["first"], cand["last"]) not in used_names):
+                src = cand; break
+        if src is None:
+            src = enc_rows[idx % len(enc_rows)]; idx += 1
+        used_names.add(clean_name(src["first"], src["last"]))
+        arrival = NOW.replace(hour=hh, minute=mm)
+        admitted = want_pw == "Sepsis"
+        events, spans, los = build_journey(want_pw, arrival, admitted, afternoon_backup=True)
+        st = _ops_state(f"P-{1060+k}", clean_name(src["first"], src["last"]),
+                        age_of(src["birth"], arrival),
+                        "female" if src["sex"] == "F" else "male",
+                        want_pw, arrival, events, spans, los, model)
+        st["arrival_mode"] = mode
+        st["arrives_later"] = True
+        arrivals.append(st)
+    return arrivals
+
 # ---------------------------------------------------------------- hero: Sarah
 def build_sarah(model):
     arrival = NOW - timedelta(minutes=100)  # arrived 100 min ago
@@ -502,8 +546,8 @@ def scenario(sarah):
         "beats": [
             {"t_offset_min": 0,  "id": "meet_sarah", "desc": "Sarah, 58, chest pain — predicted exit on track."},
             {"t_offset_min": 90, "id": "lab_delay", "desc": "Lab delay — predicted exit slides later, ring turns amber."},
-            {"t_offset_min": 150,"id": "cardio_overload", "desc": "Cardiology overload — cluster near Cardiology, Sarah goes red."},
-            {"t_offset_min": 160,"id": "resolve", "desc": "One action: move to Observation, escalate consult, assign bed O-12."},
+            {"t_offset_min": 180,"id": "cardio_overload", "desc": "Cardiology overload — 4 consults queued as the recurring 14:00 backup starts; Sarah goes red."},
+            {"t_offset_min": 190,"id": "resolve", "desc": "One action: move to Observation, escalate consult coverage, assign bed O-12."},
         ],
         "patient": sarah,
     }
@@ -539,6 +583,8 @@ def main():
          "saving_min": 18, "tag": "sequence"},
     ]
 
+    arrivals_today = make_today_arrivals(enc, model)
+
     kpis = admin_kpis(history, current, model, calib, hf, dept_minutes, avoidable_minutes)
 
     def dump(name, obj):
@@ -547,7 +593,8 @@ def main():
 
     print("FlowTwin seed:")
     dump("patients_today.json", {"generated_now": NOW.isoformat(timespec="minutes"),
-                                 "count": len(current), "patients": current})
+                                 "count": len(current), "patients": current,
+                                 "arrivals_today": arrivals_today})
     dump("history_7d.json", {"window_days": HISTORY_DAYS, "anchor_now": NOW.isoformat(timespec="minutes"),
                              "count": len(history), "journeys": history})
     dump("scenario.json", scenario(sarah))

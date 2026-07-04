@@ -13,14 +13,14 @@
       "desc": "Lab delay — predicted exit slides later, ring turns amber."
     },
     {
-      "t_offset_min": 150,
+      "t_offset_min": 180,
       "id": "cardio_overload",
-      "desc": "Cardiology overload — cluster near Cardiology, Sarah goes red."
+      "desc": "Cardiology overload — 4 consults queued as the recurring 14:00 backup starts; Sarah goes red."
     },
     {
-      "t_offset_min": 160,
+      "t_offset_min": 190,
       "id": "resolve",
-      "desc": "One action: move to Observation, escalate consult, assign bed O-12."
+      "desc": "One action: move to Observation, escalate consult coverage, assign bed O-12."
     }
   ],
   "patient": {
