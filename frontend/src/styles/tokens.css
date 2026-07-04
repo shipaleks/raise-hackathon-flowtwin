@@ -1,0 +1,119 @@
+/* ============================================================
+   FlowTwin design tokens — light + dark
+   Calm, clinical-grade minimalism: one restrained teal accent,
+   status colors reserved for state, data colors reserved for
+   series. Every color validated (dataviz six-checks) against
+   the surface it renders on.
+   ============================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* --- planes & ink --- */
+  --page: #f7f7f5;
+  --surface: #ffffff;
+  --surface-2: #f1f1ee; /* inset wells, scrubber track */
+  --ink: #16181d;
+  --ink-2: #4e5560;
+  --ink-3: #8a9099; /* decorative/large only — pair small text with --ink-2 */
+  --border: rgba(22, 24, 29, 0.1);
+  --border-strong: rgba(22, 24, 29, 0.18);
+  --grid: #e7e7e2;
+  --shadow-panel: 0 8px 32px rgba(22, 24, 29, 0.10), 0 1px 3px rgba(22, 24, 29, 0.06);
+  --shadow-pop: 0 4px 16px rgba(22, 24, 29, 0.12);
+  --scrim: rgba(22, 24, 29, 0.28);
+
+  /* --- the one accent (interactive / brand) --- */
+  --accent: #0f766e; /* 4.8:1 on white — AA as text */
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(15, 118, 110, 0.09);
+  --accent-line: rgba(15, 118, 110, 0.35);
+
+  /* --- status (state only — never a series) --- */
+  --ok: #0ca30c;
+  --warn: #fab219;
+  --crit: #d03b3b;
+  --ok-text: #006300;
+  --warn-text: #8a5a00;
+  --crit-text: #b32424;
+  --ok-soft: rgba(12, 163, 12, 0.10);
+  --warn-soft: rgba(250, 178, 25, 0.14);
+  --crit-soft: rgba(208, 59, 59, 0.10);
+
+  /* --- agent sex encoding (always paired with a letter label) --- */
+  --sex-m: #2a78d6;
+  --sex-f: #e87ba4;
+  --sex-u: #6b7280;
+
+  /* --- categorical series (fixed order, never cycled) --- */
+  --cat-1: #2a78d6; /* ambulance */
+  --cat-2: #1baf7a; /* walk-in   */
+  --cat-3: #eda100; /* referral  */
+
+  /* --- ghost/overlay (optimized path) --- */
+  --ghost: rgba(15, 118, 110, 0.16);
+  --ghost-line: rgba(15, 118, 110, 0.55);
+
+  /* --- geometry & motion --- */
+  --r-s: 6px;
+  --r-m: 10px;
+  --r-l: 14px;
+  --dur-fast: 150ms;
+  --dur-med: 250ms;
+  --dur-zone: 600ms; /* agent zone-to-zone tween */
+  --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --page: #0d0f13;
+  --surface: #151a21;
+  --surface-2: #1c222b;
+  --ink: #f2f4f7;
+  --ink-2: #b8bfc9;
+  --ink-3: #7c8592;
+  --border: rgba(242, 244, 247, 0.10);
+  --border-strong: rgba(242, 244, 247, 0.20);
+  --grid: #262b33;
+  --shadow-panel: 0 8px 32px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-pop: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --scrim: rgba(4, 6, 9, 0.5);
+
+  --accent: #2dd4bf;
+  --accent-ink: #06302b;
+  --accent-soft: rgba(45, 212, 191, 0.10);
+  --accent-line: rgba(45, 212, 191, 0.4);
+
+  --ok: #0ca30c;
+  --warn: #fab219;
+  --crit: #e05252;
+  --ok-text: #34c534;
+  --warn-text: #fab219;
+  --crit-text: #ef8080;
+  --ok-soft: rgba(12, 163, 12, 0.16);
+  --warn-soft: rgba(250, 178, 25, 0.14);
+  --crit-soft: rgba(224, 82, 82, 0.16);
+
+  --sex-m: #3987e5;
+  --sex-f: #d55181;
+  --sex-u: #9aa2ad;
+
+  --cat-1: #3987e5;
+  --cat-2: #199e70;
+  --cat-3: #c98500;
+
+  --ghost: rgba(45, 212, 191, 0.14);
+  --ghost-line: rgba(45, 212, 191, 0.5);
+}
+
+/* Meaningful motion only — collapse all durations when the user asks. */
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  [data-theme='dark'] {
+    --dur-fast: 0.01ms;
+    --dur-med: 0.01ms;
+    --dur-zone: 0.01ms;
+  }
+}
