@@ -135,14 +135,13 @@ function AboutDialog({ onClose }: { onClose: () => void }) {
           <h3 className="chrome-about__h">Data honesty</h3>
           <ul className="chrome-about__bullets">
             <li>
-              Identities, complaints and arrival patterns: Synthea open synthetic records (817 ED
-              encounters).
+              Identities and chief complaints: Synthea open synthetic records (817 ED encounters).
             </li>
             <li>Admitted LOS benchmark: HF infinite-dataset-hub/HospitalAdmissions (n=91).</li>
             <li>
-              Station-level times, vitals and the afternoon cardiology backup: synthesized and
-              labeled per-record — no open source records ED boarding at station level (MIMIC-IV-ED
-              planned).
+              Arrival hours, station-level times, vitals and the afternoon cardiology backup:
+              synthesized and labeled per-record — no open source records ED boarding at station
+              level (MIMIC-IV-ED planned).
             </li>
             <li>Every model-derived number names its model in the UI.</li>
           </ul>

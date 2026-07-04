@@ -275,10 +275,25 @@ def make_history(enc_rows):
             "events": events,
         })
 
+    def pick_unused(pool, day_names):
+        """Scan forward for a source row whose name isn't already on the floor
+        that day — three identical 'Afton C.' at one scrubber moment reads as a
+        bug, not as a frequent flyer. Falls back to a dupe if the pool runs dry."""
+        nonlocal idx
+        src = pool[idx % len(pool)]
+        for _ in range(len(pool)):
+            cand = pool[idx % len(pool)]; idx += 1
+            if clean_name(cand["first"], cand["last"]) not in day_names:
+                src = cand
+                break
+        day_names.add(clean_name(src["first"], src["last"]))
+        return src
+
     for day in range(HISTORY_DAYS, 0, -1):
         day_date = (NOW - timedelta(days=day)).date()
+        day_names = set()
         for _ in range(per_day):
-            src = enc_rows[idx % len(enc_rows)]
+            src = pick_unused(enc_rows, day_names)
             pathway = pathway_for(src["reason"])
             hour = RNG.choices(range(24), weights=ED_HOUR_WEIGHTS)[0]
             arrival = datetime(day_date.year, day_date.month, day_date.day,
@@ -288,7 +303,7 @@ def make_history(enc_rows):
         # arrivals 12:00-15:59 so the consult (~70 min after arrival) queues inside
         # the 14:00-17:00 window where build_journey applies the backup delay
         for _ in range(extra_cardiac_per_day):
-            src = cardiac_rows[idx % len(cardiac_rows)]
+            src = pick_unused(cardiac_rows, day_names)
             arrival = datetime(day_date.year, day_date.month, day_date.day,
                                RNG.randint(12, 15), RNG.randint(0, 59))
             add_journey(src, "Chest Pain Rule-Out", arrival)

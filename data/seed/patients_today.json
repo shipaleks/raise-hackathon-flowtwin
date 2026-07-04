@@ -16,12 +16,12 @@
       "current_area": "Consult",
       "elapsed_min": 100,
       "vitals": {
-        "hr": 111,
-        "sbp": 120,
-        "spo2": 92,
-        "rr": 23,
-        "temp_c": 38.2,
-        "pain": 8
+        "hr": 103,
+        "sbp": 125,
+        "spo2": 95,
+        "rr": 19,
+        "temp_c": 36.6,
+        "pain": 6
       },
       "events": [
         {
@@ -37,69 +37,69 @@
           "area": "Triage"
         },
         {
-          "t": "2026-07-04T09:29",
+          "t": "2026-07-04T09:28",
           "type": "bed_assigned",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T09:39",
+          "t": "2026-07-04T09:33",
           "type": "labs_ordered",
           "dept": "Labs",
           "area": "Chemistry"
         },
         {
-          "t": "2026-07-04T10:14",
+          "t": "2026-07-04T10:03",
           "type": "ecg",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T10:19",
+          "t": "2026-07-04T10:15",
           "type": "consult_requested",
           "dept": "Cardiology",
           "area": "Consult"
         },
         {
-          "t": "2026-07-04T11:42",
+          "t": "2026-07-04T11:12",
           "type": "consult_done",
           "dept": "Cardiology",
           "area": "Consult"
         },
         {
-          "t": "2026-07-04T12:05",
+          "t": "2026-07-04T11:28",
           "type": "observation",
           "dept": "Emergency",
           "area": "Observation"
         },
         {
-          "t": "2026-07-04T13:06",
+          "t": "2026-07-04T12:09",
           "type": "decision",
           "dept": "Emergency",
           "area": "Observation"
         },
         {
-          "t": "2026-07-04T13:20",
+          "t": "2026-07-04T12:17",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 99,
-        "nurse_min": 34,
-        "doctor_min": 19,
+        "er_bed_min": 74,
+        "nurse_min": 25,
+        "doctor_min": 14,
         "labs": 1,
         "imaging": 0
       },
-      "predicted_exit": "2026-07-04T14:19",
+      "predicted_exit": "2026-07-04T13:52",
       "predicted_exit_ci": {
-        "low": "2026-07-04T12:59",
-        "high": "2026-07-04T16:07",
+        "low": "2026-07-04T12:51",
+        "high": "2026-07-04T15:07",
         "interval": "80%"
       },
-      "predicted_los_min": 299,
-      "benchmark_los_min": 299,
+      "predicted_los_min": 272,
+      "benchmark_los_min": 272,
       "delay_risk": "high",
       "blocker": "cardiology_queue",
       "recommendation": {
@@ -156,11 +156,11 @@
       "current_area": "Observation",
       "elapsed_min": 205,
       "vitals": {
-        "hr": 117,
-        "sbp": 137,
-        "spo2": 95,
+        "hr": 106,
+        "sbp": 127,
+        "spo2": 94,
         "rr": 21,
-        "temp_c": 36.7,
+        "temp_c": 37.6,
         "pain": 6
       },
       "events": [
@@ -177,69 +177,69 @@
           "area": "Triage"
         },
         {
-          "t": "2026-07-04T07:58",
+          "t": "2026-07-04T07:51",
           "type": "bed_assigned",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T08:04",
+          "t": "2026-07-04T07:56",
           "type": "labs_ordered",
           "dept": "Labs",
           "area": "Chemistry"
         },
         {
-          "t": "2026-07-04T08:29",
+          "t": "2026-07-04T08:26",
           "type": "ecg",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T08:41",
+          "t": "2026-07-04T08:34",
           "type": "consult_requested",
           "dept": "Cardiology",
           "area": "Consult"
         },
         {
-          "t": "2026-07-04T09:42",
+          "t": "2026-07-04T09:25",
           "type": "consult_done",
           "dept": "Cardiology",
           "area": "Consult"
         },
         {
-          "t": "2026-07-04T10:14",
+          "t": "2026-07-04T09:51",
           "type": "observation",
           "dept": "Emergency",
           "area": "Observation"
         },
         {
-          "t": "2026-07-04T11:21",
+          "t": "2026-07-04T10:41",
           "type": "decision",
           "dept": "Emergency",
           "area": "Observation"
         },
         {
-          "t": "2026-07-04T11:28",
+          "t": "2026-07-04T10:53",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 115,
-        "nurse_min": 40,
-        "doctor_min": 23,
+        "er_bed_min": 91,
+        "nurse_min": 31,
+        "doctor_min": 18,
         "labs": 1,
         "imaging": 0
       },
-      "predicted_exit": "2026-07-04T12:34",
+      "predicted_exit": "2026-07-04T12:07",
       "predicted_exit_ci": {
-        "low": "2026-07-04T11:14",
-        "high": "2026-07-04T14:22",
+        "low": "2026-07-04T11:06",
+        "high": "2026-07-04T13:22",
         "interval": "80%"
       },
-      "predicted_los_min": 299,
-      "benchmark_los_min": 299,
+      "predicted_los_min": 272,
+      "benchmark_los_min": 272,
       "delay_risk": "on_track",
       "blocker": "awaiting_disposition",
       "recommendation": {
@@ -288,10 +288,10 @@
       "vitals": {
         "hr": 98,
         "sbp": 114,
-        "spo2": 96,
-        "rr": 19,
-        "temp_c": 37.2,
-        "pain": 4
+        "spo2": 95,
+        "rr": 14,
+        "temp_c": 37.4,
+        "pain": 3
       },
       "events": [
         {
@@ -313,46 +313,46 @@
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T09:52",
+          "t": "2026-07-04T09:49",
           "type": "imaging",
           "dept": "Imaging",
           "area": "X-ray"
         },
         {
-          "t": "2026-07-04T10:40",
+          "t": "2026-07-04T10:15",
           "type": "treatment",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T11:22",
+          "t": "2026-07-04T11:00",
           "type": "decision",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T11:32",
+          "t": "2026-07-04T11:11",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 79,
-        "nurse_min": 27,
-        "doctor_min": 15,
+        "er_bed_min": 80,
+        "nurse_min": 28,
+        "doctor_min": 16,
         "labs": 0,
         "imaging": 1
       },
-      "predicted_exit": "2026-07-04T10:58",
+      "predicted_exit": "2026-07-04T11:03",
       "predicted_exit_ci": {
-        "low": "2026-07-04T10:31",
-        "high": "2026-07-04T11:32",
+        "low": "2026-07-04T10:42",
+        "high": "2026-07-04T11:46",
         "interval": "80%"
       },
-      "predicted_los_min": 93,
-      "benchmark_los_min": 93,
-      "delay_risk": "elevated",
+      "predicted_los_min": 98,
+      "benchmark_los_min": 98,
+      "delay_risk": "on_track",
       "blocker": "none",
       "recommendation": {
         "action": "monitor",
@@ -392,12 +392,12 @@
       "current_area": "Medical Ward",
       "elapsed_min": 150,
       "vitals": {
-        "hr": 114,
-        "sbp": 132,
-        "spo2": 97,
-        "rr": 24,
-        "temp_c": 38.3,
-        "pain": 6
+        "hr": 93,
+        "sbp": 140,
+        "spo2": 94,
+        "rr": 22,
+        "temp_c": 38.2,
+        "pain": 9
       },
       "events": [
         {
@@ -413,45 +413,45 @@
           "area": "Triage"
         },
         {
-          "t": "2026-07-04T08:36",
+          "t": "2026-07-04T08:38",
           "type": "bed_assigned",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T08:47",
+          "t": "2026-07-04T08:49",
           "type": "labs_ordered",
           "dept": "Labs",
           "area": "Microbiology"
         },
         {
-          "t": "2026-07-04T09:22",
+          "t": "2026-07-04T09:18",
           "type": "imaging",
           "dept": "Imaging",
           "area": "CT"
         },
         {
-          "t": "2026-07-04T10:06",
+          "t": "2026-07-04T09:53",
           "type": "admit",
           "dept": "Wards",
           "area": "Medical Ward"
         }
       ],
       "resources": {
-        "er_bed_min": 17,
-        "nurse_min": 5,
+        "er_bed_min": 19,
+        "nurse_min": 6,
         "doctor_min": 3,
         "labs": 1,
         "imaging": 1
       },
-      "predicted_exit": "2026-07-04T11:10",
+      "predicted_exit": "2026-07-04T11:05",
       "predicted_exit_ci": {
-        "low": "2026-07-04T10:40",
-        "high": "2026-07-04T11:35",
+        "low": "2026-07-04T10:26",
+        "high": "2026-07-04T11:25",
         "interval": "80%"
       },
-      "predicted_los_min": 160,
-      "benchmark_los_min": 160,
+      "predicted_los_min": 155,
+      "benchmark_los_min": 155,
       "delay_risk": "on_track",
       "blocker": "none",
       "recommendation": {
@@ -487,16 +487,16 @@
       "acuity": 4,
       "arrival_mode": "walk-in",
       "arrival_time": "2026-07-04T09:50",
-      "current_department": "Labs",
-      "current_area": "Chemistry",
+      "current_department": "Emergency",
+      "current_area": "ER Bay",
       "elapsed_min": 70,
       "vitals": {
-        "hr": 71,
-        "sbp": 123,
-        "spo2": 97,
-        "rr": 16,
-        "temp_c": 37.0,
-        "pain": 3
+        "hr": 84,
+        "sbp": 124,
+        "spo2": 98,
+        "rr": 15,
+        "temp_c": 36.7,
+        "pain": 1
       },
       "events": [
         {
@@ -512,51 +512,51 @@
           "area": "Triage"
         },
         {
-          "t": "2026-07-04T10:07",
+          "t": "2026-07-04T09:56",
           "type": "bed_assigned",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T10:28",
+          "t": "2026-07-04T10:17",
           "type": "labs_ordered",
           "dept": "Labs",
           "area": "Chemistry"
         },
         {
-          "t": "2026-07-04T11:06",
+          "t": "2026-07-04T10:47",
           "type": "decision",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T11:21",
+          "t": "2026-07-04T11:04",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 53,
-        "nurse_min": 18,
-        "doctor_min": 10,
+        "er_bed_min": 44,
+        "nurse_min": 15,
+        "doctor_min": 8,
         "labs": 1,
         "imaging": 0
       },
       "predicted_exit": "2026-07-04T11:14",
       "predicted_exit_ci": {
-        "low": "2026-07-04T10:57",
-        "high": "2026-07-04T12:01",
+        "low": "2026-07-04T10:55",
+        "high": "2026-07-04T12:03",
         "interval": "80%"
       },
       "predicted_los_min": 84,
       "benchmark_los_min": 84,
       "delay_risk": "on_track",
-      "blocker": "labs_pending",
+      "blocker": "awaiting_disposition",
       "recommendation": {
-        "action": "chase_lab_result",
-        "explanation": "Awaiting lab result before disposition.",
-        "impact_min": 25
+        "action": "confirm_discharge_or_bed",
+        "explanation": "Medically progressing; confirm disposition to free the bay.",
+        "impact_min": 30
       },
       "signals": {
         "wearable": null,
@@ -596,11 +596,11 @@
       "current_area": "Observation",
       "elapsed_min": 160,
       "vitals": {
-        "hr": 92,
-        "sbp": 146,
-        "spo2": 97,
-        "rr": 22,
-        "temp_c": 36.7,
+        "hr": 97,
+        "sbp": 137,
+        "spo2": 93,
+        "rr": 21,
+        "temp_c": 36.9,
         "pain": 9
       },
       "events": [
@@ -629,39 +629,39 @@
           "area": "Toxicology"
         },
         {
-          "t": "2026-07-04T09:09",
+          "t": "2026-07-04T09:06",
           "type": "observation",
           "dept": "Emergency",
           "area": "Observation"
         },
         {
-          "t": "2026-07-04T11:25",
+          "t": "2026-07-04T10:10",
           "type": "decision",
           "dept": "Emergency",
           "area": "Observation"
         },
         {
-          "t": "2026-07-04T11:33",
+          "t": "2026-07-04T10:21",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 162,
-        "nurse_min": 56,
-        "doctor_min": 32,
+        "er_bed_min": 93,
+        "nurse_min": 32,
+        "doctor_min": 18,
         "labs": 1,
         "imaging": 0
       },
-      "predicted_exit": "2026-07-04T11:20",
+      "predicted_exit": "2026-07-04T11:30",
       "predicted_exit_ci": {
-        "low": "2026-07-04T10:05",
-        "high": "2026-07-04T13:34",
+        "low": "2026-07-04T10:38",
+        "high": "2026-07-04T12:51",
         "interval": "80%"
       },
-      "predicted_los_min": 180,
-      "benchmark_los_min": 180,
+      "predicted_los_min": 190,
+      "benchmark_los_min": 190,
       "delay_risk": "on_track",
       "blocker": "awaiting_disposition",
       "recommendation": {
@@ -701,12 +701,12 @@
       "current_area": "X-ray",
       "elapsed_min": 40,
       "vitals": {
-        "hr": 87,
-        "sbp": 137,
-        "spo2": 97,
-        "rr": 18,
-        "temp_c": 36.5,
-        "pain": 6
+        "hr": 93,
+        "sbp": 123,
+        "spo2": 95,
+        "rr": 15,
+        "temp_c": 37.3,
+        "pain": 4
       },
       "events": [
         {
@@ -722,51 +722,51 @@
           "area": "Triage"
         },
         {
-          "t": "2026-07-04T10:33",
+          "t": "2026-07-04T10:27",
           "type": "bed_assigned",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T10:55",
+          "t": "2026-07-04T10:47",
           "type": "imaging",
           "dept": "Imaging",
           "area": "X-ray"
         },
         {
-          "t": "2026-07-04T11:29",
+          "t": "2026-07-04T11:13",
           "type": "treatment",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T11:52",
+          "t": "2026-07-04T11:56",
           "type": "decision",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T12:04",
+          "t": "2026-07-04T12:05",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 70,
-        "nurse_min": 24,
-        "doctor_min": 14,
+        "er_bed_min": 79,
+        "nurse_min": 27,
+        "doctor_min": 15,
         "labs": 0,
         "imaging": 1
       },
-      "predicted_exit": "2026-07-04T11:53",
+      "predicted_exit": "2026-07-04T11:58",
       "predicted_exit_ci": {
-        "low": "2026-07-04T11:26",
-        "high": "2026-07-04T12:27",
+        "low": "2026-07-04T11:37",
+        "high": "2026-07-04T12:41",
         "interval": "80%"
       },
-      "predicted_los_min": 93,
-      "benchmark_los_min": 93,
+      "predicted_los_min": 98,
+      "benchmark_los_min": 98,
       "delay_risk": "on_track",
       "blocker": "imaging_queue",
       "recommendation": {
@@ -808,12 +808,12 @@
       "current_area": "Triage",
       "elapsed_min": -5,
       "vitals": {
-        "hr": 73,
-        "sbp": 119,
+        "hr": 77,
+        "sbp": 127,
         "spo2": 100,
-        "rr": 18,
-        "temp_c": 37.0,
-        "pain": 5
+        "rr": 15,
+        "temp_c": 37.1,
+        "pain": 1
       },
       "events": [
         {
@@ -829,41 +829,41 @@
           "area": "Triage"
         },
         {
-          "t": "2026-07-04T11:12",
+          "t": "2026-07-04T11:19",
           "type": "bed_assigned",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T11:39",
+          "t": "2026-07-04T11:41",
           "type": "labs_ordered",
           "dept": "Labs",
           "area": "Chemistry"
         },
         {
-          "t": "2026-07-04T12:19",
+          "t": "2026-07-04T12:22",
           "type": "decision",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T12:34",
+          "t": "2026-07-04T12:37",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 49,
+        "er_bed_min": 51,
         "nurse_min": 17,
-        "doctor_min": 9,
+        "doctor_min": 10,
         "labs": 1,
         "imaging": 0
       },
       "predicted_exit": "2026-07-04T12:29",
       "predicted_exit_ci": {
-        "low": "2026-07-04T12:12",
-        "high": "2026-07-04T13:16",
+        "low": "2026-07-04T12:10",
+        "high": "2026-07-04T13:18",
         "interval": "80%"
       },
       "predicted_los_min": 84,
@@ -908,12 +908,12 @@
       "current_area": "Triage",
       "elapsed_min": -25,
       "vitals": {
-        "hr": 98,
-        "sbp": 123,
-        "spo2": 95,
+        "hr": 86,
+        "sbp": 130,
+        "spo2": 99,
         "rr": 18,
-        "temp_c": 37.4,
-        "pain": 4
+        "temp_c": 36.6,
+        "pain": 6
       },
       "events": [
         {
@@ -929,51 +929,51 @@
           "area": "Triage"
         },
         {
-          "t": "2026-07-04T11:35",
+          "t": "2026-07-04T11:39",
           "type": "bed_assigned",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T11:55",
+          "t": "2026-07-04T11:53",
           "type": "imaging",
           "dept": "Imaging",
           "area": "X-ray"
         },
         {
-          "t": "2026-07-04T12:19",
+          "t": "2026-07-04T12:20",
           "type": "treatment",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T13:05",
+          "t": "2026-07-04T12:40",
           "type": "decision",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T13:20",
+          "t": "2026-07-04T12:52",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 91,
-        "nurse_min": 31,
-        "doctor_min": 18,
+        "er_bed_min": 60,
+        "nurse_min": 21,
+        "doctor_min": 12,
         "labs": 0,
         "imaging": 1
       },
-      "predicted_exit": "2026-07-04T12:58",
+      "predicted_exit": "2026-07-04T13:03",
       "predicted_exit_ci": {
-        "low": "2026-07-04T12:31",
-        "high": "2026-07-04T13:32",
+        "low": "2026-07-04T12:42",
+        "high": "2026-07-04T13:46",
         "interval": "80%"
       },
-      "predicted_los_min": 93,
-      "benchmark_los_min": 93,
+      "predicted_los_min": 98,
+      "benchmark_los_min": 98,
       "delay_risk": "on_track",
       "blocker": "none",
       "recommendation": {
@@ -1015,10 +1015,10 @@
       "elapsed_min": -55,
       "vitals": {
         "hr": 103,
-        "sbp": 118,
+        "sbp": 136,
         "spo2": 95,
-        "rr": 23,
-        "temp_c": 38.1,
+        "rr": 22,
+        "temp_c": 36.6,
         "pain": 6
       },
       "events": [
@@ -1035,69 +1035,69 @@
           "area": "Triage"
         },
         {
-          "t": "2026-07-04T12:08",
+          "t": "2026-07-04T12:03",
           "type": "bed_assigned",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T12:18",
+          "t": "2026-07-04T12:10",
           "type": "labs_ordered",
           "dept": "Labs",
           "area": "Chemistry"
         },
         {
-          "t": "2026-07-04T12:53",
+          "t": "2026-07-04T12:55",
           "type": "ecg",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T13:00",
+          "t": "2026-07-04T13:06",
           "type": "consult_requested",
           "dept": "Cardiology",
           "area": "Consult"
         },
         {
-          "t": "2026-07-04T13:56",
+          "t": "2026-07-04T13:55",
           "type": "consult_done",
           "dept": "Cardiology",
           "area": "Consult"
         },
         {
-          "t": "2026-07-04T14:20",
+          "t": "2026-07-04T14:06",
           "type": "observation",
           "dept": "Emergency",
           "area": "Observation"
         },
         {
-          "t": "2026-07-04T15:15",
+          "t": "2026-07-04T15:31",
           "type": "decision",
           "dept": "Emergency",
           "area": "Observation"
         },
         {
-          "t": "2026-07-04T15:24",
+          "t": "2026-07-04T15:38",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 94,
-        "nurse_min": 32,
-        "doctor_min": 18,
+        "er_bed_min": 118,
+        "nurse_min": 41,
+        "doctor_min": 23,
         "labs": 1,
         "imaging": 0
       },
-      "predicted_exit": "2026-07-04T16:54",
+      "predicted_exit": "2026-07-04T16:27",
       "predicted_exit_ci": {
-        "low": "2026-07-04T15:34",
-        "high": "2026-07-04T18:42",
+        "low": "2026-07-04T15:26",
+        "high": "2026-07-04T17:42",
         "interval": "80%"
       },
-      "predicted_los_min": 299,
-      "benchmark_los_min": 299,
+      "predicted_los_min": 272,
+      "benchmark_los_min": 272,
       "delay_risk": "on_track",
       "blocker": "none",
       "recommendation": {
@@ -1138,12 +1138,12 @@
       "current_area": "Triage",
       "elapsed_min": -65,
       "vitals": {
-        "hr": 71,
-        "sbp": 133,
-        "spo2": 97,
-        "rr": 18,
-        "temp_c": 37.0,
-        "pain": 5
+        "hr": 70,
+        "sbp": 120,
+        "spo2": 98,
+        "rr": 14,
+        "temp_c": 36.8,
+        "pain": 1
       },
       "events": [
         {
@@ -1159,41 +1159,41 @@
           "area": "Triage"
         },
         {
-          "t": "2026-07-04T12:09",
+          "t": "2026-07-04T12:16",
           "type": "bed_assigned",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T12:31",
+          "t": "2026-07-04T12:32",
           "type": "labs_ordered",
           "dept": "Labs",
           "area": "Chemistry"
         },
         {
-          "t": "2026-07-04T13:11",
+          "t": "2026-07-04T13:09",
           "type": "decision",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T13:27",
+          "t": "2026-07-04T13:20",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 42,
-        "nurse_min": 14,
-        "doctor_min": 8,
+        "er_bed_min": 38,
+        "nurse_min": 13,
+        "doctor_min": 7,
         "labs": 1,
         "imaging": 0
       },
       "predicted_exit": "2026-07-04T13:29",
       "predicted_exit_ci": {
-        "low": "2026-07-04T13:12",
-        "high": "2026-07-04T14:16",
+        "low": "2026-07-04T13:10",
+        "high": "2026-07-04T14:18",
         "interval": "80%"
       },
       "predicted_los_min": 84,
@@ -1238,10 +1238,10 @@
       "current_area": "Triage",
       "elapsed_min": -75,
       "vitals": {
-        "hr": 96,
-        "sbp": 147,
-        "spo2": 97,
-        "rr": 19,
+        "hr": 105,
+        "sbp": 106,
+        "spo2": 93,
+        "rr": 18,
         "temp_c": 36.8,
         "pain": 9
       },
@@ -1259,69 +1259,69 @@
           "area": "Triage"
         },
         {
-          "t": "2026-07-04T12:27",
+          "t": "2026-07-04T12:29",
           "type": "bed_assigned",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T12:33",
+          "t": "2026-07-04T12:37",
           "type": "labs_ordered",
           "dept": "Labs",
           "area": "Chemistry"
         },
         {
-          "t": "2026-07-04T13:10",
+          "t": "2026-07-04T13:03",
           "type": "ecg",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T13:19",
+          "t": "2026-07-04T13:12",
           "type": "consult_requested",
           "dept": "Cardiology",
           "area": "Consult"
         },
         {
-          "t": "2026-07-04T14:36",
+          "t": "2026-07-04T14:30",
           "type": "consult_done",
           "dept": "Cardiology",
           "area": "Consult"
         },
         {
-          "t": "2026-07-04T15:03",
+          "t": "2026-07-04T14:47",
           "type": "observation",
           "dept": "Emergency",
           "area": "Observation"
         },
         {
-          "t": "2026-07-04T16:18",
+          "t": "2026-07-04T15:29",
           "type": "decision",
           "dept": "Emergency",
           "area": "Observation"
         },
         {
-          "t": "2026-07-04T16:25",
+          "t": "2026-07-04T15:35",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 109,
-        "nurse_min": 38,
-        "doctor_min": 21,
+        "er_bed_min": 79,
+        "nurse_min": 27,
+        "doctor_min": 15,
         "labs": 1,
         "imaging": 0
       },
-      "predicted_exit": "2026-07-04T17:14",
+      "predicted_exit": "2026-07-04T16:47",
       "predicted_exit_ci": {
-        "low": "2026-07-04T15:54",
-        "high": "2026-07-04T19:02",
+        "low": "2026-07-04T15:46",
+        "high": "2026-07-04T18:02",
         "interval": "80%"
       },
-      "predicted_los_min": 299,
-      "benchmark_los_min": 299,
+      "predicted_los_min": 272,
+      "benchmark_los_min": 272,
       "delay_risk": "on_track",
       "blocker": "none",
       "recommendation": {
@@ -1362,12 +1362,12 @@
       "current_area": "Triage",
       "elapsed_min": -90,
       "vitals": {
-        "hr": 113,
-        "sbp": 124,
-        "spo2": 97,
-        "rr": 22,
-        "temp_c": 36.9,
-        "pain": 9
+        "hr": 93,
+        "sbp": 115,
+        "spo2": 94,
+        "rr": 19,
+        "temp_c": 37.5,
+        "pain": 8
       },
       "events": [
         {
@@ -1383,51 +1383,51 @@
           "area": "Triage"
         },
         {
-          "t": "2026-07-04T12:40",
+          "t": "2026-07-04T12:37",
           "type": "bed_assigned",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T12:51",
+          "t": "2026-07-04T12:49",
           "type": "labs_ordered",
           "dept": "Labs",
           "area": "Toxicology"
         },
         {
-          "t": "2026-07-04T13:34",
+          "t": "2026-07-04T13:42",
           "type": "observation",
           "dept": "Emergency",
           "area": "Observation"
         },
         {
-          "t": "2026-07-04T15:04",
+          "t": "2026-07-04T16:24",
           "type": "decision",
           "dept": "Emergency",
           "area": "Observation"
         },
         {
-          "t": "2026-07-04T15:14",
+          "t": "2026-07-04T16:34",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 121,
-        "nurse_min": 42,
-        "doctor_min": 24,
+        "er_bed_min": 191,
+        "nurse_min": 66,
+        "doctor_min": 38,
         "labs": 1,
         "imaging": 0
       },
-      "predicted_exit": "2026-07-04T15:30",
+      "predicted_exit": "2026-07-04T15:40",
       "predicted_exit_ci": {
-        "low": "2026-07-04T14:15",
-        "high": "2026-07-04T17:44",
+        "low": "2026-07-04T14:48",
+        "high": "2026-07-04T17:01",
         "interval": "80%"
       },
-      "predicted_los_min": 180,
-      "benchmark_los_min": 180,
+      "predicted_los_min": 190,
+      "benchmark_los_min": 190,
       "delay_risk": "on_track",
       "blocker": "none",
       "recommendation": {
@@ -1468,12 +1468,12 @@
       "current_area": "Triage",
       "elapsed_min": -100,
       "vitals": {
-        "hr": 118,
-        "sbp": 128,
+        "hr": 107,
+        "sbp": 135,
         "spo2": 93,
-        "rr": 23,
-        "temp_c": 37.9,
-        "pain": 8
+        "rr": 19,
+        "temp_c": 38.1,
+        "pain": 9
       },
       "events": [
         {
@@ -1489,69 +1489,69 @@
           "area": "Triage"
         },
         {
-          "t": "2026-07-04T12:52",
+          "t": "2026-07-04T12:50",
           "type": "bed_assigned",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T13:03",
+          "t": "2026-07-04T12:57",
           "type": "labs_ordered",
           "dept": "Labs",
           "area": "Chemistry"
         },
         {
-          "t": "2026-07-04T13:37",
+          "t": "2026-07-04T13:47",
           "type": "ecg",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T13:47",
+          "t": "2026-07-04T13:57",
           "type": "consult_requested",
           "dept": "Cardiology",
           "area": "Consult"
         },
         {
-          "t": "2026-07-04T14:57",
+          "t": "2026-07-04T14:58",
           "type": "consult_done",
           "dept": "Cardiology",
           "area": "Consult"
         },
         {
-          "t": "2026-07-04T15:20",
+          "t": "2026-07-04T15:14",
           "type": "observation",
           "dept": "Emergency",
           "area": "Observation"
         },
         {
-          "t": "2026-07-04T16:18",
+          "t": "2026-07-04T16:29",
           "type": "decision",
           "dept": "Emergency",
           "area": "Observation"
         },
         {
-          "t": "2026-07-04T16:25",
+          "t": "2026-07-04T16:40",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 98,
-        "nurse_min": 34,
-        "doctor_min": 19,
+        "er_bed_min": 113,
+        "nurse_min": 39,
+        "doctor_min": 22,
         "labs": 1,
         "imaging": 0
       },
-      "predicted_exit": "2026-07-04T17:39",
+      "predicted_exit": "2026-07-04T17:12",
       "predicted_exit_ci": {
-        "low": "2026-07-04T16:19",
-        "high": "2026-07-04T19:27",
+        "low": "2026-07-04T16:11",
+        "high": "2026-07-04T18:27",
         "interval": "80%"
       },
-      "predicted_los_min": 299,
-      "benchmark_los_min": 299,
+      "predicted_los_min": 272,
+      "benchmark_los_min": 272,
       "delay_risk": "on_track",
       "blocker": "none",
       "recommendation": {
@@ -1592,12 +1592,12 @@
       "current_area": "Triage",
       "elapsed_min": -125,
       "vitals": {
-        "hr": 86,
-        "sbp": 139,
-        "spo2": 96,
+        "hr": 99,
+        "sbp": 122,
+        "spo2": 98,
         "rr": 18,
-        "temp_c": 36.6,
-        "pain": 3
+        "temp_c": 37.1,
+        "pain": 4
       },
       "events": [
         {
@@ -1613,51 +1613,51 @@
           "area": "Triage"
         },
         {
-          "t": "2026-07-04T13:13",
+          "t": "2026-07-04T13:19",
           "type": "bed_assigned",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T13:28",
+          "t": "2026-07-04T13:38",
           "type": "imaging",
           "dept": "Imaging",
           "area": "X-ray"
         },
         {
-          "t": "2026-07-04T13:54",
+          "t": "2026-07-04T14:09",
           "type": "treatment",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T14:34",
+          "t": "2026-07-04T14:27",
           "type": "decision",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T14:45",
+          "t": "2026-07-04T14:35",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 74,
-        "nurse_min": 25,
-        "doctor_min": 14,
+        "er_bed_min": 59,
+        "nurse_min": 20,
+        "doctor_min": 11,
         "labs": 0,
         "imaging": 1
       },
-      "predicted_exit": "2026-07-04T14:38",
+      "predicted_exit": "2026-07-04T14:43",
       "predicted_exit_ci": {
-        "low": "2026-07-04T14:11",
-        "high": "2026-07-04T15:12",
+        "low": "2026-07-04T14:22",
+        "high": "2026-07-04T15:26",
         "interval": "80%"
       },
-      "predicted_los_min": 93,
-      "benchmark_los_min": 93,
+      "predicted_los_min": 98,
+      "benchmark_los_min": 98,
       "delay_risk": "on_track",
       "blocker": "none",
       "recommendation": {
@@ -1698,12 +1698,12 @@
       "current_area": "Triage",
       "elapsed_min": -140,
       "vitals": {
-        "hr": 118,
-        "sbp": 142,
-        "spo2": 96,
-        "rr": 21,
-        "temp_c": 38.0,
-        "pain": 6
+        "hr": 108,
+        "sbp": 148,
+        "spo2": 95,
+        "rr": 24,
+        "temp_c": 36.9,
+        "pain": 5
       },
       "events": [
         {
@@ -1719,45 +1719,45 @@
           "area": "Triage"
         },
         {
-          "t": "2026-07-04T13:33",
+          "t": "2026-07-04T13:29",
           "type": "bed_assigned",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T13:42",
+          "t": "2026-07-04T13:37",
           "type": "labs_ordered",
           "dept": "Labs",
           "area": "Microbiology"
         },
         {
-          "t": "2026-07-04T14:00",
+          "t": "2026-07-04T14:26",
           "type": "imaging",
           "dept": "Imaging",
           "area": "CT"
         },
         {
-          "t": "2026-07-04T14:43",
+          "t": "2026-07-04T15:12",
           "type": "admit",
           "dept": "Wards",
           "area": "Medical Ward"
         }
       ],
       "resources": {
-        "er_bed_min": 22,
-        "nurse_min": 7,
-        "doctor_min": 4,
+        "er_bed_min": 17,
+        "nurse_min": 5,
+        "doctor_min": 3,
         "labs": 1,
         "imaging": 1
       },
-      "predicted_exit": "2026-07-04T16:00",
+      "predicted_exit": "2026-07-04T15:55",
       "predicted_exit_ci": {
-        "low": "2026-07-04T15:30",
-        "high": "2026-07-04T16:25",
+        "low": "2026-07-04T15:16",
+        "high": "2026-07-04T16:15",
         "interval": "80%"
       },
-      "predicted_los_min": 160,
-      "benchmark_los_min": 160,
+      "predicted_los_min": 155,
+      "benchmark_los_min": 155,
       "delay_risk": "on_track",
       "blocker": "none",
       "recommendation": {
@@ -1798,12 +1798,12 @@
       "current_area": "Triage",
       "elapsed_min": -165,
       "vitals": {
-        "hr": 81,
-        "sbp": 135,
-        "spo2": 98,
-        "rr": 14,
-        "temp_c": 36.6,
-        "pain": 5
+        "hr": 83,
+        "sbp": 131,
+        "spo2": 97,
+        "rr": 12,
+        "temp_c": 36.7,
+        "pain": 2
       },
       "events": [
         {
@@ -1825,35 +1825,35 @@
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T14:16",
+          "t": "2026-07-04T14:30",
           "type": "labs_ordered",
           "dept": "Labs",
           "area": "Chemistry"
         },
         {
-          "t": "2026-07-04T14:19",
+          "t": "2026-07-04T14:48",
           "type": "decision",
           "dept": "Emergency",
           "area": "ER Bay"
         },
         {
-          "t": "2026-07-04T14:29",
+          "t": "2026-07-04T14:57",
           "type": "discharge",
           "dept": "Discharge",
           "area": "Exit"
         }
       ],
       "resources": {
-        "er_bed_min": 41,
-        "nurse_min": 14,
-        "doctor_min": 8,
+        "er_bed_min": 54,
+        "nurse_min": 18,
+        "doctor_min": 10,
         "labs": 1,
         "imaging": 0
       },
       "predicted_exit": "2026-07-04T15:09",
       "predicted_exit_ci": {
-        "low": "2026-07-04T14:52",
-        "high": "2026-07-04T15:56",
+        "low": "2026-07-04T14:50",
+        "high": "2026-07-04T15:58",
         "interval": "80%"
       },
       "predicted_los_min": 84,

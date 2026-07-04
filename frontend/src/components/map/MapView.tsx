@@ -99,7 +99,7 @@ function zoneNameFor(a: MapAgent): string {
 const sexLetter = (a: MapAgent) => (a.sex === 'male' ? 'M' : 'F')
 
 const exitPhrase = (a: MapAgent) =>
-  a.exitIsActual ? `Exited ${fmtClock(a.exitMin)}` : `Predicted exit ${fmtClock(a.exitMin)}`
+  a.exitIsActual ? `Exit ${fmtClock(a.exitMin)} · from the log` : `Predicted exit ${fmtClock(a.exitMin)}`
 
 /** Tooltip summary as one sentence — doubles as the agent's aria-label. */
 function agentSummary(a: MapAgent): string {
