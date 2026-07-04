@@ -157,10 +157,10 @@
    Headers paint LAST in the DOM and carry a halo, so no hairline or room
    fill can ever slice them (the old truncation bug). */
 .map-zone__name {
-  font-family: var(--font-serif);
-  font-size: 14px;
+  font-family: var(--font-display);
+  font-size: 15.5px;
   font-weight: 400;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   fill: var(--ink);
   paint-order: stroke;
   stroke: var(--surface);
@@ -574,88 +574,158 @@
   }
 }
 
-/* --- legend (HTML overlay) --- */
+/* --- drawing-sheet ornament: frame, registration marks, title block --- */
 
-.map-legend {
-  position: absolute;
-  right: 20px;
-  bottom: 16px;
-  z-index: 3;
-  width: 300px;
-  padding: 12px 14px;
-  background: color-mix(in oklab, var(--surface) 92%, transparent);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-m);
-  transition: opacity var(--dur-med) var(--ease);
-}
-
-.map-legend.is-hidden {
-  opacity: 0;
+.plate-orn {
   pointer-events: none;
+  transition: opacity var(--dur-zone) var(--ease);
 }
 
-.map-legend__title {
-  margin: 0 0 8px;
+.plate-orn.is-dimmed {
+  opacity: 0;
+}
+
+.orn-frame {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+.orn-cross line {
+  stroke: var(--ink-3);
+  stroke-width: 0.8;
+  opacity: 0.75;
+}
+
+.orn-ticks line {
+  stroke: var(--border-strong);
+  stroke-width: 0.8;
+}
+
+.orn-refs text {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 6.5px;
+  letter-spacing: 0.08em;
+  fill: var(--ink-3);
+  opacity: 0.75;
+}
+
+.orn-street line {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+  stroke-dasharray: 7 5;
+}
+
+.orn-street text {
+  font-family: var(--font-mono);
+  font-size: 6px;
+  letter-spacing: 0.16em;
+  fill: var(--ink-3);
+  opacity: 0.85;
+}
+
+/* the title block — a printed label pasted on the sheet */
+.orn-tb__frame {
+  fill: var(--page);
+  stroke: var(--border-strong);
+  stroke-width: 1.1;
+  vector-effect: non-scaling-stroke;
+}
+
+.orn-tb__rule {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.orn-tb__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 7px;
   font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-3);
+  letter-spacing: 0.15em;
+  fill: var(--ink-3);
 }
 
-.map-legend__rows {
-  display: flex;
-  gap: 22px;
-  margin-bottom: 9px;
-}
-
-.map-legend__col {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.map-legend__item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.orn-tb__code {
   font-family: var(--font-mono);
-  font-size: 10.5px;
-  color: var(--ink-2);
+  font-size: 7px;
+  letter-spacing: 0.1em;
+  fill: var(--ink-3);
 }
 
-.map-legend__ring {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  border: 2.5px solid var(--ok);
-  flex: none;
+.orn-tb__floor {
+  font-family: var(--font-display);
+  font-size: 30px;
+  fill: var(--ink);
 }
 
-.map-legend__ring--warn {
-  border-color: var(--warn);
+.orn-tb__floorname {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13px;
+  fill: var(--ink-2);
 }
 
-.map-legend__ring--crit {
-  border-color: var(--crit);
-}
-
-.map-legend__caption {
-  margin: 0;
+.orn-tb__item {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  line-height: 1.5;
-  color: var(--ink-2);
+  font-size: 8.5px;
+  fill: var(--ink-2);
 }
 
-.map-legend__caption strong {
-  color: var(--ok-text);
-  font-weight: 600;
+.orn-tb__ring {
+  fill: none;
+  stroke-width: 2;
 }
 
-.map-legend__caption--src {
-  color: var(--ink-3);
+.orn-tb__ring--ok {
+  stroke: var(--ok);
+}
+
+.orn-tb__ring--warn {
+  stroke: var(--warn);
+}
+
+.orn-tb__ring--crit {
+  stroke: var(--crit);
+}
+
+.orn-tb__credit {
+  font-family: var(--font-mono);
+  font-size: 6.2px;
+  letter-spacing: 0.07em;
+  fill: var(--ink-3);
+}
+
+.orn-scale rect.is-fill {
+  fill: var(--ink-2);
+}
+
+.orn-scale rect.is-open {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 0.7;
+}
+
+.orn-scale text {
+  font-family: var(--font-mono);
+  font-size: 5.8px;
+  fill: var(--ink-3);
+}
+
+.orn-north circle {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.orn-north path {
+  fill: var(--ink-2);
+}
+
+.orn-north text {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  fill: var(--ink-3);
 }
 
 /* --- hover preview tooltip --- */

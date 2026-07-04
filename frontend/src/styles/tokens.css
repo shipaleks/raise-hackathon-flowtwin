@@ -1,10 +1,11 @@
 /* ============================================================
-   FlowTwin design tokens — "Monad" editorial-technical system.
-   Warm parchment canvas, serif display type, mono UI text, pill
-   containers, hairline ash borders instead of shadows. One vivid
-   Lake Blue accent; status colors reserved for state; series
-   colors reserved for the arrival chart. All chart/status colors
-   validated (dataviz six-checks) against the surface they sit on.
+   FlowTwin design tokens — "Atelier" editorial-technical system.
+   One warm beige paper canvas (never white, never dark), display
+   serif for announcements, mono for instruments, hairline ink
+   ruling everywhere a border is needed. The whole app reads like
+   a beautifully printed architectural folio: plates, title blocks,
+   registration marks, one Lake Blue accent. Status colors are
+   reserved for state; series colors for the arrival chart only.
    ============================================================ */
 
 :root {
@@ -14,61 +15,65 @@
   --font-mono:
     'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --font-serif: 'Source Serif 4', ui-serif, Georgia, 'Times New Roman', serif;
+  /* the display voice — high-contrast editorial serif, headlines & figures */
+  --font-display: 'Instrument Serif', 'Source Serif 4', Georgia, serif;
 
-  /* --- planes & ink (warm grayscale) --- */
-  --page: #f6f3f1; /* parchment — the signature canvas, never pure white */
-  --surface: #faf8f6; /* cards & chrome: a half-step lighter parchment */
-  --surface-2: #eeeae6; /* inset wells, tracks, meters */
-  --ink: #242424; /* off-black */
-  --ink-2: #4e4d4d; /* graphite */
-  --ink-3: #6f6d6c; /* smoke, tuned to ≥4.5:1 on parchment for captions */
-  --border: #dcd7d3; /* hairline between planes of the same family */
-  --border-strong: #cecac8; /* ash — the drawn line of the system */
-  --grid: #e7e2dd;
-  --shadow-panel: 0 0 10px rgba(36, 36, 36, 0.08), 0 1px 2px rgba(36, 36, 36, 0.05);
-  --shadow-pop: 0 4px 14px rgba(36, 36, 36, 0.1);
-  --scrim: rgba(36, 33, 31, 0.32);
+  /* --- planes & ink (warm beige paper) --- */
+  --page: #f1ece1; /* the paper — warm beige, the signature canvas */
+  --surface: #f9f6ee; /* cards & plates: a half-step lighter sheet */
+  --surface-2: #e7e0d1; /* inset wells, tracks, meters */
+  --ink: #211e18; /* iron-gall ink */
+  --ink-2: #4e4a3f; /* graphite */
+  --ink-3: #6e6a5d; /* smoke — ≥4.5:1 on the paper for captions */
+  --border: #ddd5c4; /* hairline between planes of the same family */
+  --border-strong: #c7bea9; /* the drawn ash line of the system */
+  --grid: #e6dfce;
+  --shadow-panel: 0 0 10px rgba(33, 30, 24, 0.07), 0 1px 2px rgba(33, 30, 24, 0.05);
+  --shadow-pop: 0 6px 18px rgba(33, 30, 24, 0.12);
+  --shadow-plate: 0 24px 48px -20px rgba(33, 30, 24, 0.28);
+  --scrim: rgba(38, 33, 24, 0.34);
 
   /* --- the one accent: Lake Blue (interactive / brand only) --- */
-  --accent: #2b59d1; /* 5.5:1 on parchment — AA as text */
-  --accent-ink: #f6f3f1;
-  --accent-soft: rgba(43, 89, 209, 0.08);
-  --accent-line: rgba(43, 89, 209, 0.38);
+  --accent: #2b59d1; /* 5.4:1 on the paper — AA as text */
+  --accent-ink: #f5f1e8;
+  --accent-soft: rgba(43, 89, 209, 0.09);
+  --accent-line: rgba(43, 89, 209, 0.4);
 
   /* --- the one colored surface (elevated hero card) --- */
-  --periwinkle: #cfdaf5;
-  --periwinkle-ink: #242424;
+  --periwinkle: #d2dbf4;
+  --periwinkle-ink: #211e18;
 
-  /* --- decorative gradient washes (never functional UI) --- */
-  --wash-coral: rgba(255, 148, 115, 0.4);
-  --wash-sky: rgba(160, 181, 235, 0.42);
-  --wash-mint: rgba(167, 252, 205, 0.4);
-  --wash-gold: rgba(236, 218, 152, 0.42);
+  /* --- decorative aurora washes (never functional UI) --- */
+  --wash-coral: rgba(255, 141, 105, 0.42);
+  --wash-sky: rgba(150, 175, 236, 0.44);
+  --wash-mint: rgba(160, 240, 199, 0.36);
+  --wash-gold: rgba(238, 214, 138, 0.46);
+  --wash-lilac: rgba(196, 170, 244, 0.4);
   --wash-opacity: 0.5;
 
-  /* --- status (state only — never a series; validated on #f6f3f1) --- */
+  /* --- status (state only — never a series; validated on #f1ece1) --- */
   --ok: #217a3c;
-  --warn: #b8770a;
+  --warn: #a9700a;
   --crit: #c73a3a;
   --ok-text: #1d6b35;
-  --warn-text: #8a5a00;
+  --warn-text: #7d5300;
   --crit-text: #b32424;
   --ok-soft: rgba(33, 122, 60, 0.1);
-  --warn-soft: rgba(184, 119, 10, 0.12);
+  --warn-soft: rgba(169, 112, 10, 0.12);
   --crit-soft: rgba(199, 58, 58, 0.1);
 
   /* --- agent sex encoding (always paired with a letter label) --- */
-  --sex-m: #2a78d6;
-  --sex-f: #e87ba4;
+  --sex-m: #2a6fd0;
+  --sex-f: #df6f9d;
   --sex-u: #6b7280;
   --sex-m-ink: rgba(255, 255, 255, 0.97);
-  --sex-f-ink: #43102a;
+  --sex-f-ink: #400f28;
   --sex-u-ink: rgba(255, 255, 255, 0.97);
 
-  /* --- categorical series (fixed order, never cycled; validated on #f6f3f1) --- */
+  /* --- categorical series (fixed order, never cycled) --- */
   --cat-1: #33549c; /* ambulance */
   --cat-2: #177a53; /* walk-in   */
-  --cat-3: #a06b00; /* referral  */
+  --cat-3: #97650a; /* referral  */
 
   /* --- ghost/overlay (optimized path) --- */
   --ghost: rgba(43, 89, 209, 0.1);
@@ -83,9 +88,11 @@
   --dur-med: 260ms;
   --dur-slow: 420ms;
   --dur-zone: 600ms; /* agent zone-to-zone tween */
+  --dur-scene: 950ms; /* 3D plate transitions */
   --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.4, 0.44, 1);
+  --ease-3d: cubic-bezier(0.6, 0.05, 0.15, 1);
 }
 
 /* Meaningful motion only — collapse all durations when the user asks. */
@@ -95,5 +102,6 @@
     --dur-med: 0.01ms;
     --dur-slow: 0.01ms;
     --dur-zone: 0.01ms;
+    --dur-scene: 0.01ms;
   }
 }

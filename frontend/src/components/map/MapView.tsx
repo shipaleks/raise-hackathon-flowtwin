@@ -35,7 +35,7 @@ import { LIVE_MIN, fmtClock, fmtDur, simToDate } from '../../sim/time'
 import { HOSPITAL, hkLive } from '../../data/seed'
 import { useStore } from '../../store'
 import type { Risk } from '../../types'
-import { MapLegend } from './MapLegend'
+import { PlateOrnament } from './PlateOrnament'
 import './map.css'
 
 // ---------------------------------------------------------------- constants
@@ -425,6 +425,9 @@ export function MapView() {
             </text>
           </g>
 
+          {/* ---------------- drawing-sheet ornament ---------------- */}
+          <PlateOrnament floorId={floorId} dimmed={zoomed} />
+
           {/* ---------------- departments ---------------- */}
           {depts.map((d) => {
             const load = world.zones.depts.get(d.id)
@@ -568,7 +571,7 @@ export function MapView() {
             <g
               key={a.id}
               className="map-amb"
-              transform={`translate(${126 + i * 50} ${0}) scale(0.72)`}
+              transform={`translate(${126 + i * 50} ${1.5}) scale(0.62)`}
               aria-hidden="true"
             >
               <rect x={0} y={0} width={44} height={18} rx={4} />
@@ -709,8 +712,6 @@ export function MapView() {
           </>
         )}
       </div>
-
-      <MapLegend hidden={zoomed || selectedId != null} />
 
       <div ref={tipRef} className={`map-tip${hoverAgent ? ' is-on' : ''}`} aria-hidden="true">
         {hoverAgent ? (
