@@ -16,6 +16,15 @@ fi
 
 git add -A
 
+# Safety net for an auto-push hook: never let secret/env files reach the remote,
+# even if one is already tracked or slips past .gitignore. Unstage them.
+git reset -q -- '.env' '.env.*' '*.env' 'secrets*' '*.pem' '*.key' 2>/dev/null || true
+
+# If unstaging left nothing to commit, exit quietly.
+if git diff --cached --quiet; then
+  exit 0
+fi
+
 files=$(git diff --cached --name-only | head -n 5 | paste -sd', ' -)
 count=$(git diff --cached --name-only | wc -l | tr -d ' ')
 
