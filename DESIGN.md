@@ -1,267 +1,429 @@
-# FlowTwin — Product & Visual Design Document
+# Monad — Style Reference
+> editorial tech journal on warm parchment
 
-> Working name **FlowTwin** (see §0 for the rename rationale and alternatives).
-> This is the design source of truth for the demo UI. Build plan lives in [PLAN.md](./PLAN.md); concept in [idea.md](./idea.md).
-> The one-line paste-ready design brief for a prototyping tool (Fable) is in [FABLE_PROMPT.md](./FABLE_PROMPT.md).
+**Theme:** light
 
----
+Monad renders its entire interface on a warm parchment canvas (#f6f3f1) that immediately separates it from the typical pure-white SaaS template. Headlines carry editorial weight in Untitled Serif at weight 400 — never bold — while every body, nav, and UI string runs in ABC Diatype Mono, giving the site the texture of a technical manual typeset for a literary magazine. A single vivid Lake Blue (#2b59d1) is the only chromatic accent for primary actions; everything else lives in a warm grayscale, so a periwinkle card surface (#cfdaf5) and soft pastel gradient washes (coral, sky, mint, gold) read as deliberate punctuation rather than noise. Components lean on hairline borders and 100px pill containers rather than shadows, and the rhythm stays calm and spacious with 40px card padding and generous vertical breathing room between sections.
 
-## 0. Naming
+## Tokens — Colors
 
-**Problem with "WardFlow":** "Ward" reads clinical and a little institutional/scary (psychiatric ward, "being warded"), and "flow" on its own is generic. We want something clean, calm, professional, and clearly about *operations and movement*, not about being a patient.
+| Name | Value | Token | Role |
+|------|-------|-------|------|
+| Parchment | `#f6f3f1` | `--color-parchment` | Page canvas and the majority of surface fills — this warm off-white IS the brand's signature surface, immediately distinguishing the site from pure-white SaaS templates |
+| Lake Blue | `#2b59d1` | `--color-lake-blue` | Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color |
+| Periwinkle Mist | `#cfdaf5` | `--color-periwinkle-mist` | Muted UI surface for disabled controls, low-emphasis panels, and placeholder blocks. |
+| Sky Blue | `#a0b5eb` | `--color-sky-blue` | Decorative gradient stop — appears in atmospheric washes and the pipeline diagram's flow lines, never as a UI fill |
+| Mint | `#a7fccd` | `--color-mint` | Supporting palette color for small decorative accents when the core palette needs contrast. |
+| Coral | `#ff9473` | `--color-coral` | Supporting palette color for small decorative accents when the core palette needs contrast. |
+| Gold | `#ecda98` | `--color-gold` | Decorative gradient stop — warm accent in gradient washes, never used in functional UI |
+| Crimson | `#f37a0a` | `--color-crimson` | Decorative gradient stop — deep warm tone in gradient washes alongside gold and coral |
+| Off-Black | `#242424` | `--color-off-black` | High-contrast neutral action fill for primary buttons on light surfaces. |
+| Ink | `#000000` | `--color-ink` | Announcement bar surface and certain heading fills — the black band at the top of the page and select heading contexts |
+| Graphite | `#4e4d4d` | `--color-graphite` | Secondary text — body copy and sub-headings that need less weight than primary headlines |
+| Smoke | `#797776` | `--color-smoke` | Muted helper text and tertiary links |
+| Ash | `#cecac8` | `--color-ash` | Hairline borders — 1px solid lines separating sections, outlining pipeline diagram nodes, and defining card edges |
 
-**Recommendation — `FlowTwin`** (also already the repo name). It says exactly what the product is: a **live digital twin of your patient flow**. Modern, non-clinical, memorable, and it makes the whole pitch legible in three words. Tagline: *"FlowTwin — a live twin of your hospital's flow."*
+## Tokens — Typography
 
-**Strong alternatives** (all non-scary, ops-flavored, easy to say):
+### ABC Diatype Mono — Body text, navigation, buttons, badges, tags, and ALL UI strings. The monospace choice across every functional element gives the interface its technical-manual character — body copy at 16-20px reads as data, not marketing. Nav labels and badges use 18px uppercase with tighter tracking; small print and meta text use 12px uppercase. Weight 500 is reserved for emphasized UI labels. · `--font-abc-diatype-mono`
+- **Substitute:** JetBrains Mono, IBM Plex Mono, or Space Mono
+- **Weights:** 400, 500
+- **Sizes:** 12px, 14px, 16px, 18px, 20px, 28px
+- **Line height:** 1.0–1.35 (varies by size)
+- **Letter spacing:** -0.033em at 12px, -0.025em at 16px, -0.022em at 18px, -0.02em at 14px and 20px, -0.014em at 28px
+- **Role:** Body text, navigation, buttons, badges, tags, and ALL UI strings. The monospace choice across every functional element gives the interface its technical-manual character — body copy at 16-20px reads as data, not marketing. Nav labels and badges use 18px uppercase with tighter tracking; small print and meta text use 12px uppercase. Weight 500 is reserved for emphasized UI labels.
 
-| Name | Why it works | Watch-out |
-|---|---|---|
-| **FlowTwin** ✅ | Describes the product; matches repo; "twin follows the patient" | — |
-| **Meridian** | Calm, premium; evokes pathways / lines of flow | Common in finance branding |
-| **Cadence** | The rhythm and pace of operations; warm | Used by some HR/eng tools |
-| **Wayfinder** | Guides each patient's path through the building; hopeful, human | Slightly consumer-app feel |
-| **Tempo** | Short, punchy, about throughput and pace | Generic |
-| **Throughline** | The connecting thread of a patient's journey | Longer to say |
+### Untitled Serif — Display and heading type only — used at 80px (hero), 48px (section), 40px and 32px (sub-section), 24px (feature card titles). Weight is locked at 400 across all sizes; the serif's natural contrast and the -0.02em letter-spacing do the heavy lifting instead of bold weight. This is the editorial confidence signature: headlines whisper through typographic refinement rather than shout through weight. · `--font-untitled-serif`
+- **Substitute:** Times New Roman, Georgia, or any editorial serif with similar stroke contrast
+- **Weights:** 400
+- **Sizes:** 24px, 32px, 40px, 48px, 80px
+- **Line height:** 1.2
+- **Letter spacing:** -0.02em at all sizes (-1.6px at 80px, -0.96px at 48px, -0.8px at 40px, -0.64px at 32px, -0.48px at 24px)
+- **Role:** Display and heading type only — used at 80px (hero), 48px (section), 40px and 32px (sub-section), 24px (feature card titles). Weight is locked at 400 across all sizes; the serif's natural contrast and the -0.02em letter-spacing do the heavy lifting instead of bold weight. This is the editorial confidence signature: headlines whisper through typographic refinement rather than shout through weight.
 
-We'll use **FlowTwin** throughout this doc. Final call is a 5-minute kickoff decision — then never revisit (per PLAN §2.2).
+### Untitled Sans — Untitled Sans — detected in extracted data but not described by AI · `--font-untitled-sans`
+- **Weights:** 400
+- **Sizes:** 16px
+- **Line height:** 1.35
+- **Letter spacing:** -0.02
+- **Role:** Untitled Sans — detected in extracted data but not described by AI
 
----
+### Type Scale
 
-## 1. Design principles
+| Role | Size | Line Height | Letter Spacing | Token |
+|------|------|-------------|----------------|-------|
+| caption | 12px | 1.2 | -0.4px | `--text-caption` |
+| body-sm | 14px | 1.35 | -0.28px | `--text-body-sm` |
+| body | 16px | 1.35 | -0.4px | `--text-body` |
+| label | 18px | 1.2 | -0.4px | `--text-label` |
+| body-lg | 20px | 1.35 | -0.4px | `--text-body-lg` |
+| subheading | 24px | 1.2 | -0.48px | `--text-subheading` |
+| heading-sm | 32px | 1.2 | -0.64px | `--text-heading-sm` |
+| heading | 40px | 1.2 | -0.8px | `--text-heading` |
+| heading-lg | 48px | 1.2 | -0.96px | `--text-heading-lg` |
+| display | 80px | 1.2 | -1.6px | `--text-display` |
 
-The demo lives or dies on how *clean and calm* it looks. Judges should feel they're looking at a real, shippable hospital product — not a hackathon toy.
+## Tokens — Spacing & Shapes
 
-1. **Calm, clinical-grade minimalism.** Lots of white space, a single restrained accent, no gradients-for-fun, no clutter. Think Linear / Apple Health / modern EHR, not a gamified dashboard.
-2. **One thing in focus at a time.** The map holds attention; detail arrives in a side panel, never a modal pile-up.
-3. **Everything is explainable.** Every prediction shows *why* (which events, which model, what confidence). Nothing is a magic number.
-4. **Motion is meaningful, never decorative.** Agents move because a patient moved; a number slides because state changed. Respect `prefers-reduced-motion`.
-5. **Operations, never diagnosis.** The whole product optimizes time, beds, and queues. Care stays with clinicians. This is a visible, load-bearing constraint (NemoGuard badge, ops-only copy).
-6. **De-humanize the token, humanize the care.** Patients are represented by neutral **agent glyphs**, not little people — it keeps the tone professional and privacy-respecting and reinforces "this is the *agent* that follows the patient," not surveillance of a person.
+**Base unit:** 8px
 
-**Accessibility:** WCAG-AA contrast, full light + dark themes, keyboard navigable, color never the sole signal (always pair color with icon/label).
+**Density:** comfortable
 
----
+### Spacing Scale
 
-## 2. Two operating modes — Doctor view vs Administrator view
+| Name | Value | Token |
+|------|-------|-------|
+| 8 | 8px | `--spacing-8` |
+| 16 | 16px | `--spacing-16` |
+| 24 | 24px | `--spacing-24` |
+| 32 | 32px | `--spacing-32` |
+| 40 | 40px | `--spacing-40` |
+| 64 | 64px | `--spacing-64` |
+| 72 | 72px | `--spacing-72` |
+| 80 | 80px | `--spacing-80` |
+| 200 | 200px | `--spacing-200` |
+| 216 | 216px | `--spacing-216` |
 
-A top-bar toggle switches the entire lens. Same underlying data, different questions, different affordances. **This is a headline feature** — it shows we understand that a hospital has (at least) two very different users.
+### Border Radius
 
-### 2.1 Doctor / Clinical-Ops view (default)
-The mindset: *"What's happening with the patients in front of me, and what's the next best operational move?"*
+| Element | Value |
+|---------|-------|
+| tags | 9999px |
+| cards | 40px |
+| pills | 9999px |
+| buttons | 100px |
 
-- Patient-centric. Deep on the individual: full journey, pending tests, predicted exit, current blocker, the single recommended next action.
-- Shows the **"See flow"** journey, intake signals, and the ops recommendation with the NemoGuard "Ops-only ✓" badge.
-- **Never shows money.** No cost figures, no staffing-budget language. A doctor doesn't want (and shouldn't be nudged by) cost-per-bed-hour at the point of care.
-- Zone loads shown as *clinical* pressure (queue length, longest wait), not dollars.
+### Shadows
 
-### 2.2 Administrator view
-The mindset: *"Where is the whole hospital bottlenecked, and what reallocation buys the most throughput?"*
+| Name | Value | Token |
+|------|-------|-------|
+| md | `rgba(0, 0, 0, 0.1) 0px 0px 10px 0px` | `--shadow-md` |
 
-- Aggregate-centric. Department loads, bed occupancy, throughput, arrival forecast, cost-of-delay.
-- Surfaces optimization plays: *"Cardiology is blocking 4 ER beds; reassigning one cardiologist for 60 min frees ~3h20m of overstay (≈ 2.6 bed-hours, est. €X)."*
-- Shows **capacity planning**: predicted arrivals next N hours by entry mode; projected occupancy; where today will break if nothing changes.
-- Money and staffing are allowed and central here.
+### Layout
 
-> Design rule: the *same* bottleneck renders as **"90-min cardiology queue delaying Sarah"** for the doctor and **"Cardiology = top avoidable-wait driver, €X/day"** for the admin. One truth, two framings.
+- **Page max-width:** 1432px
+- **Section gap:** 64px
+- **Card padding:** 40px
+- **Element gap:** 16px
 
----
+## Components
 
-## 3. Spatial navigation — drill-down, not a flat map
+### Announcement Bar
+**Role:** Top-of-page notification strip
 
-We navigate *into* the building, zooming through levels of detail. A breadcrumb sits top-left; clicking a zone zooms in, `Esc` / breadcrumb zooms out. Each zone shows a live **agent count** and a **load ring**.
+Full-width black (#000000) bar, ~40px tall, containing mono text in white (#f6f3f1) at 14px and a small white pill button (9999px radius, white border, 12px uppercase text) anchored right. Close icon (×) in white at far right.
 
+### Primary Pill Button (Blue)
+**Role:** Primary conversion action
+
+Lake Blue (#2b59d1) fill, white text in ABC Diatype Mono at 14px uppercase, 100px border-radius, 16px 32px padding, with a trailing arrow (▸) glyph in white. Height ~48px. This is the only saturated fill in the system.
+
+### Primary Pill Button (Black)
+**Role:** Secondary conversion action
+
+Off-Black (#242424) fill, white text in ABC Diatype Mono at 14px uppercase, 100px border-radius, 16px 32px padding, no arrow. Height ~48px.
+
+### Ghost Pill Button
+**Role:** Tertiary navigation action
+
+Transparent fill, 1px Off-Black (#242424) border, Off-Black text in ABC Diatype Mono at 14px uppercase, 100px border-radius, 16px 32px padding. Height ~48px.
+
+### Text Link with Arrow
+**Role:** Navigation link with directional indicator
+
+Transparent fill, Off-Black (#242424) text in ABC Diatype Mono at 14px, trailing rightward arrow (→) in Off-Black. No background or border. Uppercase tracking.
+
+### Pipeline Node Tag
+**Role:** Labeled node in the data pipeline diagram
+
+Parchment (#f6f3f1) fill, 1px Ash (#cecac8) border, 9999px border-radius (full pill), small mono icon (12px) + 14px mono uppercase text, 12px 20px padding. Connected by thin curved Ash lines to adjacent nodes.
+
+### Feature Card
+**Role:** Product capability card with icon, title, description
+
+Transparent or Parchment fill, 1px Ash (#cecac8) border, 40px border-radius, 40px padding. Small mono icon (20px) in top-left at 16px padding offset. Title in Untitled Serif at 24px weight 400, Off-Black. Body in ABC Diatype Mono at 16px weight 400, Graphite (#4e4d4d). No shadow.
+
+### Elevated Feature Card (Periwinkle)
+**Role:** Hero feature card with gradient illustration
+
+Periwinkle Mist (#cfdaf5) fill, 40px border-radius, 40px padding. Contains a large gradient illustration on the right side using Coral → Sky Blue → Mint washes. Title in Untitled Serif 24px, body in mono 16px. This is the one card that uses a colored surface to draw the eye.
+
+### FAQ Accordion Item
+**Role:** Expandable question/answer row
+
+Full-width row, 40px vertical padding, 1px Ash (#cecac8) bottom border (no top border). Question text in Untitled Serif at 24px weight 400, Off-Black. Trailing chevron icon (↓) in Off-Black, 20px, right-aligned. No background fill change on hover.
+
+### Logo Strip
+**Role:** Social proof partner logo row
+
+Single horizontal row of 6-7 partner logos in grayscale (desaturated from original brand colors), evenly spaced with ~32px gaps, left-aligned within max-width container. No logo lockup borders or cards.
+
+### Gradient Atmospheric Wash
+**Role:** Decorative background gradient blob
+
+Large blurred radial/linear gradient using Coral (#ff9473 80% opacity) → Sky Blue (#a0b5eb 80% opacity) or Sky Blue → Mint (#a7fccd), rendered with blur(50-75px) filter, positioned behind hero or feature content. Never sharp-edged, always softly diffused.
+
+### Navigation Bar
+**Role:** Primary site navigation
+
+Transparent or Parchment background, logo on far left (monad wordmark + circular dot mark), 4-5 nav text links centered or left-grouped in ABC Diatype Mono 18px uppercase Off-Black, action buttons (Login ghost + Get a Demo blue pill) right-aligned. ~80px height, no visible border.
+
+### Hero Section
+**Role:** First-screen headline and subtext
+
+Full-width Parchment background, centered content stack: Untitled Serif headline at 80px weight 400 Off-Black, monospace subtext at 20px Graphite (#4e4d4d) at 1.35 line-height, two pill buttons centered below. No background image — pure typographic hero.
+
+## Do's and Don'ts
+
+### Do
+- Use Untitled Serif at weight 400 for all headings — never go bold; the serif's stroke contrast and -0.02em tracking carry the weight visually
+- Use ABC Diatype Mono for all body copy, buttons, nav labels, badges, and functional UI text — the monospace IS the brand voice
+- Set all button and tag border-radius to 100px or 9999px — pill shapes are the container language of this system
+- Use Parchment (#f6f3f1) as the page canvas — never substitute pure white (#ffffff); the warm tint is signature
+- Reserve Lake Blue (#2b59d1) exclusively for the single primary action per screen; all other buttons use Off-Black or ghost variants
+- Use 1px solid Ash (#cecac8) for all borders and dividers — avoid thicker weights or darker border colors
+- Apply uppercase + tight tracking to all nav labels, buttons, and tag text via the monospace family
+
+### Don't
+- Never set headings in bold or 600+ weight — Untitled Serif headlines stay at 400 across all sizes
+- Never use pure white (#ffffff) as a page background — always use Parchment (#f6f3f1) to preserve the warm surface
+- Never use Lake Blue (#2b59d1) for anything other than the single primary action fill — it loses meaning if scattered
+- Never substitute a sans-serif for the monospace body font — the mono/serif pairing is the defining typographic gesture
+- Never apply drop shadows to cards — use 1px Ash borders and surface color contrast (Parchment → Periwinkle) for elevation instead
+- Never use corner radii below 16px on cards or below 100px on buttons — the system is pill-and-soft-rect, never sharp
+- Never introduce additional accent colors for UI elements — the pastel palette (Sky, Mint, Coral, Gold) is decorative-only and belongs in illustrations and gradient washes
+
+## Surfaces
+
+| Level | Name | Value | Purpose |
+|-------|------|-------|---------|
+| 1 | Parchment | `#f6f3f1` | Page canvas — the base warm off-white that fills the entire viewport |
+| 2 | Periwinkle Mist | `#cfdaf5` | Elevated card surface — the one colored card that breaks the monochrome to draw the eye |
+| 3 | Off-Black | `#242424` | Dark surface for secondary buttons and inverted UI contexts |
+| 4 | Ink | `#000000` | Announcement bar — the darkest surface, used for the top notification strip |
+
+## Elevation
+
+- **Subtle ambient elevation:** `rgba(0, 0, 0, 0.1) 0px 0px 10px 0px`
+
+## Imagery
+
+The visual language is dominated by a custom data pipeline diagram: pill-shaped bordered nodes connected by thin curved lines, with small icons inside each node representing data sources (Any Source, Cloud Logs, Vulnerabilities) and destinations (SIEM, Cloud Storage, Data Lake). The diagram uses a soft green radial glow at the center hub to suggest data normalization. Gradient atmospheric washes (Coral → Sky Blue, Sky Blue → Mint) with heavy blur filters create soft color halos behind hero and feature content. Partner logos appear desaturated in a single social-proof row. The 'In-flight Data Transforms' card features a large gradient illustration with overlapping translucent geometric shapes. No photography is used — the brand communicates through typography, diagram, and color wash alone.
+
+## Agent Prompt Guide
+
+Quick Color Reference:
+- text: #242424 (Off-Black)
+- background: #f6f3f1 (Parchment)
+- border: #cecac8 (Ash)
+- accent: #2b59d1 (Lake Blue)
+- primary action: no distinct CTA color
+
+Example Component Prompts:
+
+1. Create a hero section on Parchment (#f6f3f1) background. Centered headline in Untitled Serif at 80px weight 400, color #242424, letter-spacing -1.6px. Subtext below in ABC Diatype Mono at 20px weight 400, color #4e4d4d, line-height 1.35. Two centered pill buttons: primary Lake Blue (#2b59d1) with white text, and ghost (1px #242424 border, transparent fill, #242424 text), both 100px border-radius, 16px 32px padding, ABC Diatype Mono 14px uppercase.
+
+2. Create a feature card on Parchment background. 1px solid #cecac8 border, 40px border-radius, 40px padding. Small 20px mono icon top-left at #242424. Title in Untitled Serif 24px weight 400, #242424. Body in ABC Diatype Mono 16px weight 400, #4e4d4d. No shadow.
+
+3. Create a secondary pill button: Off-Black (#242424) fill, white text in ABC Diatype Mono 14px uppercase, 100px border-radius, 16px 32px padding, no arrow.
+
+4. Create an FAQ accordion row: full-width, 40px vertical padding, 1px solid #cecac8 bottom border only. Question in Untitled Serif 24px weight 400, #242424. Trailing down-chevron icon (↓) in #242424 at 20px, right-aligned. No background fill.
+
+5. Create a pipeline diagram node tag: Parchment (#f6f3f1) fill, 1px solid #cecac8 border, 9999px border-radius, 12px 20px padding. Small 12px icon + 14px text in ABC Diatype Mono uppercase, #242424.
+
+## Typography Pairing Philosophy
+
+The serif-mono pairing is the single most distinctive design choice in this system. Untitled Serif handles all hierarchical display text (headlines, section titles, feature card titles, FAQ questions) — it carries editorial authority through its stroke contrast and refined letterforms, not through weight (always 400). ABC Diatype Mono handles everything functional: body paragraphs, navigation, button labels, badges, tags, and inline UI text. This creates a consistent voice: the serif announces, the mono instructs. A page that swapped in a sans-serif for body would lose its identity immediately.
+
+## Similar Brands
+
+- **Linear** — Shares the restrained monochrome palette and minimal-elevation card approach, though Monad's warm Parchment canvas and serif headlines set it apart from Linear's cooler white surface
+- **Stripe** — Both use custom editorial serif typefaces for headlines with tight letter-spacing and -0.02em tracking, treating the homepage as a typographic composition rather than a product screenshot
+- **Vercel** — Shares the comfortable-density spacing, generous section gaps, and pill-shaped button language, though Monad adds the warm canvas and mono body twist
+- **Railway** — Both target developer audiences with a monospace-leaning UI vocabulary and minimal decoration, but Monad layers in the editorial serif for a more literary feel
+- **Arc Browser** — Both use warm off-white surfaces rather than pure white, and both treat the page as a designed editorial artifact rather than a typical SaaS template
+
+## Quick Start
+
+### CSS Custom Properties
+
+```css
+:root {
+  /* Colors */
+  --color-parchment: #f6f3f1;
+  --color-lake-blue: #2b59d1;
+  --color-periwinkle-mist: #cfdaf5;
+  --color-sky-blue: #a0b5eb;
+  --color-mint: #a7fccd;
+  --color-coral: #ff9473;
+  --color-gold: #ecda98;
+  --color-crimson: #f37a0a;
+  --color-off-black: #242424;
+  --color-ink: #000000;
+  --color-graphite: #4e4d4d;
+  --color-smoke: #797776;
+  --color-ash: #cecac8;
+
+  /* Typography — Font Families */
+  --font-abc-diatype-mono: 'ABC Diatype Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-untitled-serif: 'Untitled Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-untitled-sans: 'Untitled Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-caption: 12px;
+  --leading-caption: 1.2;
+  --tracking-caption: -0.4px;
+  --text-body-sm: 14px;
+  --leading-body-sm: 1.35;
+  --tracking-body-sm: -0.28px;
+  --text-body: 16px;
+  --leading-body: 1.35;
+  --tracking-body: -0.4px;
+  --text-label: 18px;
+  --leading-label: 1.2;
+  --tracking-label: -0.4px;
+  --text-body-lg: 20px;
+  --leading-body-lg: 1.35;
+  --tracking-body-lg: -0.4px;
+  --text-subheading: 24px;
+  --leading-subheading: 1.2;
+  --tracking-subheading: -0.48px;
+  --text-heading-sm: 32px;
+  --leading-heading-sm: 1.2;
+  --tracking-heading-sm: -0.64px;
+  --text-heading: 40px;
+  --leading-heading: 1.2;
+  --tracking-heading: -0.8px;
+  --text-heading-lg: 48px;
+  --leading-heading-lg: 1.2;
+  --tracking-heading-lg: -0.96px;
+  --text-display: 80px;
+  --leading-display: 1.2;
+  --tracking-display: -1.6px;
+
+  /* Typography — Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+
+  /* Spacing */
+  --spacing-unit: 8px;
+  --spacing-8: 8px;
+  --spacing-16: 16px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-64: 64px;
+  --spacing-72: 72px;
+  --spacing-80: 80px;
+  --spacing-200: 200px;
+  --spacing-216: 216px;
+
+  /* Layout */
+  --page-max-width: 1432px;
+  --section-gap: 64px;
+  --card-padding: 40px;
+  --element-gap: 16px;
+
+  /* Border Radius */
+  --radius-2xl: 16px;
+  --radius-3xl: 40px;
+  --radius-full: 100px;
+  --radius-full-2: 2000px;
+  --radius-full-3: 9999px;
+
+  /* Named Radii */
+  --radius-tags: 9999px;
+  --radius-cards: 40px;
+  --radius-pills: 9999px;
+  --radius-buttons: 100px;
+
+  /* Shadows */
+  --shadow-md: rgba(0, 0, 0, 0.1) 0px 0px 10px 0px;
+
+  /* Surfaces */
+  --surface-parchment: #f6f3f1;
+  --surface-periwinkle-mist: #cfdaf5;
+  --surface-off-black: #242424;
+  --surface-ink: #000000;
+}
 ```
-Hospital  ›  Department / Sector  ›  Specialty region  ›  Room / area
-(campus)     (Emergency, Imaging,    (within Cardiology:    (MRI room, ER bay 4,
-             Cardiology, Surgery,     cath lab, telemetry,    triage, waiting area,
-             Wards, Discharge)        consult bench)          ambulance bay / "outside")
+
+### Tailwind v4
+
+```css
+@theme {
+  /* Colors */
+  --color-parchment: #f6f3f1;
+  --color-lake-blue: #2b59d1;
+  --color-periwinkle-mist: #cfdaf5;
+  --color-sky-blue: #a0b5eb;
+  --color-mint: #a7fccd;
+  --color-coral: #ff9473;
+  --color-gold: #ecda98;
+  --color-crimson: #f37a0a;
+  --color-off-black: #242424;
+  --color-ink: #000000;
+  --color-graphite: #4e4d4d;
+  --color-smoke: #797776;
+  --color-ash: #cecac8;
+
+  /* Typography */
+  --font-abc-diatype-mono: 'ABC Diatype Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-untitled-serif: 'Untitled Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-untitled-sans: 'Untitled Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-caption: 12px;
+  --leading-caption: 1.2;
+  --tracking-caption: -0.4px;
+  --text-body-sm: 14px;
+  --leading-body-sm: 1.35;
+  --tracking-body-sm: -0.28px;
+  --text-body: 16px;
+  --leading-body: 1.35;
+  --tracking-body: -0.4px;
+  --text-label: 18px;
+  --leading-label: 1.2;
+  --tracking-label: -0.4px;
+  --text-body-lg: 20px;
+  --leading-body-lg: 1.35;
+  --tracking-body-lg: -0.4px;
+  --text-subheading: 24px;
+  --leading-subheading: 1.2;
+  --tracking-subheading: -0.48px;
+  --text-heading-sm: 32px;
+  --leading-heading-sm: 1.2;
+  --tracking-heading-sm: -0.64px;
+  --text-heading: 40px;
+  --leading-heading: 1.2;
+  --tracking-heading: -0.8px;
+  --text-heading-lg: 48px;
+  --leading-heading-lg: 1.2;
+  --tracking-heading-lg: -0.96px;
+  --text-display: 80px;
+  --leading-display: 1.2;
+  --tracking-display: -1.6px;
+
+  /* Spacing */
+  --spacing-8: 8px;
+  --spacing-16: 16px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-64: 64px;
+  --spacing-72: 72px;
+  --spacing-80: 80px;
+  --spacing-200: 200px;
+  --spacing-216: 216px;
+
+  /* Border Radius */
+  --radius-2xl: 16px;
+  --radius-3xl: 40px;
+  --radius-full: 100px;
+  --radius-full-2: 2000px;
+  --radius-full-3: 9999px;
+
+  /* Shadows */
+  --shadow-md: rgba(0, 0, 0, 0.1) 0px 0px 10px 0px;
+}
 ```
-
-- **Level 0 — Hospital:** clean floor-plate of departments as soft rounded zones. Each zone = name, agent count, load ring (green→amber→red), 1-line status.
-- **Level 1 — Department:** zoom into e.g. Emergency; see its rooms/areas (triage, bays, waiting, imaging hand-off) with agents positioned in them.
-- **Level 2 — Specialty region:** e.g. Cardiology → cath lab / telemetry / consult queue.
-- **Level 3 — Room/area:** the individual bay or scanner, with the agents currently there.
-
-Agents **move between zones** as their patient's state changes (arrival → triage → bay → imaging → observation → discharge). On discharge the glyph animates out of the map; its record and memory are **archived** (reachable via the time scrubber and a "Discharged today" list) — the agent keeps its memory, it just leaves the floor.
-
----
-
-## 4. The agents — bot glyphs, not humans
-
-Each patient is represented by a small **SVG agent glyph** — deliberately *not* a humanoid. Think a soft rounded-square "bot" token with a simple mark (in the spirit of an AI-agent avatar / a friendly sparkle-asterisk), not a stick figure. This keeps the tone professional and privacy-forward and reinforces the core idea: *this is the agent that shadows the patient.*
-
-- **Color = sex:** **blue** for male, **pink** for female. (Neutral fallback grey if unknown.) Color is paired with a letter/icon so it's not the only signal.
-- **State ring / accent:** a thin ring encodes delay risk — calm (on-track), amber (at-risk), red (blocked). Subtle pulse only when blocked.
-- **Hover → preview tooltip:** name, age, chief complaint, current wait, predicted exit, risk. ~250 ms fade, follows cursor, non-blocking.
-- **Click → patient sheet** slides in from the right (see §5).
-- **Density:** ~5–8 agents on screen for the demo (one deep, the rest shallow). Clusters near a bottleneck (e.g. Cardiology at the overload beat) read at a glance.
-
----
-
-## 5. The patient sheet — right-hand detail panel
-
-Clicking an agent opens a clean **right side panel** (the "patient sheet"), overlaying nothing important, dismissible with `Esc` or a click-away. Header: agent glyph, name, age, sex, chief complaint, pathway, a big **predicted-exit chip with confidence**, and the **"Ops-only ✓ (NemoGuard)"** badge.
-
-Three tabs:
-
-### Tab 1 — Flow  *(the "See flow" view; see §6)*
-The patient's journey through the hospital: time in each section, what was done, what was decided, and where a decision could be improved.
-
-### Tab 2 — Predictions
-- Predicted exit time **with confidence interval** (e.g. *16:50, 80% CI ±40 min*).
-- Predicted length-of-stay vs. pathway benchmark.
-- **Tests / steps still pending** and the current **blocker**.
-- The single **recommended operational action** + expected time saved.
-- **Model transparency line:** which model produced this and from what inputs (see §9). Never a bare number.
-
-### Tab 3 — Intake & Signals
-- Arrival mode (walk-in / ambulance / referral) and initial complaint.
-- **Vocal-biomarker screening** result from the reception conversation (§8) — shown as *screening flags*, clearly labelled non-diagnostic.
-- **Wearable / fitness-tracker** import (HR, HRV, SpO₂, overnight arrhythmia flags, activity) if the patient shared it.
-- How these signals **shifted the prediction or suggested a step** (e.g. "overnight arrhythmia flag → cardiology consult pre-ordered").
-
----
-
-## 6. The Flow view — journey + optimization overlay
-
-The centerpiece of the Doctor view and the most "wow" screen. A horizontal **journey timeline** of the patient's path: each segment is a zone the patient sat in, sized by minutes spent, annotated with what happened (bloods ordered, imaging done, consult requested) and what was decided.
-
-Two layers, toggleable:
-
-1. **Actual path** — what really happened, with time-in-each-section and total.
-2. **Optimized path (FlowTwin suggestion)** — a ghosted overlay showing where a decision could have been made earlier or differently, with the time saved called out.
-
-Examples of the optimization callouts (drive the "we can also show improvements" ask):
-- *"Troponin could have been ordered at triage instead of after bed assignment → −35 min."*
-- *"Wearable showed overnight arrhythmia → cardiology consult could have been pre-ordered at arrival → −50 min."*
-- *"Patient was medically ready to move 40 min before the bed was requested → −40 min ER occupancy."*
-
-Each callout is tagged **operational** (never "wrong diagnosis" — always "sequence/timing could improve"), keeping us safely on the ops side of the line. We ship **multiple simulated tracks** (§11) so we can show both a clean journey and a fixable one.
-
----
-
-## 7. Time scrubber — the last 7 days + today
-
-A slim **timeline scrubber** pinned to the bottom. Dragging it re-renders the *entire* hospital state at that moment: agent positions, zone loads, predictions, blockers. This is how we "show state changes over time" and "click through a patient's full history."
-
-- **Range:** the pre-loaded **7 days of history** + **today** (live/sim).
-- **Preset jumps:** `2 AM` (quiet) · `Morning rounds` · `Lunchtime` · `Shift change 18:00` — each a very different-looking hospital, which reads beautifully on stage.
-- **Play / pause / speed:** animate forward through time; agents flow between zones.
-- **Beat markers:** the scripted demo beats (lab delay, cardio overload) are pinned as ticks so the presenter can jump precisely.
-- **Per-patient history:** with a patient sheet open, the scrubber scopes to that patient's timeline so you can replay just their journey.
-
-The scrubber *is* the sim clock — it unifies "presenter pacing control" (PLAN §2.2) with "historical playback."
-
-### 7.1 Open dataset backbone (real data, not synthetic)
-
-The 7-day history and the patients are **seeded from open hospital datasets**, so LOS distributions, acuity mix, and arrival patterns are real. Options, best-fidelity first:
-
-| Dataset | What it gives us | Access | Use |
-|---|---|---|---|
-| **MIMIC-IV-ED** (PhysioNet, ~425k ED stays, BIDMC 2011–2019) | Triage acuity (ESI 1–5), chief complaint, vitals, ED arrival/discharge times → real journeys + LOS | Free but **credentialed** (short CITI training + DUA); redistribution-restricted, so we load locally, never commit | Primary if a teammate gets credentialed in time |
-| **Synthea** (synthetic, fully open, license-free) | Full longitudinal encounters with timestamps; generate any volume of realistic journeys | Open, no credentialing | Fast, safe fallback for the flow view + scrubber |
-| **`infinite-dataset-hub/HospitalAdmissions`** (Hugging Face) | Demographics, diagnosis, admit/discharge dates, LOS, outcome label | Open, immediate `datasets.load_dataset` | Quick LOS/ETA-model + Admin KPIs (lacks intra-stay event times) |
-| Iran teaching-hospital ED (ScienceDirect, open-access) | `ED_triage` / `ED_admission` / `services` event tables | Open download | Extra event-level flow texture |
-
-**Honesty note:** MIMIC data is *not* redistributable — it stays local and is gitignored (never pushed). Where we synthesize to fill gaps (e.g. exact room-level positions the datasets don't record), we say so. See §14 for the "which dataset" decision.
-
----
-
-## 8. Intake & data sources
-
-**The real data backbone is an open hospital dataset** (see §7.1 below), not synthetic. Every patient's intake — demographics, arrival mode, chief complaint, triage acuity, vitals, timestamps, and length-of-stay outcome — comes from real records, which is what makes the flow view and the predictions credible on stage.
-
-The **Intake & Signals** tab surfaces those fields, and *names additional data sources the platform can plug in* — we **mention** these to show the vision; we do **not build** them for the demo:
-
-- **Wearable / fitness-tracker** data (HR, HRV, SpO₂, overnight arrhythmia flags, activity) — one example extra input a patient could share at intake.
-- **Vocal biomarkers** — an emerging field where a short reception conversation yields *non-diagnostic screening flags* (stress, respiratory, cognitive). Grounded in real work (e.g. **Klick Labs 2023** diabetes-from-voice; Sonde/Canary/Vocalis). **Mention only** — presented as "one more signal we could fuse in," always labelled *"screening, not diagnosis,"* and (like everything) it would run **on-prem** so voice never leaves the building.
-
-Framing rule for any mentioned source: operational triage support, never diagnosis; ops-gated by NemoGuard; sovereign by design (§10).
-
-**Demo beat:** open a patient's **Intake** tab → the real dataset fields populate; a small "additional sources" row shows *example* wearable / vocal-biomarker inputs as pluggable (greyed "available" chips), making the point without us building them.
-
----
-
-## 9. Prediction models — what we use, and how honest we are about it
-
-The user asked us to be **very clear about which models power which number**. We are. Three prediction surfaces, each labelled in-UI:
-
-| Surface | What it predicts | How (demo) | Shown as |
-|---|---|---|---|
-| **FlowTwin ETA** *(our model)* | Remaining time / predicted exit for a patient | Lightweight **quantile regression / survival** over the 7-day event log; features: pathway, arrival mode, current zone, elapsed wait, live resource state, time-of-day, intake/wearable flags | Exit time **+ confidence interval** (e.g. 16:50, 80% CI ±40 min) |
-| **FlowTwin Arrival Forecast** *(our model)* | Patients arriving next N hours, by entry mode | Historical time-of-day/day-of-week rates from the 7-day log | Admin view: expected arrivals + occupancy projection |
-| **Reasoning / recommendation** | Blocker, next best operational action, hospital-wide insight | **Gemini** (stateful Interactions chain per patient) + **Antigravity** Ops Chief over the event log | Plain-language action + explanation |
-
-**Confidence & calibration (the "how far off are we" ask):** because we hold the 7-day history *with known outcomes*, we can show a live **calibration readout** — e.g. *"80% interval covered 82% of past cases; median error ±22 min."* That turns "trust me" into "here's our track record," which is exactly what an administrator wants.
-
-**Honesty rules:**
-- The ETA and arrival models are **lightweight statistical models over the operational log** — not black boxes, not clinical inference. We say so.
-- We never predict a medical outcome — only *operational timing and flow*.
-- Where a number is model-derived, the UI names the model. No anonymous magic.
-
----
-
-## 10. Data sovereignty & local hosting (+ the Gemma roadmap)
-
-A first-class pitch pillar, not a footnote. **Hospitals cannot ship patient data to arbitrary clouds.** FlowTwin is designed sovereign:
-
-- **On-prem models:** PersonaPlex (patient voice), Nemotron (department fleet), NemoGuard (safety gate), and the vocal-biomarker screening are **open models that run inside the hospital**. Voice and PHI never leave the building.
-- **What leaves (today, honestly):** the frontier reasoning calls (Gemini/Antigravity) run in the cloud but carry only **de-identified operational metadata** — timings, queue states, resource counts — not names or clinical detail. We say this plainly; it's the difference between a demo and a deployable system.
-- **The roadmap narrative — Gemma (do NOT build on it; position it):** *"Today we split frontier-cloud reasoning from on-prem open models. In 2–3 years, open on-device models like **Gemma** will be capable enough to run the entire stateful-agent layer **inside the hospital**, on the hospital's own hardware — and then nothing leaves the building at all. FlowTwin is architected for that day: swap the reasoning endpoint from cloud Gemini to local Gemma and the whole system goes fully sovereign."*
-
-Place the Gemma line on the **closing/roadmap slide** and mention it once when explaining model tiering. It flatters Google, reinforces sovereignty, and gives a credible "where this goes" without us having to build it now.
-
----
-
-## 11. Patient tracks (for the demo)
-
-Seeded from the open dataset (§7.1) and pinned so the demo is deterministic (PLAN §2.2); each track showcases a different capability:
-
-1. **Sarah M., 58, chest pain — the hero, fixable delay.** Clean arrival, then lab delay + cardiology overload push her exit out; the "See flow" optimization overlay shows −35/−50 min opportunities; one tap (Computer Use) resolves it. Voiced via PersonaPlex.
-2. **Near-optimal track — a control.** A patient whose journey was near-ideal, so the optimization overlay shows almost no waste — proves the tool isn't just crying wolf.
-3. **Extra-signal track (illustrative).** A patient whose Intake tab shows an *example* pluggable source (wearable arrhythmia flag) that *would* let FlowTwin pre-order a consult earlier. We **mention** the source, not build it — it makes the "richer inputs" point without new scope.
-
-All tracks appear across the 7-day scrubber as historical journeys too, so the hospital-history story (recurring 14:00–17:00 cardiology backup) is grounded in real data, not a slide.
-
----
-
-## 12. Visual system spec
-
-- **Layout:** left = drill-down map (dominant), right = collapsible patient sheet, top = view toggle + breadcrumb + global status, bottom = time scrubber.
-- **Color:** near-white / soft-neutral canvas; **one** calm accent (recommend a medical teal or calm blue) for interactive/primary; semantic set — green (on-track), amber (at-risk), red (blocked). Agent sex: blue (M) / pink (F) / grey (unknown), always paired with a label. Full dark theme.
-- **Type:** one clean humanist sans (e.g. Inter). Generous line-height. Numbers tabular so predictions don't jitter as they update.
-- **Components:** zone card (name / count / load ring / status), agent glyph, hover tooltip, patient sheet w/ tabs, journey timeline (actual + ghost overlay), prediction chip w/ CI, calibration readout, NemoGuard badge, scrubber with beat markers, view toggle, department/admin KPI tiles.
-- **Motion:** agent zone-to-zone tween (~600 ms ease), number slide on state change, panel slide-in (~200 ms). Nothing gratuitous. Honor reduced-motion.
-- **Empty/loading/fallback states** designed for every panel (the demo must look composed even if an API is slow — PLAN §2.2).
-
----
-
-## 13. Screen inventory (what the prototype must contain)
-
-1. **Hospital overview** (Level 0) — Doctor view, calm state.
-2. **Department drill-down** (Levels 1–3) with breadcrumb + agent counts.
-3. **Patient sheet** — all three tabs (Flow / Predictions / Intake & Signals).
-4. **Flow view** with actual + optimized overlay and callouts.
-5. **Administrator view** — hospital KPIs, bottleneck + reallocation play, arrival forecast, cost-of-delay.
-6. **Time scrubber** with the four preset jumps and beat markers.
-7. **Intake moment** — a patient's Intake tab populating from the open dataset, with example wearable / vocal-biomarker sources shown as greyed "pluggable" chips (mention, not built).
-8. **Resolve-delay moment** — recommendation → one tap → agent moves on the map (ties to the Computer Use beat).
-9. **Import-history moment** — the "load last 7 days" ingestion that visibly calibrates the models.
-10. **Closing/architecture + sovereignty/Gemma-roadmap** slide surface.
-
----
-
-## 14. Decisions (locked from team feedback) + what's still open
-
-**Locked:**
-1. **Name** — decide later; **FlowTwin** stays as the working name (alternatives in §0).
-2. **Views** — **Doctor + Administrator only.** No nurse view.
-3. **Agent glyph** — **color = sex** (blue M / pink F / grey unknown), delay-**risk on the ring**, always paired with a label so color isn't the sole signal.
-4. **Data** — **real open datasets** (§7.1), downloaded (HF / PhysioNet), **not synthetic**. Kept local, gitignored.
-5. **Wearables + vocal biomarkers** — **mention only, do not build.** Shown as greyed "pluggable source" chips on the Intake tab (§8).
-6. **Fable** — the target is the **Fable model** (Anthropic); FABLE_PROMPT.md is written for a model that generates the prototype/code directly.
-7. **Live, not scripted** — genuinely wired to Gemini + Nemotron on stage. **API keys go in `.env` (already gitignored — never pushed).**
-
-**Still open (not blocking):**
-- **Which dataset to commit to:** start on **Synthea + `infinite-dataset-hub/HospitalAdmissions`** (open, immediate), and swap in **MIMIC-IV-ED** *if* a teammate completes PhysioNet credentialing in time. Confirm who owns the download.
-- **Map source:** stylized floor plan (recommended, fast) vs. realistic layout.

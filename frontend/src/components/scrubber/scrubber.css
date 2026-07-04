@@ -14,9 +14,9 @@
   align-items: center;
   gap: 18px;
   height: 76px;
-  padding: 0 16px;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
+  padding: 0 18px;
+  background: var(--page);
+  border-top: 1px solid var(--border-strong);
 }
 
 /* ---------------- transport ---------------- */
@@ -28,28 +28,56 @@
 }
 
 .scrub-play {
+  position: relative;
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-m);
-  color: var(--ink-2);
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  color: var(--ink);
   transition:
     background var(--dur-fast) var(--ease),
     color var(--dur-fast) var(--ease),
-    border-color var(--dur-fast) var(--ease);
+    border-color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 
 .scrub-play:hover {
-  background: var(--surface-2);
-  color: var(--ink);
+  background: var(--ink);
+  color: var(--page);
+}
+
+.scrub-play:active {
+  transform: scale(0.93);
 }
 
 .scrub-play.is-playing {
-  color: var(--accent);
-  border-color: var(--accent-line);
-  background: var(--accent-soft);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+/* a soft radiating ring while the clock runs */
+.scrub-play.is-playing::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  animation: play-ripple 2.2s var(--ease-out) infinite;
+  pointer-events: none;
+}
+
+@keyframes play-ripple {
+  from {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.55);
+  }
 }
 
 /* ---------------- track ---------------- */
@@ -95,7 +123,9 @@
   position: absolute;
   top: 0;
   transform: translateX(-50%);
-  font-size: 10px;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   line-height: 1.3;
   color: var(--ink-3);
   white-space: nowrap;
@@ -108,7 +138,7 @@
   right: 0;
   bottom: 12px;
   height: 4px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--surface-2);
   box-shadow: inset 0 0 0 1px var(--border);
   pointer-events: none;
@@ -119,7 +149,7 @@
   left: 0;
   bottom: 12px;
   height: 4px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--accent);
   pointer-events: none;
 }
@@ -165,11 +195,14 @@
   height: 10px;
   border-radius: 1px;
   background: var(--accent-line);
-  transition: background var(--dur-fast) var(--ease);
+  transition:
+    background var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 
 .scrub-track__event:hover > span {
   background: var(--accent);
+  transform: scaleY(1.3);
 }
 
 /* demo-beat diamonds pinned on today */
@@ -190,20 +223,24 @@
   transform: rotate(45deg);
   border-radius: 2px;
   background: var(--accent);
-  box-shadow: 0 0 0 2px var(--surface);
-  transition: background var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+  box-shadow: 0 0 0 2px var(--page);
+  transition:
+    background var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease),
+    transform var(--dur-med) var(--ease-spring);
 }
 
 .scrub-track__beat.is-done .scrub-track__beat-diamond {
-  background: var(--surface);
+  background: var(--page);
   box-shadow:
     inset 0 0 0 2px var(--accent-line),
-    0 0 0 2px var(--surface);
+    0 0 0 2px var(--page);
 }
 
 .scrub-track__beat:hover .scrub-track__beat-diamond {
   background: var(--accent);
-  box-shadow: 0 0 0 2px var(--surface);
+  box-shadow: 0 0 0 2px var(--page);
+  transform: rotate(45deg) scale(1.3);
 }
 
 .scrub-track__thumb {
@@ -214,15 +251,20 @@
   transform: translateX(-50%);
   border-radius: 50%;
   background: var(--accent);
-  border: 2px solid var(--surface);
+  border: 2px solid var(--page);
   box-shadow: 0 0 0 1px var(--border-strong);
   pointer-events: none;
   z-index: 4;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.scrub-track__input:hover ~ .scrub-track__thumb {
+  transform: translateX(-50%) scale(1.25);
 }
 
 .scrub-track__input:focus-visible ~ .scrub-track__thumb {
   box-shadow:
-    0 0 0 2px var(--surface),
+    0 0 0 2px var(--page),
     0 0 0 4px var(--accent);
 }
 
@@ -235,9 +277,9 @@
 }
 
 .scrub-readout {
-  min-width: 128px;
-  font-size: 12.5px;
-  font-weight: 600;
+  min-width: 118px;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--ink);
   text-align: right;
   white-space: nowrap;
@@ -250,28 +292,32 @@
 }
 
 .scrub-preset {
-  padding: 5px 9px;
-  border-radius: 999px;
-  font-size: 11.5px;
-  font-weight: 550;
+  padding: 5px 11px;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
   color: var(--ink-2);
   white-space: nowrap;
   transition:
+    border-color var(--dur-fast) var(--ease),
     background var(--dur-fast) var(--ease),
     color var(--dur-fast) var(--ease);
 }
 
 .scrub-preset:hover {
-  background: var(--surface-2);
+  border-color: var(--border-strong);
   color: var(--ink);
 }
 
 .scrub-preset.is-active {
   background: var(--accent-soft);
+  border-color: var(--accent-line);
   color: var(--accent);
 }
 
-@media (max-width: 1099px) {
+/* presets yield to the demo cluster first — the demo is the hero */
+@media (max-width: 1439px) {
   .scrub-presets {
     display: none;
   }
@@ -282,14 +328,15 @@
   align-items: center;
   gap: 7px;
   max-width: 320px;
-  padding: 4px 6px 4px 11px;
+  padding: 4px 6px 4px 12px;
   border: 1px solid var(--accent-line);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--accent-soft);
   color: var(--accent);
-  font-size: 11.5px;
-  font-weight: 550;
+  font-size: 11px;
+  font-weight: 500;
   white-space: nowrap;
+  animation: chip-in var(--dur-med) var(--ease-out);
 }
 
 .scrub-scope__text {
@@ -324,27 +371,29 @@
 .scrub-demo__toggle {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 11px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-m);
-  font-size: 12px;
-  font-weight: 550;
+  gap: 7px;
+  padding: 6px 13px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--ink-2);
   white-space: nowrap;
   transition:
-    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
     color var(--dur-fast) var(--ease);
 }
 
 .scrub-demo__toggle:hover,
 .scrub-demo__toggle.is-open {
-  background: var(--surface-2);
+  border-color: var(--ink);
   color: var(--ink);
 }
 
 .scrub-demo__toggle svg {
-  transition: transform var(--dur-fast) var(--ease);
+  transition: transform var(--dur-med) var(--ease-spring);
 }
 
 .scrub-demo__toggle.is-open svg {
@@ -355,20 +404,20 @@
   position: absolute;
   right: 0;
   bottom: calc(100% + 10px);
-  width: 252px;
+  width: 264px;
   padding: 8px;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--r-l);
   box-shadow: var(--shadow-panel);
   z-index: 30;
-  animation: scrub-pop-rise var(--dur-fast) var(--ease-out);
+  animation: scrub-pop-rise var(--dur-med) var(--ease-out);
 }
 
 @keyframes scrub-pop-rise {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(6px) scale(0.98);
   }
   to {
     opacity: 1;
@@ -389,9 +438,9 @@
   align-items: center;
   gap: 9px;
   width: 100%;
-  padding: 6px 8px;
+  padding: 7px 9px;
   border-radius: var(--r-m);
-  font-size: 12.5px;
+  font-size: 12px;
   text-align: left;
   color: var(--ink-2);
   transition:
@@ -417,8 +466,8 @@
   height: 18px;
   border: 1px solid var(--border-strong);
   border-radius: 50%;
-  font-size: 10.5px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 500;
   color: var(--ink-2);
   transition:
     background var(--dur-fast) var(--ease),
@@ -442,10 +491,10 @@
 .scrub-demo__caption {
   margin: 8px 4px 2px;
   padding-top: 8px;
-  border-top: 1px solid var(--border);
-  font-size: 10.5px;
-  line-height: 1.45;
-  color: var(--ink-2);
+  border-top: 1px solid var(--border-strong);
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--ink-3);
 }
 
 /* inline variant (wide windows) */
@@ -454,28 +503,27 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  padding: 2px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
+  padding: 3px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
 }
 
 .scrub-demo-inline__label {
-  padding: 0 4px 0 9px;
-  font-size: 10.5px;
-  font-weight: 650;
-  letter-spacing: 0.06em;
+  padding: 0 5px 0 10px;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ink-2);
+  color: var(--ink-3);
 }
 
 .scrub-demo-inline__step {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 3px 9px 3px 4px;
-  border-radius: 999px;
-  font-size: 11.5px;
-  font-weight: 550;
+  padding: 3px 10px 3px 4px;
+  border-radius: var(--r-pill);
+  font-size: 11px;
   color: var(--ink-2);
   white-space: nowrap;
   transition:
@@ -496,5 +544,5 @@
 .scrub-demo-inline__step .scrub-demo__num {
   width: 16px;
   height: 16px;
-  font-size: 10px;
+  font-size: 9.5px;
 }

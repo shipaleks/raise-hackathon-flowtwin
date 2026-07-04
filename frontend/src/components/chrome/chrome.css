@@ -1,50 +1,128 @@
-/* Chrome module: top bar + About overlay. */
+/* Chrome module: announcement bar + top bar + About overlay. */
+
+/* ------------------------------------------------------- announcement bar */
+
+.chrome-announce {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 30px;
+  padding: 4px 40px 4px 14px;
+  position: relative;
+  background: #000;
+  color: #f6f3f1;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  animation: chrome-announce-in var(--dur-slow) var(--ease-out);
+}
+
+@keyframes chrome-announce-in {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+.chrome-announce__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 11px;
+  border: 1px solid rgba(246, 243, 241, 0.55);
+  border-radius: var(--r-pill);
+  color: #f6f3f1;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.chrome-announce__link:hover {
+  background: #f6f3f1;
+  color: #000;
+}
+
+.chrome-announce__close {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: rgba(246, 243, 241, 0.8);
+  transition:
+    color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+
+.chrome-announce__close:hover {
+  color: #f6f3f1;
+  background: rgba(246, 243, 241, 0.16);
+}
 
 /* ---------------------------------------------------------------- top bar */
 
 .chrome-topbar {
   display: flex;
   align-items: center;
-  gap: 14px;
-  height: 52px;
-  padding: 0 16px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  gap: 16px;
+  height: 56px;
+  padding: 0 18px;
+  background: var(--page);
+  border-bottom: 1px solid var(--border-strong);
 }
 
 .chrome-topbar__brand {
   display: flex;
-  align-items: center;
-  gap: 9px;
+  align-items: baseline;
+  gap: 10px;
   flex: none;
 }
 
 .chrome-topbar__mark {
   display: block;
   flex: none;
+  align-self: center;
+  transition: transform var(--dur-med) var(--ease-spring);
 }
 
+.chrome-topbar__brand:hover .chrome-topbar__mark {
+  transform: rotate(90deg);
+}
+
+/* the wordmark is the one serif voice in the chrome */
 .chrome-topbar__name {
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 
 .chrome-topbar__tagline {
-  font-size: 12px;
+  font-size: 11px;
+  font-style: italic;
   color: var(--ink-3);
   white-space: nowrap;
 }
 
-/* breadcrumb */
+/* breadcrumb — technical-manual uppercase */
 
 .chrome-topbar__crumbs {
   display: flex;
   align-items: center;
   gap: 4px;
   min-width: 0;
-  font-size: 12.5px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .chrome-topbar__crumb {
@@ -55,21 +133,23 @@
 }
 
 .chrome-topbar__crumb--link {
-  padding: 3px 6px;
-  border-radius: var(--r-s);
+  padding: 4px 9px;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
   transition:
+    border-color var(--dur-fast) var(--ease),
     background var(--dur-fast) var(--ease),
     color var(--dur-fast) var(--ease);
 }
 
 .chrome-topbar__crumb--link:hover {
-  background: var(--surface-2);
+  border-color: var(--border-strong);
   color: var(--ink);
 }
 
 .chrome-topbar__crumb.is-current {
-  padding: 3px 6px;
-  font-weight: 550;
+  padding: 4px 9px;
+  font-weight: 500;
   color: var(--ink);
 }
 
@@ -89,7 +169,7 @@
 }
 
 .chrome-topbar__status {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--ink-2);
   white-space: nowrap;
 }
@@ -97,43 +177,62 @@
 .chrome-topbar__icon-btn {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--r-s);
+  width: 30px;
+  height: 30px;
+  border: 1px solid transparent;
+  border-radius: 50%;
   color: var(--ink-2);
   transition:
-    background var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 
 .chrome-topbar__icon-btn:hover {
-  background: var(--surface-2);
+  border-color: var(--border-strong);
   color: var(--ink);
 }
 
+.chrome-topbar__icon-btn:active {
+  transform: scale(0.92);
+}
+
+.chrome-topbar__icon-btn svg {
+  transition: transform var(--dur-med) var(--ease-spring);
+}
+
+.chrome-topbar__icon-btn:hover svg {
+  transform: rotate(-14deg);
+}
+
+/* ghost pill — the tertiary action language */
 .chrome-topbar__about {
-  padding: 4px 10px;
-  border-radius: var(--r-s);
-  font-size: 12.5px;
-  font-weight: 550;
-  color: var(--ink-2);
+  padding: 5px 14px;
+  border: 1px solid var(--ink);
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
   transition:
     background var(--dur-fast) var(--ease),
     color var(--dur-fast) var(--ease);
 }
 
 .chrome-topbar__about:hover {
-  background: var(--surface-2);
-  color: var(--ink);
+  background: var(--ink);
+  color: var(--page);
 }
 
-@media (max-width: 1100px) {
+/* mono runs wide — shed the decorative strings early */
+@media (max-width: 1420px) {
   .chrome-topbar__tagline {
     display: none;
   }
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1340px) {
   .chrome-topbar__calib {
     display: none;
   }
@@ -163,12 +262,12 @@
   max-width: 680px;
   max-height: 84vh;
   overflow: auto;
-  padding: 28px;
+  padding: 32px;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-l);
+  border: 1px solid var(--border-strong);
+  border-radius: 24px;
   box-shadow: var(--shadow-panel);
-  animation: chrome-rise var(--dur-med) var(--ease-out);
+  animation: chrome-rise var(--dur-slow) var(--ease-out);
 }
 
 @keyframes chrome-fade {
@@ -180,44 +279,50 @@
 @keyframes chrome-rise {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(14px) scale(0.985);
   }
 }
 
 .chrome-about__close {
   position: absolute;
-  top: 14px;
-  right: 14px;
+  top: 16px;
+  right: 16px;
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--r-s);
+  width: 30px;
+  height: 30px;
+  border: 1px solid transparent;
+  border-radius: 50%;
   color: var(--ink-2);
   transition:
-    background var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    transform var(--dur-med) var(--ease-spring);
 }
 
 .chrome-about__close:hover {
-  background: var(--surface-2);
+  border-color: var(--border-strong);
   color: var(--ink);
+  transform: rotate(90deg);
 }
 
 .chrome-about__section + .chrome-about__section {
-  margin-top: 20px;
+  margin-top: 24px;
 }
 
+/* section headings speak serif */
 .chrome-about__h {
-  font-size: 13px;
-  font-weight: 600;
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
   color: var(--ink);
-  margin-bottom: 6px;
+  margin-bottom: 7px;
 }
 
 .chrome-about__body {
-  font-size: 13px;
-  line-height: 1.55;
+  font-size: 12px;
+  line-height: 1.6;
   color: var(--ink-2);
 }
 
@@ -239,10 +344,10 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 12px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--r-m);
+  padding: 14px;
+  background: var(--page);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-l);
 }
 
 .chrome-about__plane--cloud {
@@ -251,8 +356,10 @@
 }
 
 .chrome-about__plane-title {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--ink);
 }
 
@@ -262,8 +369,8 @@
   list-style: none;
   display: grid;
   gap: 4px;
-  font-size: 12.5px;
-  line-height: 1.45;
+  font-size: 11.5px;
+  line-height: 1.5;
   color: var(--ink-2);
 }
 
@@ -280,7 +387,7 @@
 .chrome-about__arrow {
   align-self: center;
   width: 36px;
-  height: 1.5px;
+  height: 1px;
   background: var(--ink-3);
   position: relative;
 }
@@ -301,13 +408,13 @@
 .chrome-about__arrow-label {
   grid-column: 1 / -1;
   text-align: center;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--ink-2);
 }
 
 .chrome-about__planes-note {
-  font-size: 12.5px;
-  font-weight: 550;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--ink);
 }
 
@@ -330,8 +437,8 @@
   padding-left: 18px;
   display: grid;
   gap: 5px;
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 12px;
+  line-height: 1.55;
   color: var(--ink-2);
 }
 
@@ -341,11 +448,11 @@
 
 .chrome-about__cal {
   margin-top: 10px;
-  padding: 6px 10px;
-  font-size: 12px;
+  padding: 7px 12px;
+  font-size: 11px;
   color: var(--ink-2);
   background: var(--surface-2);
-  border-radius: var(--r-s);
+  border-radius: var(--r-m);
 }
 
 /* keyboard */
@@ -357,7 +464,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px 16px;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--ink-2);
 }
 
@@ -368,25 +475,25 @@
 }
 
 .chrome-about__key kbd {
-  font-family: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace;
-  font-size: 11px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
   font-weight: 500;
   line-height: 1.4;
-  padding: 1px 6px;
+  padding: 1px 7px;
   color: var(--ink);
-  background: var(--surface-2);
-  border: 1px solid var(--border);
+  background: var(--page);
+  border: 1px solid var(--border-strong);
   border-bottom-width: 2px;
-  border-radius: var(--r-s);
+  border-radius: 6px;
 }
 
 /* footer */
 
 .chrome-about__footer {
-  margin-top: 22px;
+  margin-top: 24px;
   padding-top: 14px;
-  border-top: 1px solid var(--border);
-  font-size: 12px;
-  line-height: 1.5;
+  border-top: 1px solid var(--border-strong);
+  font-size: 11px;
+  line-height: 1.55;
   color: var(--ink-2);
 }

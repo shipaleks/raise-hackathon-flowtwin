@@ -1,4 +1,5 @@
-/* Drill-down hospital map — soft rounded zones on a quiet page. */
+/* Drill-down hospital map — soft rounded zones drawn in hairlines on
+   parchment, with a quiet atmospheric wash behind the plate. */
 
 .map-wrap {
   position: relative;
@@ -9,7 +10,47 @@
   overflow: hidden;
 }
 
+/* decorative gradient washes — never functional, always diffused */
+.map-wrap::before,
+.map-wrap::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: var(--wash-opacity);
+  pointer-events: none;
+  animation: map-wash-drift 46s var(--ease) infinite alternate;
+}
+
+.map-wrap::before {
+  width: 46vw;
+  height: 34vh;
+  right: -8vw;
+  top: -12vh;
+  background: linear-gradient(115deg, var(--wash-coral), var(--wash-sky));
+}
+
+.map-wrap::after {
+  width: 38vw;
+  height: 30vh;
+  left: -10vw;
+  bottom: -10vh;
+  background: linear-gradient(65deg, var(--wash-sky), var(--wash-mint));
+  animation-delay: -20s;
+}
+
+@keyframes map-wash-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-3vw, 2vh, 0) scale(1.12);
+  }
+}
+
 .map-svg {
+  position: relative;
+  z-index: 1;
   display: block;
   width: 100%;
   height: 100%;
@@ -26,7 +67,7 @@
 
 .map-zone__rect {
   fill: var(--surface);
-  stroke: var(--border);
+  stroke: var(--border-strong);
   stroke-width: 1;
   cursor: pointer;
   transition:
@@ -35,11 +76,11 @@
 }
 
 .map-zone__rect:hover {
-  stroke: var(--border-strong);
+  stroke: var(--ink-3);
 }
 
 .map-zone--outside .map-zone__rect {
-  fill: var(--page);
+  fill: transparent;
   stroke-dasharray: 5 4;
 }
 
@@ -47,22 +88,45 @@
   pointer-events: none;
 }
 
+/* zone names carry the serif voice — the map reads like a floor-plan plate.
+   The paint-order halo lifts labels off any hairline passing behind them. */
 .map-zone__name {
-  font-size: 12.5px;
-  font-weight: 600;
-  fill: var(--ink-2);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  fill: var(--ink);
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+.map-zone--outside .map-zone__name {
+  stroke: var(--page);
 }
 
 .map-zone__tag {
-  font-size: 10.5px;
-  font-weight: 500;
-  font-style: italic;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-style: normal;
+  letter-spacing: 0.08em;
   fill: var(--ink-3);
 }
 
 .map-zone__status {
-  font-size: 11px;
-  fill: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  fill: var(--ink-3);
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.map-zone--outside .map-zone__status {
+  stroke: var(--page);
 }
 
 /* --- areas: faint hints at hospital level, live rooms inside a dept --- */
@@ -78,14 +142,14 @@
 }
 
 .map-area--live .map-area__rect {
-  fill: var(--surface-2);
-  stroke: var(--border);
+  fill: var(--page);
+  stroke: var(--border-strong);
   pointer-events: all;
   cursor: pointer;
 }
 
 .map-area--live .map-area__rect:hover {
-  stroke: var(--border-strong);
+  stroke: var(--ink-3);
 }
 
 .map-area__label {
@@ -96,13 +160,16 @@
 }
 
 .map-area__label text {
-  font-size: 11px;
-  font-weight: 550;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   fill: var(--ink-2);
 }
 
 .map-area__count {
-  font-weight: 500;
+  font-weight: 400;
   fill: var(--ink-3);
 }
 
@@ -117,12 +184,13 @@
   fill: none;
   stroke: var(--border-strong);
   stroke-width: 1;
-  opacity: 0.7;
+  opacity: 0.75;
 }
 
 .map-slot__name {
+  font-family: var(--font-mono);
   font-size: 3.2px;
-  font-weight: 550;
+  font-weight: 500;
   fill: var(--ink-2);
   opacity: 0.85;
 }
@@ -185,19 +253,21 @@
 
 .map-legend__card {
   fill: var(--surface);
-  stroke: var(--border);
+  stroke: var(--border-strong);
   stroke-width: 1;
 }
 
 .map-legend__title {
-  font-size: 10px;
-  font-weight: 650;
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   fill: var(--ink-3);
 }
 
 .map-legend__label {
+  font-family: var(--font-mono);
   font-size: 11px;
   fill: var(--ink-2);
 }
@@ -220,12 +290,13 @@
 }
 
 .map-legend__caption {
-  font-size: 11px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
   fill: var(--ink-2);
 }
 
 .map-legend__caption--src {
-  fill: var(--ink-2);
+  fill: var(--ink-3);
 }
 
 /* --- hover preview tooltip --- */
@@ -234,53 +305,60 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 252px;
-  padding: 10px 12px;
+  width: 264px;
+  padding: 12px 14px;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--r-m);
   box-shadow: var(--shadow-pop);
   pointer-events: none;
   opacity: 0;
-  transition: opacity var(--dur-med) var(--ease);
+  transform: translateY(3px);
+  transition:
+    opacity var(--dur-med) var(--ease),
+    transform var(--dur-med) var(--ease-out);
   z-index: 4;
 }
 
 .map-tip.is-on {
   opacity: 1;
+  transform: none;
 }
 
 .map-tip__name {
-  font-size: 12.5px;
-  font-weight: 600;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  letter-spacing: -0.01em;
   color: var(--ink);
 }
 
 .map-tip__meta {
-  font-weight: 500;
+  font-family: var(--font-mono);
+  font-size: 11px;
   color: var(--ink-2);
 }
 
 .map-tip__complaint {
-  font-size: 12px;
+  font-size: 11.5px;
   color: var(--ink-2);
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
 .map-tip__row {
-  font-size: 11.5px;
+  font-size: 11px;
   color: var(--ink-2);
-  margin-top: 6px;
+  margin-top: 7px;
 }
 
 .map-tip__foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  font-size: 11.5px;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  font-size: 11px;
   color: var(--ink-2);
-  margin-top: 6px;
+  margin-top: 7px;
 }
 
 /* --- quiet floor note --- */
@@ -290,12 +368,12 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  padding: 8px 16px;
+  padding: 9px 18px;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  box-shadow: var(--shadow-pop);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
   color: var(--ink-2);
-  font-size: 12.5px;
+  font-size: 12px;
   pointer-events: none;
+  z-index: 2;
 }

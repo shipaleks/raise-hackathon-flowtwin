@@ -1,7 +1,7 @@
 /* Top chrome: wordmark, drill-down breadcrumb (doctor view), global status
    line, the Doctor/Administrator switch, theme toggle, and About. */
 
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { adminKpis } from '../../data/seed'
 import { worldAt } from '../../sim/engine'
 import { areaById, deptById } from '../../sim/layout'
@@ -127,13 +127,39 @@ function ThemeToggle() {
   )
 }
 
+/** Monad-style announcement strip: the honesty note, one glance, dismissible. */
+function AnnouncementBar({ onAbout }: { onAbout: () => void }) {
+  const [dismissed, setDismissed] = useState(false)
+  if (dismissed) return null
+  return (
+    <div className="chrome-announce" role="note">
+      <span>Hackathon demo — synthetic patients, operational suggestions only</span>
+      <button type="button" className="chrome-announce__link" onClick={onAbout}>
+        data honesty →
+      </button>
+      <button
+        type="button"
+        className="chrome-announce__close"
+        aria-label="Dismiss announcement"
+        onClick={() => setDismissed(true)}
+      >
+        <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true">
+          <path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        </svg>
+      </button>
+    </div>
+  )
+}
+
 export function TopBar() {
   const view = useStore((s) => s.view)
   const setView = useStore((s) => s.setView)
   const setAboutOpen = useStore((s) => s.setAboutOpen)
 
   return (
-    <header className="chrome-topbar">
+    <div className="chrome">
+      <AnnouncementBar onAbout={() => setAboutOpen(true)} />
+      <header className="chrome-topbar">
       <div className="chrome-topbar__brand">
         <Wordmark />
         <span className="chrome-topbar__name">FlowTwin</span>
@@ -150,6 +176,7 @@ export function TopBar() {
           About
         </button>
       </div>
-    </header>
+      </header>
+    </div>
   )
 }

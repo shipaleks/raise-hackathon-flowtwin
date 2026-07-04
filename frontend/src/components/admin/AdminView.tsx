@@ -26,7 +26,10 @@ function StatTile({ label, value, sub }: { label: string; value: string; sub?: s
   return (
     <div className="admin-kpi">
       <span className="admin-kpi__label">{label}</span>
-      <span className="admin-kpi__value">{value}</span>
+      {/* keyed on the value so a change gets the quick fade/slide swap */}
+      <span className="admin-kpi__value" key={value}>
+        {value}
+      </span>
       {sub ? <span className="admin-kpi__sub">{sub}</span> : null}
     </div>
   )

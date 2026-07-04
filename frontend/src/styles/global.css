@@ -11,10 +11,12 @@ body,
   margin: 0;
 }
 
+/* The mono IS the brand voice: every functional string runs in it. */
 body {
-  font-family: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  font-size: 14px;
+  font-family: var(--font-mono);
+  font-size: 13px;
   line-height: 1.5;
+  letter-spacing: -0.01em;
   color: var(--ink);
   background: var(--page);
   -webkit-font-smoothing: antialiased;
@@ -30,8 +32,19 @@ p {
   margin: 0;
 }
 
+/* The serif announces, the mono instructs — headings never go bold. */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
 button {
   font: inherit;
+  letter-spacing: inherit;
   color: inherit;
   background: none;
   border: none;
@@ -50,12 +63,22 @@ button:disabled {
 }
 
 ::selection {
-  background: var(--accent-soft);
+  background: var(--periwinkle);
+  color: var(--periwinkle-ink);
 }
 
 /* Numbers that update in place never jitter. */
 .tnum {
   font-variant-numeric: tabular-nums;
+}
+
+/* Editorial micro-heading: uppercase mono eyebrow. */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .visually-hidden {
@@ -70,10 +93,10 @@ button:disabled {
   border: 0;
 }
 
-/* Shared card idiom (the app is mostly quiet cards on a quiet page). */
+/* Shared card idiom: hairline ash border, soft-rect radius, no shadow. */
 .card {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--r-l);
 }
 

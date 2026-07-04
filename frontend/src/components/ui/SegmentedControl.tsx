@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import './ui.css'
 
 export interface SegmentedOption<T extends string> {
@@ -25,6 +25,22 @@ export function SegmentedControl<T extends string>({
   size?: 'md' | 'sm'
 }) {
   const refs = useRef(new Map<T, HTMLButtonElement>())
+  const [thumb, setThumb] = useState<{ x: number; w: number } | null>(null)
+
+  // The active pill is a measured sliding thumb, so switching glides instead
+  // of jumping. Re-measured on selection and on any container resize (fonts).
+  useLayoutEffect(() => {
+    const el = refs.current.get(value)
+    const measure = () => {
+      const btn = refs.current.get(value)
+      if (btn) setThumb({ x: btn.offsetLeft, w: btn.offsetWidth })
+    }
+    measure()
+    if (!el?.parentElement) return
+    const ro = new ResizeObserver(measure)
+    ro.observe(el.parentElement)
+    return () => ro.disconnect()
+  }, [value, options])
 
   const move = (from: T, delta: number) => {
     const i = options.findIndex((o) => o.id === from)
@@ -35,6 +51,13 @@ export function SegmentedControl<T extends string>({
 
   return (
     <div className={`segmented segmented--${size}`} role="radiogroup" aria-label={ariaLabel}>
+      {thumb ? (
+        <span
+          className="segmented__thumb"
+          aria-hidden="true"
+          style={{ width: thumb.w, transform: `translateX(${thumb.x}px)` }}
+        />
+      ) : null}
       {options.map((o) => (
         <button
           key={o.id}

@@ -16,7 +16,7 @@
   place-items: center;
   height: 100%;
   color: var(--ink-3);
-  font-size: 13px;
+  font-size: 12px;
   text-align: center;
   padding: 24px;
 }
@@ -24,8 +24,9 @@
 .panel-empty__pulse {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
+  border-radius: var(--r-m);
   background: var(--surface-2);
+  border: 1px solid var(--border-strong);
   margin: 0 auto 12px;
   animation: panel-breathe 1.4s var(--ease) infinite;
 }

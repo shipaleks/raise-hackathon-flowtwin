@@ -1,104 +1,134 @@
 /* ============================================================
-   FlowTwin design tokens — light + dark
-   Calm, clinical-grade minimalism: one restrained teal accent,
-   status colors reserved for state, data colors reserved for
-   series. Every color validated (dataviz six-checks) against
-   the surface it renders on.
+   FlowTwin design tokens — "Monad" editorial-technical system.
+   Warm parchment canvas, serif display type, mono UI text, pill
+   containers, hairline ash borders instead of shadows. One vivid
+   Lake Blue accent; status colors reserved for state; series
+   colors reserved for the arrival chart. All chart/status colors
+   validated (dataviz six-checks) against the surface they sit on.
    ============================================================ */
 
 :root {
   color-scheme: light;
 
-  /* --- planes & ink --- */
-  --page: #f7f7f5;
-  --surface: #ffffff;
-  --surface-2: #f1f1ee; /* inset wells, scrubber track */
-  --ink: #16181d;
-  --ink-2: #4e5560;
-  --ink-3: #626d7d; /* 4.6:1 on surface — safe for the small captions that use it */
-  --border: rgba(22, 24, 29, 0.1);
-  --border-strong: rgba(22, 24, 29, 0.18);
-  --grid: #e7e7e2;
-  --shadow-panel: 0 8px 32px rgba(22, 24, 29, 0.10), 0 1px 3px rgba(22, 24, 29, 0.06);
-  --shadow-pop: 0 4px 16px rgba(22, 24, 29, 0.12);
-  --scrim: rgba(22, 24, 29, 0.28);
+  /* --- type families --- */
+  --font-mono:
+    'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-serif: 'Source Serif 4', ui-serif, Georgia, 'Times New Roman', serif;
 
-  /* --- the one accent (interactive / brand) --- */
-  --accent: #0f766e; /* 4.8:1 on white — AA as text */
-  --accent-ink: #ffffff;
-  --accent-soft: rgba(15, 118, 110, 0.09);
-  --accent-line: rgba(15, 118, 110, 0.35);
+  /* --- planes & ink (warm grayscale) --- */
+  --page: #f6f3f1; /* parchment — the signature canvas, never pure white */
+  --surface: #faf8f6; /* cards & chrome: a half-step lighter parchment */
+  --surface-2: #eeeae6; /* inset wells, tracks, meters */
+  --ink: #242424; /* off-black */
+  --ink-2: #4e4d4d; /* graphite */
+  --ink-3: #6f6d6c; /* smoke, tuned to ≥4.5:1 on parchment for captions */
+  --border: #dcd7d3; /* hairline between planes of the same family */
+  --border-strong: #cecac8; /* ash — the drawn line of the system */
+  --grid: #e7e2dd;
+  --shadow-panel: 0 0 10px rgba(36, 36, 36, 0.08), 0 1px 2px rgba(36, 36, 36, 0.05);
+  --shadow-pop: 0 4px 14px rgba(36, 36, 36, 0.1);
+  --scrim: rgba(36, 33, 31, 0.32);
 
-  /* --- status (state only — never a series) --- */
-  --ok: #0ca30c;
-  --warn: #b8770a; /* 3.7:1 on white — the at-risk ring must clear non-text contrast */
-  --crit: #d03b3b;
-  --ok-text: #006300;
+  /* --- the one accent: Lake Blue (interactive / brand only) --- */
+  --accent: #2b59d1; /* 5.5:1 on parchment — AA as text */
+  --accent-ink: #f6f3f1;
+  --accent-soft: rgba(43, 89, 209, 0.08);
+  --accent-line: rgba(43, 89, 209, 0.38);
+
+  /* --- the one colored surface (elevated hero card) --- */
+  --periwinkle: #cfdaf5;
+  --periwinkle-ink: #242424;
+
+  /* --- decorative gradient washes (never functional UI) --- */
+  --wash-coral: rgba(255, 148, 115, 0.4);
+  --wash-sky: rgba(160, 181, 235, 0.42);
+  --wash-mint: rgba(167, 252, 205, 0.4);
+  --wash-gold: rgba(236, 218, 152, 0.42);
+  --wash-opacity: 0.5;
+
+  /* --- status (state only — never a series; validated on #f6f3f1) --- */
+  --ok: #217a3c;
+  --warn: #b8770a;
+  --crit: #c73a3a;
+  --ok-text: #1d6b35;
   --warn-text: #8a5a00;
   --crit-text: #b32424;
-  --ok-soft: rgba(12, 163, 12, 0.10);
-  --warn-soft: rgba(250, 178, 25, 0.14);
-  --crit-soft: rgba(208, 59, 59, 0.10);
+  --ok-soft: rgba(33, 122, 60, 0.1);
+  --warn-soft: rgba(184, 119, 10, 0.12);
+  --crit-soft: rgba(199, 58, 58, 0.1);
 
   /* --- agent sex encoding (always paired with a letter label) --- */
   --sex-m: #2a78d6;
   --sex-f: #e87ba4;
   --sex-u: #6b7280;
-  /* letter ink per fill so the mandated non-color cue itself clears contrast */
   --sex-m-ink: rgba(255, 255, 255, 0.97);
   --sex-f-ink: #43102a;
   --sex-u-ink: rgba(255, 255, 255, 0.97);
 
-  /* --- categorical series (fixed order, never cycled; ≥3:1 on white) --- */
-  --cat-1: #2a78d6; /* ambulance */
-  --cat-2: #0e8f62; /* walk-in   */
-  --cat-3: #b97e00; /* referral  */
+  /* --- categorical series (fixed order, never cycled; validated on #f6f3f1) --- */
+  --cat-1: #33549c; /* ambulance */
+  --cat-2: #177a53; /* walk-in   */
+  --cat-3: #a06b00; /* referral  */
 
   /* --- ghost/overlay (optimized path) --- */
-  --ghost: rgba(15, 118, 110, 0.16);
-  --ghost-line: rgba(15, 118, 110, 0.55);
+  --ghost: rgba(43, 89, 209, 0.1);
+  --ghost-line: rgba(43, 89, 209, 0.5);
 
   /* --- geometry & motion --- */
-  --r-s: 6px;
-  --r-m: 10px;
-  --r-l: 14px;
+  --r-s: 9px;
+  --r-m: 14px;
+  --r-l: 18px;
+  --r-pill: 999px;
   --dur-fast: 150ms;
-  --dur-med: 250ms;
+  --dur-med: 260ms;
+  --dur-slow: 420ms;
   --dur-zone: 600ms; /* agent zone-to-zone tween */
   --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.44, 1);
 }
 
 [data-theme='dark'] {
   color-scheme: dark;
 
-  --page: #0d0f13;
-  --surface: #151a21;
-  --surface-2: #1c222b;
-  --ink: #f2f4f7;
-  --ink-2: #b8bfc9;
-  --ink-3: #8b95a3; /* ≥4.5:1 on the dark surface */
-  --border: rgba(242, 244, 247, 0.10);
-  --border-strong: rgba(242, 244, 247, 0.20);
-  --grid: #262b33;
-  --shadow-panel: 0 8px 32px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-pop: 0 4px 16px rgba(0, 0, 0, 0.5);
-  --scrim: rgba(4, 6, 9, 0.5);
+  /* warm charcoal counterpart of the parchment canvas */
+  --page: #161311;
+  --surface: #1d1a17;
+  --surface-2: #272320;
+  --ink: #ede8e1;
+  --ink-2: #b9b0a5;
+  --ink-3: #8f8377; /* ≥4.5:1 on the dark surface */
+  --border: rgba(237, 232, 225, 0.11);
+  --border-strong: rgba(237, 232, 225, 0.22);
+  --grid: #2b2723;
+  --shadow-panel: 0 0 12px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-pop: 0 4px 16px rgba(0, 0, 0, 0.45);
+  --scrim: rgba(8, 6, 5, 0.52);
 
-  --accent: #2dd4bf;
-  --accent-ink: #06302b;
-  --accent-soft: rgba(45, 212, 191, 0.10);
-  --accent-line: rgba(45, 212, 191, 0.4);
+  --accent: #93aef2; /* periwinkle-lake, 7.8:1 on the dark surface */
+  --accent-ink: #101423;
+  --accent-soft: rgba(147, 174, 242, 0.1);
+  --accent-line: rgba(147, 174, 242, 0.42);
 
-  --ok: #0ca30c;
-  --warn: #fab219;
-  --crit: #e05252;
-  --ok-text: #34c534;
-  --warn-text: #fab219;
-  --crit-text: #ef8080;
-  --ok-soft: rgba(12, 163, 12, 0.16);
-  --warn-soft: rgba(250, 178, 25, 0.14);
-  --crit-soft: rgba(224, 82, 82, 0.16);
+  --periwinkle: #2b3350;
+  --periwinkle-ink: #ede8e1;
+
+  --wash-coral: rgba(255, 148, 115, 0.2);
+  --wash-sky: rgba(160, 181, 235, 0.2);
+  --wash-mint: rgba(167, 252, 205, 0.18);
+  --wash-gold: rgba(236, 218, 152, 0.18);
+  --wash-opacity: 0.16;
+
+  /* status — validated on #1d1a17 */
+  --ok: #3f9d58;
+  --warn: #bd861d;
+  --crit: #dd5f52;
+  --ok-text: #7cc98f;
+  --warn-text: #d9a94e;
+  --crit-text: #ec9086;
+  --ok-soft: rgba(63, 157, 88, 0.15);
+  --warn-soft: rgba(189, 134, 29, 0.15);
+  --crit-soft: rgba(221, 95, 82, 0.15);
 
   --sex-m: #3987e5;
   --sex-f: #d55181;
@@ -107,12 +137,13 @@
   --sex-f-ink: #33081b;
   --sex-u-ink: #161b22;
 
-  --cat-1: #3987e5;
-  --cat-2: #199e70;
-  --cat-3: #c98500;
+  /* categorical — validated on #1d1a17 */
+  --cat-1: #6383d6;
+  --cat-2: #2f9a6e;
+  --cat-3: #bd8623;
 
-  --ghost: rgba(45, 212, 191, 0.14);
-  --ghost-line: rgba(45, 212, 191, 0.5);
+  --ghost: rgba(147, 174, 242, 0.13);
+  --ghost-line: rgba(147, 174, 242, 0.5);
 }
 
 /* Meaningful motion only — collapse all durations when the user asks. */
@@ -121,6 +152,7 @@
   [data-theme='dark'] {
     --dur-fast: 0.01ms;
     --dur-med: 0.01ms;
+    --dur-slow: 0.01ms;
     --dur-zone: 0.01ms;
   }
 }

@@ -50,6 +50,12 @@ function SheetPanel({ vm, simMin }: { vm: SheetVM; simMin: number }) {
   const setSheetTab = useStore((s) => s.setSheetTab)
   const select = useStore((s) => s.select)
   const closeRef = useRef<HTMLButtonElement>(null)
+  const bodyRef = useRef<HTMLDivElement>(null)
+
+  // Each tab starts at its own top — scroll state never leaks across tabs.
+  useEffect(() => {
+    bodyRef.current?.scrollTo({ top: 0 })
+  }, [sheetTab])
 
   // On open: focus the close button; on close: hand focus back where it was.
   useEffect(() => {
@@ -138,7 +144,7 @@ function SheetPanel({ vm, simMin }: { vm: SheetVM; simMin: number }) {
         />
       </header>
 
-      <div className="sheet-body" role="tabpanel" aria-label={TAB_NAMES[sheetTab]}>
+      <div ref={bodyRef} className="sheet-body" role="tabpanel" aria-label={TAB_NAMES[sheetTab]}>
         {sheetTab === 'flow' && <FlowTab vm={vm} simMin={simMin} />}
         {sheetTab === 'predictions' && <PredictionsTab vm={vm} />}
         {sheetTab === 'intake' && <IntakeTab vm={vm} />}

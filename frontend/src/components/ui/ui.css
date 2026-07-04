@@ -5,6 +5,10 @@
   overflow: visible;
 }
 
+.agent-glyph text {
+  font-family: var(--font-mono);
+}
+
 .agent-glyph__ring {
   transition: stroke var(--dur-med) var(--ease);
 }
@@ -35,21 +39,31 @@
     stroke var(--dur-med) var(--ease);
 }
 
-/* --- chips --- */
+/* --- chips: the badge voice — mono, uppercase, pill --- */
 
 .chip {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 2px 9px;
-  border-radius: 999px;
-  font-size: 11.5px;
-  font-weight: 550;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   line-height: 1.5;
   white-space: nowrap;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   color: var(--ink-2);
-  background: var(--surface);
+  background: transparent;
+  animation: chip-in var(--dur-med) var(--ease-out);
+}
+
+@keyframes chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
 }
 
 .chip--accent {
@@ -86,36 +100,50 @@
   color: var(--accent);
   border-color: var(--accent-line);
   background: transparent;
-  font-size: 10.5px;
-  letter-spacing: 0.01em;
+  font-size: 9.5px;
 }
 
-/* --- segmented control --- */
+/* --- segmented control: pill rail with a sliding thumb --- */
 
 .segmented {
+  position: relative;
   display: inline-flex;
-  padding: 2px;
+  padding: 3px;
   gap: 2px;
   background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+}
+
+/* the sliding thumb — measured by the component, animated here */
+.segmented__thumb {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 0;
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  transition:
+    transform var(--dur-med) var(--ease-out),
+    width var(--dur-med) var(--ease-out);
 }
 
 .segmented__btn {
-  padding: 4px 12px;
-  border-radius: 7px;
-  font-size: 12.5px;
-  font-weight: 550;
+  position: relative;
+  z-index: 1;
+  padding: 4px 13px;
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
   color: var(--ink-2);
-  transition:
-    background var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease),
-    box-shadow var(--dur-fast) var(--ease);
+  transition: color var(--dur-med) var(--ease);
 }
 
 .segmented--sm .segmented__btn {
-  padding: 2px 9px;
-  font-size: 11.5px;
+  padding: 3px 10px;
+  font-size: 10px;
 }
 
 .segmented__btn:hover {
@@ -123,7 +151,5 @@
 }
 
 .segmented__btn.is-active {
-  background: var(--surface);
-  color: var(--ink);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  color: var(--page);
 }

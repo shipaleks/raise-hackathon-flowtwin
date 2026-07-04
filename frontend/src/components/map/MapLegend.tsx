@@ -20,7 +20,7 @@ export function MapLegend({ hidden }: { hidden: boolean }) {
   const rowY = (i: number) => y + 46 + i * 23
   return (
     <g className="map-legend" style={{ opacity: hidden ? 0 : 1 }} aria-hidden={hidden || undefined}>
-      <rect className="map-legend__card" x={x} y={y} width={w} height={h} rx={12} />
+      <rect className="map-legend__card" x={x} y={y} width={w} height={h} rx={16} />
       <text className="map-legend__title" x={x + 20} y={y + 26}>
         Legend
       </text>

@@ -246,7 +246,7 @@ export function MapView() {
                   y={d.y}
                   width={d.w}
                   height={d.h}
-                  rx={12}
+                  rx={16}
                   vectorEffect="non-scaling-stroke"
                   role="button"
                   tabIndex={0}
@@ -263,10 +263,10 @@ export function MapView() {
                 >
                   <text className="map-zone__name" y={13}>
                     {d.name}
-                    {d.id === 'ambulance-bay' ? <tspan className="map-zone__tag"> · outside</tspan> : null}
                   </text>
                   <text className="map-zone__status" y={29}>
                     {load?.status ?? ''}
+                    {d.id === 'ambulance-bay' ? <tspan className="map-zone__tag"> · outside</tspan> : null}
                   </text>
                 </g>
                 <g

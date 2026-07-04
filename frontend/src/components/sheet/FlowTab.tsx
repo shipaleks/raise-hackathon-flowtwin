@@ -80,18 +80,16 @@ export function FlowTab({ vm, simMin }: { vm: SheetVM; simMin: number }) {
         </p>
       )}
 
-      <div className="sheet-flow__bar" role="list" aria-label="Journey timeline">
+      {/* proportional strip: durations as widths only — the labels live in the
+          index below, full-length, so nothing ever truncates */}
+      <div className="sheet-flow__strip" aria-hidden="true">
         {vm.segments.map((seg, i) => (
           <div
             key={i}
-            role="listitem"
-            className={`sheet-flow__seg${seg.current ? ' is-current' : ''}${seg.predicted ? ' is-predicted' : ''}`}
-            style={{ flexGrow: Math.max(seg.minutes, 0) }}
+            className={`sheet-flow__strip-seg${seg.current ? ' is-current' : ''}${seg.predicted ? ' is-predicted' : ''}`}
+            style={{ flexGrow: Math.max(seg.minutes, 0), animationDelay: `${i * 30}ms` }}
             title={`${seg.zoneLabel} · ${fmtDur(seg.minutes)}${seg.predicted ? ' · predicted' : ''}`}
-            aria-label={`${seg.zoneLabel}, ${fmtDur(seg.minutes)}${seg.predicted ? ', predicted' : ''}${seg.current ? ', now' : ''}`}
           >
-            <span className="sheet-flow__seg-zone">{seg.zoneLabel}</span>
-            <span className="sheet-flow__seg-min tnum">{fmtMinShort(seg.minutes)}</span>
             {seg.current && !departed && (
               <span className="sheet-flow__now" aria-hidden="true">
                 now
@@ -100,6 +98,25 @@ export function FlowTab({ vm, simMin }: { vm: SheetVM; simMin: number }) {
           </div>
         ))}
       </div>
+
+      <ol className="sheet-flow__toc" aria-label="Journey timeline">
+        {vm.segments.map((seg, i) => (
+          <li
+            key={i}
+            className={`sheet-flow__toc-row${seg.current && !departed ? ' is-current' : ''}${seg.predicted ? ' is-predicted' : ''}`}
+            style={{ animationDelay: `${i * 35}ms` }}
+            aria-label={`${seg.zoneLabel}, ${fmtDur(seg.minutes)}${seg.predicted ? ', predicted' : ''}${seg.current ? ', now' : ''}`}
+          >
+            <span className="sheet-flow__toc-time tnum">{fmtClock(seg.startMin)}</span>
+            <span className="sheet-flow__toc-zone">{seg.zoneLabel}</span>
+            <span className="sheet-flow__toc-leader" aria-hidden="true" />
+            <span className="sheet-flow__toc-min tnum">{fmtMinShort(seg.minutes)}</span>
+          </li>
+        ))}
+      </ol>
+      {vm.segments.some((s) => s.predicted) && (
+        <p className="sheet-flow__toc-note">Italic steps are predicted, not yet observed.</p>
+      )}
 
       {annotations.length > 0 && (
         <ul className="sheet-flow__annos">
@@ -169,39 +186,46 @@ export function FlowTab({ vm, simMin }: { vm: SheetVM; simMin: number }) {
 }
 
 function GhostBar({ segments }: { segments: FlowSegment[] }) {
+  // appliedMin is capped at the segment's real length — the ghost strip never
+  // claims to compress a stop by more time than it contained
+  const actualTotal = segments.reduce((sum, s) => sum + Math.max(0, s.minutes), 0)
+  const ghostTotal = segments.reduce((sum, s) => sum + Math.max(0, s.minutes - s.appliedMin), 0)
+  const savedMin = Math.round(actualTotal - ghostTotal)
+  // the compressed strip is proportionally shorter — its width IS the saving
+  const widthPct = actualTotal > 0 ? (ghostTotal / actualTotal) * 100 : 100
+
   return (
     <div
-      className="sheet-flow__bar sheet-flow__bar--ghost"
-      role="list"
-      aria-label="Optimized path — same journey, compressed where a step could move earlier"
+      className="sheet-flow__ghost"
+      role="img"
+      aria-label={`Optimized path — same journey compressed to ${fmtDur(ghostTotal)}, ${savedMin} minutes shorter`}
     >
-      {segments.map((seg, i) => {
-        // appliedMin is capped at the segment's real length — the ghost bar
-        // never claims to compress a stop by more time than it contained
-        const minutes = Math.max(0, seg.minutes - seg.appliedMin)
-        return (
-          <div
-            key={i}
-            role="listitem"
-            className={`sheet-flow__gseg${seg.appliedMin > 0 ? ' is-saved' : ''}`}
-            style={{ flexGrow: minutes }}
-            title={
-              seg.appliedMin > 0
-                ? `${seg.zoneLabel} · compressed by ${Math.round(seg.appliedMin)} min here`
-                : `${seg.zoneLabel} · ${fmtDur(minutes)}`
-            }
-            aria-label={`${seg.zoneLabel}, ${fmtDur(minutes)}${seg.appliedMin > 0 ? `, compressed by ${Math.round(seg.appliedMin)} minutes` : ''}`}
-          >
-            {seg.appliedMin > 0 ? (
-              // a compressed segment is too narrow for both texts — the delta
-              // carries the story; the callout list below names the zone
-              <span className="sheet-flow__gseg-delta tnum">−{Math.round(seg.appliedMin)}m</span>
-            ) : (
-              <span className="sheet-flow__gseg-zone">{seg.zoneLabel}</span>
-            )}
-          </div>
-        )
-      })}
+      <div className="sheet-flow__ghost-track">
+        <div
+          className="sheet-flow__strip sheet-flow__strip--ghost"
+          style={{ width: `${widthPct}%` }}
+          aria-hidden="true"
+        >
+          {segments.map((seg, i) => {
+            const minutes = Math.max(0, seg.minutes - seg.appliedMin)
+            return (
+              <div
+                key={i}
+                className={`sheet-flow__strip-seg${seg.appliedMin > 0 ? ' is-saved' : ''}`}
+                style={{ flexGrow: minutes, animationDelay: `${i * 30}ms` }}
+                title={
+                  seg.appliedMin > 0
+                    ? `${seg.zoneLabel} · compressed by ${Math.round(seg.appliedMin)} min here`
+                    : `${seg.zoneLabel} · ${fmtDur(minutes)}`
+                }
+              />
+            )
+          })}
+        </div>
+      </div>
+      <span className="sheet-flow__ghost-delta" aria-hidden="true">
+        the shorter strip is the same journey re-sequenced — dashed stops give the time back
+      </span>
     </div>
   )
 }
