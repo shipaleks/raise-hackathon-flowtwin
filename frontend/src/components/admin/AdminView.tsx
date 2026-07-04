@@ -32,7 +32,8 @@ function CheckMark() {
 
 function StatTile({ label, value, sub, live }: { label: string; value: string; sub?: string; live?: boolean }) {
   return (
-    <div className={`admin-kpi${live ? ' admin-kpi--live' : ''}`}>
+    <div className={`admin-kpi reg-ticks${live ? ' admin-kpi--live' : ''}`}>
+      <span className="admin-kpi__idx" aria-hidden="true" />
       <span className="admin-kpi__label">{label}</span>
       {/* keyed on the value so a change gets the quick fade/slide swap */}
       <span className="admin-kpi__value" key={value}>
@@ -96,7 +97,7 @@ function PlayCard({ vm, onGoToDoctor }: { vm: AdminVM; onGoToDoctor: () => void 
   }
 
   return (
-    <section className="card admin-card">
+    <section className="card admin-card reg-ticks">
       <h2 className="admin-card__title">Bottleneck &amp; reallocation play</h2>
       {body}
     </section>
@@ -107,7 +108,7 @@ function PlayCard({ vm, onGoToDoctor }: { vm: AdminVM; onGoToDoctor: () => void 
 function NetworkCard() {
   const rows = networkNow()
   return (
-    <section className="card admin-card">
+    <section className="card admin-card reg-ticks">
       <h2 className="admin-card__title">The network right now</h2>
       <table className="admin-table admin-net">
         <caption className="admin-table__caption">
@@ -150,7 +151,7 @@ function PatternCard({ simMin }: { simMin: number }) {
   const H = 92
   const bw = W / 24
   return (
-    <section className="card admin-card">
+    <section className="card admin-card reg-ticks">
       <h2 className="admin-card__title">The real daily pattern</h2>
       <svg
         className="admin-pattern"
@@ -191,7 +192,7 @@ function PatternCard({ simMin }: { simMin: number }) {
 
 function DeptLoadCard({ zones }: { zones: ZoneLoads }) {
   return (
-    <section className="card admin-card">
+    <section className="card admin-card reg-ticks">
       <h2 className="admin-card__title">Load by floor</h2>
       <div className="admin-load">
         {FLOORS.map((f) => (
@@ -237,7 +238,7 @@ function DeptLoadCard({ zones }: { zones: ZoneLoads }) {
 function CalibrationCard({ vm }: { vm: AdminVM }) {
   const { calibration: cal, benchmark } = vm
   return (
-    <section className="card admin-card">
+    <section className="card admin-card reg-ticks">
       <h2 className="admin-card__title">Model calibration</h2>
       <p className="admin-cal__line tnum">
         {cal.interval} · n={cal.n} real ED stays (MIMIC-IV-ED)
@@ -319,13 +320,21 @@ export function AdminView() {
           </div>
           <div className="admin-col">
             <NetworkCard />
-            <section className="card admin-card">
+            <section className="card admin-card reg-ticks">
               <h2 className="admin-card__title">Expected arrivals · next 3 h</h2>
               <ArrivalForecast forecast={vm.arrivalForecast} />
             </section>
             <DeptLoadCard zones={zones} />
           </div>
         </div>
+
+        <footer className="admin-foot">
+          <span>
+            FlowTwin · Administrator plate · {HOSPITAL.hospital}
+          </span>
+          <span className="admin-foot__sep" aria-hidden="true" />
+          <span>Printed from the HA live feed · {fmtDayClock(simMin)} HKT</span>
+        </footer>
       </div>
     </section>
   )

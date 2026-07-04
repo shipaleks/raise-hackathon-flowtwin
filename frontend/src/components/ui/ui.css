@@ -103,6 +103,14 @@
   font-size: 9.5px;
 }
 
+/* the rubber-stamp chip: 1px ink hairline, transparent fill, mono caps */
+.chip--stamp {
+  color: var(--ink);
+  border-color: var(--ink);
+  background: transparent;
+  letter-spacing: 0.12em;
+}
+
 /* --- segmented control: pill rail with a sliding thumb --- */
 
 .segmented {
@@ -152,4 +160,40 @@
 
 .segmented__btn.is-active {
   color: var(--page);
+}
+
+/* --- underline variant: folio tabs — a hairline baseline + 2px ink rule --- */
+
+.segmented--underline {
+  display: flex;
+  padding: 0;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-strong);
+  border-radius: 0;
+}
+
+.segmented--underline .segmented__thumb {
+  top: auto;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--ink);
+}
+
+.segmented--underline .segmented__btn {
+  padding: 4px 4px 9px;
+  border-radius: 0;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+
+.segmented--underline .segmented__btn:hover {
+  color: var(--ink-2);
+}
+
+.segmented--underline .segmented__btn.is-active {
+  color: var(--ink);
 }

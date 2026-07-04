@@ -1,5 +1,53 @@
 /* Chrome module: announcement bar + top bar + About overlay. */
 
+/* ---------- shared folio ornament: registration ticks + eyebrow rule ------- */
+
+/* crop-mark L's in the four corners of a plate (host needs position:relative) */
+.reg-ticks::before {
+  content: '';
+  position: absolute;
+  inset: 11px;
+  pointer-events: none;
+  z-index: 1;
+  --tk: color-mix(in oklab, var(--ink-3) 52%, transparent);
+  background:
+    linear-gradient(var(--tk), var(--tk)) top left / 7px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) top left / 1px 7px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) top right / 7px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) top right / 1px 7px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) bottom left / 7px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) bottom left / 1px 7px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) bottom right / 7px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) bottom right / 1px 7px no-repeat;
+}
+
+/* uppercase mono eyebrow trailed by a hairline rule with a diamond end-cap */
+.folio-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.folio-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background:
+    radial-gradient(circle, var(--border-strong) 0 2.5px, transparent 2.6px) right center / 5px 5px
+      no-repeat,
+    linear-gradient(var(--border-strong), var(--border-strong)) left center / 100% 1px no-repeat;
+}
+
+.folio-eyebrow--accent {
+  color: var(--accent);
+}
+
 /* ------------------------------------------------------- announcement bar */
 
 .chrome-announce {
@@ -11,10 +59,11 @@
   min-width: 0;
   padding: 4px 40px 4px 14px;
   position: relative;
-  background: #000;
-  color: #f6f3f1;
-  font-size: 10.5px;
-  letter-spacing: 0.08em;
+  background: var(--ink);
+  color: var(--page);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   animation: chrome-announce-in var(--dur-slow) var(--ease-out);
 }
@@ -39,11 +88,11 @@
   align-items: center;
   gap: 6px;
   padding: 2px 11px;
-  border: 1px solid rgba(246, 243, 241, 0.55);
+  border: 1px solid color-mix(in oklab, var(--page) 45%, transparent);
   border-radius: var(--r-pill);
-  color: #f6f3f1;
-  font-size: 10px;
-  letter-spacing: 0.08em;
+  color: var(--page);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
   white-space: nowrap;
   transition:
     background var(--dur-fast) var(--ease),
@@ -51,8 +100,8 @@
 }
 
 .chrome-announce__link:hover {
-  background: #f6f3f1;
-  color: #000;
+  background: var(--page);
+  color: var(--ink);
 }
 
 .chrome-announce__close {
@@ -65,15 +114,15 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  color: rgba(246, 243, 241, 0.8);
+  color: color-mix(in oklab, var(--page) 78%, transparent);
   transition:
     color var(--dur-fast) var(--ease),
     background var(--dur-fast) var(--ease);
 }
 
 .chrome-announce__close:hover {
-  color: #f6f3f1;
-  background: rgba(246, 243, 241, 0.16);
+  color: var(--page);
+  background: color-mix(in oklab, var(--page) 16%, transparent);
 }
 
 /* ---------------------------------------------------------------- top bar */
@@ -106,12 +155,13 @@
   transform: rotate(90deg);
 }
 
-/* the wordmark is the one serif voice in the chrome */
+/* the wordmark is the display voice in the chrome — the masthead */
 .chrome-topbar__name {
-  font-family: var(--font-serif);
-  font-size: 19px;
+  font-family: var(--font-display);
+  font-size: 23px;
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
+  line-height: 1;
   color: var(--ink);
 }
 
@@ -271,16 +321,25 @@
 
 .chrome-about__card {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 680px;
   max-height: 84vh;
-  overflow: auto;
-  padding: 32px;
+  overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--border-strong);
-  border-radius: 24px;
-  box-shadow: var(--shadow-panel);
+  border-radius: 20px;
+  box-shadow: var(--shadow-plate);
   animation: chrome-rise var(--dur-slow) var(--ease-out);
+}
+
+/* the plate frame stays put; only this inner region scrolls */
+.chrome-about__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 30px 32px 32px;
 }
 
 @keyframes chrome-fade {
@@ -320,17 +379,37 @@
 }
 
 .chrome-about__section + .chrome-about__section {
-  margin-top: 24px;
+  margin-top: 26px;
 }
 
-/* section headings speak serif */
+/* the dialog masthead: eyebrow + rule above the opening title */
+.chrome-about__masthead {
+  margin-bottom: 18px;
+}
+
+/* section headings speak the display serif, each led by a small ink tick */
 .chrome-about__h {
-  font-family: var(--font-serif);
-  font-size: 19px;
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  font-family: var(--font-display);
+  font-size: 22px;
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
+  line-height: 1.1;
   color: var(--ink);
-  margin-bottom: 7px;
+  margin-bottom: 9px;
+}
+
+.chrome-about__h::before {
+  content: '';
+  flex: none;
+  align-self: center;
+  width: 5px;
+  height: 5px;
+  transform: rotate(45deg);
+  background: var(--accent);
 }
 
 .chrome-about__body {
@@ -526,35 +605,34 @@
   color: var(--ink);
 }
 
+/* rubber-stamp status: transparent fill, 1px hairline in the state colour */
 .chrome-about__status {
   display: inline-block;
-  padding: 2px 9px;
-  border-radius: var(--r-pill);
+  padding: 2px 8px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  background: transparent;
   font-family: var(--font-mono);
   font-size: 8.5px;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.11em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
 .chrome-about__status--real {
-  background: var(--ok-soft);
   color: var(--ok-text);
 }
 
 .chrome-about__status--real-stats {
-  background: var(--accent-soft);
   color: var(--accent);
 }
 
 .chrome-about__status--synthetic {
-  background: var(--surface-2);
-  color: var(--ink-2);
+  color: var(--ink-3);
 }
 
 .chrome-about__status--assumption {
-  background: var(--warn-soft);
   color: var(--warn-text);
 }
 
@@ -621,7 +699,10 @@
 /* --------------------------------------------------- optimize-the-day pill */
 
 .chrome-topbar__optimize {
-  padding: 6px 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 17px;
   border-radius: var(--r-pill);
   background: var(--accent);
   color: var(--accent-ink);
@@ -636,8 +717,18 @@
     box-shadow var(--dur-med) var(--ease);
 }
 
+.chrome-topbar__optimize::after {
+  content: '→';
+  font-weight: 400;
+  transition: transform var(--dur-med) var(--ease-out);
+}
+
 .chrome-topbar__optimize:hover {
-  filter: brightness(1.1);
+  filter: brightness(1.08);
+}
+
+.chrome-topbar__optimize:hover::after {
+  transform: translateX(3px);
 }
 
 .chrome-topbar__optimize:active {
@@ -665,25 +756,38 @@
 }
 
 .chrome-wrap__head {
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   padding-right: 40px;
 }
 
 .chrome-wrap__kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-family: var(--font-mono);
   font-size: 9.5px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+.chrome-wrap__kicker::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background:
+    radial-gradient(circle, var(--accent-line) 0 2.5px, transparent 2.6px) right center / 5px 5px
+      no-repeat,
+    linear-gradient(var(--accent-line), var(--accent-line)) left center / 100% 1px no-repeat;
 }
 
 .chrome-wrap__title {
-  font-family: var(--font-serif);
-  font-size: 27px;
+  font-family: var(--font-display);
+  font-size: 32px;
   font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  letter-spacing: 0;
+  line-height: 1.08;
   color: var(--ink);
 }
 
@@ -701,20 +805,22 @@
 }
 
 .chrome-wrap__stat {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 3px;
   min-width: 96px;
-  padding: 10px 14px;
+  padding: 12px 14px 11px;
   background: var(--page);
   border: 1px solid var(--border-strong);
   border-radius: var(--r-m);
 }
 
 .chrome-wrap__stat-v {
-  font-family: var(--font-serif);
-  font-size: 24px;
-  line-height: 1.1;
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: 0;
   color: var(--ink);
 }
 
@@ -752,9 +858,10 @@
 }
 
 .chrome-wrap__case-t {
-  font-family: var(--font-serif);
-  font-size: 24px;
-  line-height: 1.1;
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: 0;
 }
 
 .chrome-wrap__case-t--crit {

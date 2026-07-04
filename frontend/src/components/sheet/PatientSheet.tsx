@@ -70,7 +70,7 @@ function SheetPanel({ vm, simMin }: { vm: SheetVM; simMin: number }) {
   const sexLetter = vm.sex === 'female' ? 'F' : 'M'
 
   return (
-    <aside className="sheet" role="complementary" aria-label={`Patient sheet: ${vm.name}`}>
+    <aside className="sheet reg-ticks" role="complementary" aria-label={`Patient sheet: ${vm.name}`}>
       <header className="sheet-head">
         <button
           ref={closeRef}
@@ -137,6 +137,7 @@ function SheetPanel({ vm, simMin }: { vm: SheetVM; simMin: number }) {
 
         <SegmentedControl
           size="sm"
+          variant="underline"
           options={TAB_OPTIONS}
           value={sheetTab}
           onChange={setSheetTab}

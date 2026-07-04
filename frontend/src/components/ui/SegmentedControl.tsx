@@ -17,12 +17,15 @@ export function SegmentedControl<T extends string>({
   onChange,
   ariaLabel,
   size = 'md',
+  variant = 'pill',
 }: {
   options: Array<SegmentedOption<T>>
   value: T
   onChange: (v: T) => void
   ariaLabel: string
   size?: 'md' | 'sm'
+  /** 'pill' = rail with sliding ink thumb; 'underline' = folio tabs with a 2px ink rule. */
+  variant?: 'pill' | 'underline'
 }) {
   const refs = useRef(new Map<T, HTMLButtonElement>())
   const [thumb, setThumb] = useState<{ x: number; w: number } | null>(null)
@@ -50,7 +53,11 @@ export function SegmentedControl<T extends string>({
   }
 
   return (
-    <div className={`segmented segmented--${size}`} role="radiogroup" aria-label={ariaLabel}>
+    <div
+      className={`segmented segmented--${size} segmented--${variant}`}
+      role="radiogroup"
+      aria-label={ariaLabel}
+    >
       {thumb ? (
         <span
           className="segmented__thumb"

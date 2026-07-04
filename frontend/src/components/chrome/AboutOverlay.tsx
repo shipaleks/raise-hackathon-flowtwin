@@ -107,7 +107,7 @@ function AboutDialog({ onClose }: { onClose: () => void }) {
       <div className="chrome-about__scrim" onClick={onClose} aria-hidden="true" />
       <div
         ref={cardRef}
-        className="chrome-about__card"
+        className="chrome-about__card reg-ticks"
         role="dialog"
         aria-modal="true"
         aria-label="About FlowTwin"
@@ -129,6 +129,9 @@ function AboutDialog({ onClose }: { onClose: () => void }) {
             />
           </svg>
         </button>
+
+        <div className="chrome-about__scroll">
+        <p className="folio-eyebrow chrome-about__masthead">FlowTwin · the honesty ledger</p>
 
         <section className="chrome-about__section">
           <h3 className="chrome-about__h">What this is</h3>
@@ -288,6 +291,7 @@ function AboutDialog({ onClose }: { onClose: () => void }) {
           Kong Hospital Authority A&amp;E waiting times (data.gov.hk). Patient statistics:
           MIMIC-IV-ED (PhysioNet). Identities: Synthea. No live API calls in this build.
         </p>
+        </div>
       </div>
     </div>
   )

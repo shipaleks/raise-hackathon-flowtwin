@@ -14,6 +14,25 @@
   background: var(--page);
 }
 
+/* crop-mark L's in the four corners of a plate (host needs position:relative) */
+.reg-ticks::before {
+  content: '';
+  position: absolute;
+  inset: 11px;
+  pointer-events: none;
+  z-index: 1;
+  --tk: color-mix(in oklab, var(--ink-3) 50%, transparent);
+  background:
+    linear-gradient(var(--tk), var(--tk)) top left / 7px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) top left / 1px 7px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) top right / 7px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) top right / 1px 7px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) bottom left / 7px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) bottom left / 1px 7px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) bottom right / 7px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) bottom right / 1px 7px no-repeat;
+}
+
 /* one soft atmospheric wash behind the KPI row — decorative only */
 .admin::before {
   content: '';
@@ -56,10 +75,11 @@
 }
 
 .admin-head__role {
-  font-family: var(--font-serif);
-  font-size: 26px;
+  font-family: var(--font-display);
+  font-size: 30px;
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
+  line-height: 1;
   color: var(--ink);
 }
 
@@ -87,22 +107,41 @@
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 14px;
+  counter-reset: kpi;
 }
 
 .admin-kpi {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 18px 20px;
+  gap: 6px;
+  padding: 26px 20px 18px;
   background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: var(--r-l);
+  counter-increment: kpi;
   transition: border-color var(--dur-med) var(--ease);
   animation: admin-rise var(--dur-slow) var(--ease-out) backwards;
 }
 
 .admin-kpi:hover {
   border-color: var(--ink-3);
+}
+
+/* index numeral — the plate number, top-left, in mono */
+.admin-kpi__idx {
+  position: absolute;
+  top: 13px;
+  left: 20px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+}
+
+.admin-kpi__idx::before {
+  content: counter(kpi, decimal-leading-zero) ' / 05';
 }
 
 /* staggered entrance, left to right */
@@ -127,14 +166,14 @@
   color: var(--ink-3);
 }
 
-/* headline figures speak serif — the editorial confidence signature */
+/* headline figures speak the display serif — the editorial confidence signature */
 .admin-kpi__value {
   display: inline-block;
-  font-family: var(--font-serif);
-  font-size: 34px;
+  font-family: var(--font-display);
+  font-size: 38px;
   font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: 1;
+  letter-spacing: 0;
   color: var(--ink);
   animation: kpi-swap var(--dur-med) var(--ease-out);
 }
@@ -179,6 +218,7 @@
 
 /* shared card scaffolding (composes with global .card) */
 .admin-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -191,11 +231,26 @@
 }
 
 .admin-card__title {
-  font-family: var(--font-serif);
-  font-size: 19px;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  font-family: var(--font-display);
+  font-size: 22px;
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
+  line-height: 1.05;
   color: var(--ink);
+}
+
+/* a small ink diamond leads each plate title */
+.admin-card__title::before {
+  content: '';
+  flex: none;
+  align-self: center;
+  width: 5px;
+  height: 5px;
+  transform: rotate(45deg);
+  background: var(--accent);
 }
 
 .admin-card__caption {
@@ -576,6 +631,42 @@
   background: var(--accent-soft);
   color: var(--ink);
   font-weight: 500;
+}
+
+/* the home hospital gets an accent left rule — you-are-here in the network */
+.admin-net tbody tr.is-hero td:first-child {
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+/* --- printed credits footer -------------------------------- */
+
+.admin-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-strong);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  animation: admin-rise var(--dur-slow) var(--ease-out) backwards;
+  animation-delay: 440ms;
+}
+
+.admin-foot::before {
+  content: '';
+  flex: none;
+  width: 5px;
+  height: 5px;
+  transform: rotate(45deg);
+  background: var(--border-strong);
+}
+
+.admin-foot__sep {
+  flex: 1;
 }
 
 /* --- the real daily pattern ---------------------------------- */

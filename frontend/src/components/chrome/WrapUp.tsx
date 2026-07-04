@@ -51,7 +51,7 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
       <div className="chrome-about__scrim" onClick={onClose} aria-hidden="true" />
       <div
         ref={cardRef}
-        className="chrome-about__card chrome-wrap__card"
+        className="chrome-about__card chrome-wrap__card reg-ticks"
         role="dialog"
         aria-modal="true"
         aria-label="Day in review and tomorrow's plan"
@@ -69,6 +69,7 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
           </svg>
         </button>
 
+        <div className="chrome-about__scroll">
         <header className="chrome-wrap__head">
           <p className="chrome-wrap__kicker">Day in review · as of {fmtClock(simMin)}</p>
           <h2 className="chrome-wrap__title">
@@ -229,6 +230,7 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
             — not a care decision.
           </span>
         </footer>
+        </div>
       </div>
     </div>
   )
