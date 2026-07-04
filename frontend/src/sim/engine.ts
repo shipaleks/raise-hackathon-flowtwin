@@ -1,12 +1,26 @@
 /* The sim engine: pure functions from (simMinute, resolvedAt) → world state.
-   Every number traces to the seed (or to the hero's scripted beats); nothing
-   here is random, so scrubbing is perfectly reversible. */
+   The cast replays the seed built against the REAL HK feed: every wait was
+   drawn from the hospital's published p50/p95 at that moment, so scrubbing
+   the clock replays the hospital's actual day. Nothing here is random —
+   scrubbing is perfectly reversible. */
 
 import { adminKpis, HERO_ID, history7d, todayCast } from '../data/seed'
 import type { JourneyEvent, OpsPatient, Optimization, Risk, Sex } from '../types'
 import { BEAT_MIN, sarahAt, sarahBaseEvents, type SarahPresentation } from './beats'
-import { DEPTS, deptById, areaById, placeOccupants, zoneIdsFor } from './layout'
-import { SIM_END_MIN, fmtClock, fmtDur, parseT, simToDate } from './time'
+import {
+  DEPTS,
+  areaById,
+  deptById,
+  floorOfDept,
+  placeOccupants,
+  pointOnRoute,
+  roughSlot,
+  routeBetween,
+  zoneIdsFor,
+  type FloorId,
+  type RoutePoint,
+} from './layout'
+import { LIVE_MIN, SIM_END_MIN, fmtClock, fmtDur, parseT, simToDate } from './time'
 
 // ---------------------------------------------------------------- tracks
 
@@ -31,15 +45,22 @@ interface Track {
   arrivalMin: number
   endMin: number
   admitted: boolean
+  /** admitted but NOT part of the seeded ward cast — leaves the twin's scope */
+  handoff: boolean
+  inpatient: boolean
   kind: 'today' | 'history'
   events: TrackEvent[]
   patient?: OpsPatient
 }
 
+/** Admitted flow patients linger this long at the ward door before the twin
+    stops following them (hand-off out of A&E scope). */
+const HANDOFF_LINGER_MIN = 6
+
 function toTrackEvents(events: JourneyEvent[], arrivalMode: string): TrackEvent[] {
   return events.map((e) => {
-    // seed pathway templates route every arrival through the ambulance bay;
-    // walk-ins and referrals enter through the main entrance instead
+    // pathway templates route every arrival through the ambulance bay;
+    // walk-ins and referrals enter through the walk-in entrance instead
     const viaEntrance = e.type === 'arrival' && arrivalMode !== 'ambulance'
     const { deptId, areaId } = viaEntrance
       ? { deptId: 'walk-in', areaId: 'reception' }
@@ -48,13 +69,22 @@ function toTrackEvents(events: JourneyEvent[], arrivalMode: string): TrackEvent[
   })
 }
 
-const todayTracks: Track[] = todayCast.map((p) => {
-  const events = toTrackEvents(p.events, p.arrival_mode)
+function endRuleFor(
+  events: TrackEvent[],
+  isHero: boolean,
+  inpatient: boolean,
+): { endMin: number; admitted: boolean; handoff: boolean } {
   const last = events[events.length - 1]
   const admitted = last.type === 'admit'
-  // admitted patients stay on the ward for the rest of the sim window; the hero's
-  // future is governed by the demo beats, never by her seed track's end
-  const endMin = admitted || p.patient_id === HERO_ID ? SIM_END_MIN + 1 : last.tMin
+  if (isHero) return { endMin: SIM_END_MIN + 1, admitted: false, handoff: false }
+  if (admitted && inpatient) return { endMin: SIM_END_MIN + 1, admitted, handoff: false }
+  if (admitted) return { endMin: last.tMin + HANDOFF_LINGER_MIN, admitted, handoff: true }
+  return { endMin: last.tMin, admitted, handoff: false }
+}
+
+const todayTracks: Track[] = todayCast.map((p) => {
+  const events = toTrackEvents(p.events, p.arrival_mode)
+  const rule = endRuleFor(events, p.patient_id === HERO_ID, !!p.inpatient)
   return {
     id: p.patient_id,
     name: p.name,
@@ -65,29 +95,37 @@ const todayTracks: Track[] = todayCast.map((p) => {
     acuity: p.acuity,
     arrivalMode: p.arrival_mode,
     arrivalMin: parseT(p.arrival_time),
-    endMin,
-    admitted,
+    endMin: rule.endMin,
+    admitted: rule.admitted,
+    handoff: rule.handoff,
+    inpatient: !!p.inpatient,
     kind: 'today',
     events,
     patient: p,
   }
 })
 
-const historyTracks: Track[] = history7d.journeys.map((j) => ({
-  id: j.patient_id,
-  name: j.name,
-  age: j.age,
-  sex: j.sex,
-  pathway: j.pathway,
-  complaint: j.complaint,
-  acuity: j.acuity,
-  arrivalMode: j.arrival_mode,
-  arrivalMin: parseT(j.arrival),
-  endMin: parseT(j.arrival) + j.los_min,
-  admitted: j.admitted,
-  kind: 'history',
-  events: toTrackEvents(j.events, j.arrival_mode),
-}))
+const historyTracks: Track[] = history7d.journeys.map((j) => {
+  const events = toTrackEvents(j.events, j.arrival_mode)
+  const rule = endRuleFor(events, false, false)
+  return {
+    id: j.patient_id,
+    name: j.name,
+    age: j.age,
+    sex: j.sex,
+    pathway: j.pathway,
+    complaint: j.complaint,
+    acuity: j.acuity,
+    arrivalMode: j.arrival_mode,
+    arrivalMin: parseT(j.arrival),
+    endMin: rule.endMin,
+    admitted: rule.admitted,
+    handoff: rule.handoff,
+    inpatient: false,
+    kind: 'history',
+    events,
+  }
+})
 
 const trackById = new Map<string, Track>([
   ...todayTracks.map((t) => [t.id, t] as const),
@@ -105,9 +143,11 @@ export interface MapAgent {
   name: string
   age: number
   sex: Sex
+  acuity: number
   risk: Risk
   x: number
   y: number
+  floorId: FloorId
   deptId: string
   areaId: string | null
   kind: 'today' | 'history'
@@ -124,8 +164,12 @@ export interface MapAgent {
   blocked: boolean
   /** discharged within the last few sim-minutes — fading off the map */
   exiting: boolean
-  /** admitted and settled on the ward (ED prediction closed) */
+  /** settled in a seeded ward bed (prediction closed) */
   onWard: boolean
+  /** admitted and being handed off beyond the A&E twin's scope */
+  handoff: boolean
+  /** mid-walk between stations (corridor / lift) */
+  walking: boolean
 }
 
 function eventIndexAt(events: TrackEvent[], tMin: number): number {
@@ -137,8 +181,10 @@ function eventIndexAt(events: TrackEvent[], tMin: number): number {
   return i
 }
 
+const RESTING_TYPES = new Set(['admit', 'boarding'])
+
 function riskFor(track: Track, tMin: number, cur: TrackEvent): Risk {
-  if (cur.deptId === 'wards' || cur.deptId === 'discharge') return 'on_track'
+  if (cur.deptId === 'discharge' || RESTING_TYPES.has(cur.type) || track.inpatient) return 'on_track'
   const q = quantiles[track.pathway]
   if (!q) return 'on_track'
   const elapsed = tMin - track.arrivalMin
@@ -151,7 +197,12 @@ function riskFor(track: Track, tMin: number, cur: TrackEvent): Risk {
     the stay outruns each estimate — exactly what a live model would do. */
 function predictedExitMin(track: Track, tMin: number): number {
   const q = quantiles[track.pathway]
-  if (!q) return Math.max(track.arrivalMin + 120, tMin + 10)
+  if (!q) {
+    // no pathway model (seeded inpatients) — the planned end is the estimate
+    return track.endMin > track.arrivalMin && track.endMin <= SIM_END_MIN
+      ? track.endMin
+      : Math.max(track.arrivalMin + 120, tMin + 10)
+  }
   const elapsed = tMin - track.arrivalMin
   let est = q.p50
   if (elapsed > q.p90) est = elapsed + 15
@@ -169,21 +220,35 @@ const heroLastMoveMin = heroBaseEvents.length
 /** Discharged glyphs linger this long while they fade off the map. */
 export const EXIT_GRACE_MIN = 8
 
-/** All agents on the floor at sim-minute t, positioned. */
+/** Walking time between stations (visible in corridors and the lift). */
+export const TRAVEL_MIN = 5
+
+/** All agents in the building at sim-minute t, positioned (all floors). */
 export function agentsAt(tMin: number, resolvedAtMin: number | null): MapAgent[] {
   const sarah = tMin >= 0 ? sarahAt(tMin, resolvedAtMin) : null
-  const raw: Array<Omit<MapAgent, 'x' | 'y'>> = []
+  interface RawAgent extends Omit<MapAgent, 'x' | 'y' | 'floorId' | 'walking'> {
+    track: Track
+    eventIdx: number
+    sinceMin: number
+  }
+  const raw: RawAgent[] = []
 
   for (const track of [...todayTracks, ...historyTracks]) {
-    if (track.arrivalMin > tMin || track.endMin + EXIT_GRACE_MIN <= tMin) continue
-    const exiting = tMin >= track.endMin
+    if (track.arrivalMin > tMin) continue
     const isHero = track.id === HERO_ID
+
+    let effectiveEnd = track.endMin
+    if (isHero && sarah) effectiveEnd = sarah.departed ? sarah.exitMin : SIM_END_MIN + 1
+    if (effectiveEnd + EXIT_GRACE_MIN <= tMin) continue
+    const exiting = tMin >= effectiveEnd
+
     let deptId: string
     let areaId: string | null
     let since: number
     let risk: Risk
     let exitMin: number
     let onWard = false
+    let eventIdx = -1
     const exitIsActual = track.kind === 'history'
 
     if (isHero && sarah) {
@@ -193,10 +258,17 @@ export function agentsAt(tMin: number, resolvedAtMin: number | null): MapAgent[]
       risk = sarah.risk
       exitMin = sarah.exitMin
       since = sarah.resolved && resolvedAtMin != null ? resolvedAtMin : heroLastMoveMin
-      if (sarah.resolved) {
-        deptId = 'emergency'
-        areaId = 'observation'
-      }
+    } else if (isHero) {
+      // before the anchor the hero plays her seed intake straight
+      const idx = eventIndexAt(track.events, tMin)
+      if (idx < 0) continue
+      const cur = track.events[idx]
+      deptId = cur.deptId
+      areaId = cur.areaId
+      since = cur.tMin
+      risk = riskFor(track, tMin, cur)
+      exitMin = predictedExitMin(track, tMin)
+      eventIdx = idx
     } else {
       const idx = eventIndexAt(track.events, tMin)
       if (idx < 0) continue
@@ -206,12 +278,15 @@ export function agentsAt(tMin: number, resolvedAtMin: number | null): MapAgent[]
       since = cur.tMin
       risk = riskFor(track, tMin, cur)
       exitMin = track.kind === 'history' ? track.endMin : predictedExitMin(track, tMin)
-      // admitted + past their track = settled on the ward
+      eventIdx = idx
+      // settled in a seeded ward bed = the A&E prediction is closed
       if (track.admitted && idx === track.events.length - 1) {
         risk = 'on_track'
-        if (track.kind === 'today') {
+        if (track.inpatient) {
           onWard = true
-          exitMin = cur.tMin // the admit moment — ED prediction is closed
+          exitMin = cur.tMin
+        } else {
+          exitMin = cur.tMin // hand-off moment
         }
       }
     }
@@ -221,6 +296,7 @@ export function agentsAt(tMin: number, resolvedAtMin: number | null): MapAgent[]
       name: track.name,
       age: track.age,
       sex: track.sex,
+      acuity: track.acuity,
       risk,
       deptId,
       areaId,
@@ -230,17 +306,21 @@ export function agentsAt(tMin: number, resolvedAtMin: number | null): MapAgent[]
       pathway: track.pathway,
       arrivalMode: track.arrivalMode,
       waitMin: Math.max(0, tMin - since),
-      elapsedMin: Math.max(0, Math.min(tMin, track.endMin) - track.arrivalMin),
+      elapsedMin: Math.max(0, Math.min(tMin, effectiveEnd) - track.arrivalMin),
       exitMin,
       exitIsActual,
       blocked: risk === 'high' && !exiting,
       exiting,
       onWard,
+      handoff: track.handoff && tMin >= track.events[track.events.length - 1].tMin,
+      track,
+      eventIdx,
+      sinceMin: since,
     })
   }
 
   // position: group per zone, deterministic slot per occupant
-  const byZone = new Map<string, typeof raw>()
+  const byZone = new Map<string, RawAgent[]>()
   for (const a of raw) {
     const key = `${a.deptId}/${a.areaId ?? ''}`
     const list = byZone.get(key) ?? []
@@ -254,15 +334,111 @@ export function agentsAt(tMin: number, resolvedAtMin: number | null): MapAgent[]
     const dept = deptById.get(deptId)
     if (!dept) continue
     const zone = areaId ? areaById.get(`${deptId}/${areaId}`)?.area : null
-    const rect = zone ?? { x: dept.x + 8, y: dept.y + 30, w: dept.w - 16, h: dept.h - 38 }
+    const rect = zone ?? { x: dept.x + 8, y: dept.y + 44, w: dept.w - 16, h: dept.h - 52 }
     const cap = zone?.capacity ?? 4
     const placed = placeOccupants(rect, list.map((a) => a.id), cap)
     for (const a of list) {
       const p = placed.get(a.id)!
-      out.push({ ...a, x: p.x, y: p.y })
+      const { track, eventIdx, sinceMin, ...agent } = a
+      let x = p.x
+      let y = p.y
+      let floorId = floorOfDept(a.deptId)
+      let walking = false
+
+      // walking interpolation: for TRAVEL_MIN after a zone change the agent
+      // is en route from the previous station (corridors + lift)
+      const walkT = (tMin - sinceMin) / TRAVEL_MIN
+      if (walkT >= 0 && walkT < 1 && eventIdx > 0) {
+        const prev = track.events[eventIdx - 1]
+        const curEv = track.events[eventIdx]
+        const zoneChanged = prev.deptId !== curEv.deptId || prev.areaId !== curEv.areaId
+        if (zoneChanged) {
+          const prevZone = prev.areaId ? areaById.get(`${prev.deptId}/${prev.areaId}`)?.area : null
+          const prevDept = deptById.get(prev.deptId)
+          const prevRect =
+            prevZone ??
+            (prevDept
+              ? { x: prevDept.x + 8, y: prevDept.y + 44, w: prevDept.w - 16, h: prevDept.h - 52 }
+              : rect)
+          const from = roughSlot(prevRect, a.id, prevZone?.capacity ?? 4)
+          const route = routeBetween(
+            { deptId: prev.deptId, areaId: prev.areaId, x: from.x, y: from.y },
+            { deptId: curEv.deptId, areaId: curEv.areaId, x: p.x, y: p.y },
+          )
+          const pt = pointOnRoute(route, walkT)
+          x = pt.x
+          y = pt.y
+          floorId = pt.floor
+          walking = true
+        }
+      }
+
+      out.push({ ...agent, x, y, floorId, walking })
     }
   }
   return out.sort((a, b) => (a.id < b.id ? -1 : 1))
+}
+
+// ---------------------------------------------------------------- journey trace
+
+export interface TraceLeg {
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  floor: FloorId
+  past: boolean
+  /** the leg enters/leaves the lift — draw the floor-change marker */
+  liftHop: boolean
+}
+
+/** The selected patient's way through the building: where they came from
+    (solid) and where they are headed (dashed) — drawn on the map. */
+export function traceFor(id: string, tMin: number, resolvedAtMin: number | null): TraceLeg[] {
+  const track = trackById.get(id)
+  if (!track) return []
+  let events = track.events
+  if (id === HERO_ID && tMin >= 0) {
+    const sarah = sarahAt(tMin, resolvedAtMin)
+    events = toTrackEvents(
+      [...sarahBaseEvents(), ...sarah.extraEvents].sort((a, b) => parseT(a.t) - parseT(b.t)),
+      track.arrivalMode,
+    )
+  }
+  const legs: TraceLeg[] = []
+  let prevPt: { x: number; y: number; deptId: string; areaId: string | null } | null = null
+  // beat annotations are state changes, not walks — they must not draw as moves
+  const ANNOTATIONS = new Set(['lab_delay', 'dept_overload', 'consult_escalated'])
+  for (const e of events) {
+    if (ANNOTATIONS.has(e.type)) continue
+    const zone = e.areaId ? areaById.get(`${e.deptId}/${e.areaId}`)?.area : null
+    const dept = deptById.get(e.deptId)
+    if (!dept) continue
+    const rect = zone ?? { x: dept.x + 8, y: dept.y + 44, w: dept.w - 16, h: dept.h - 52 }
+    const pt = roughSlot(rect, id, zone?.capacity ?? 4)
+    if (prevPt && (prevPt.deptId !== e.deptId || prevPt.areaId !== e.areaId)) {
+      const route = routeBetween(
+        { deptId: prevPt.deptId, areaId: prevPt.areaId, x: prevPt.x, y: prevPt.y },
+        { deptId: e.deptId, areaId: e.areaId, x: pt.x, y: pt.y },
+      )
+      const past = e.tMin <= tMin
+      for (let i = 1; i < route.length; i++) {
+        const a: RoutePoint = route[i - 1]
+        const b: RoutePoint = route[i]
+        legs.push({
+          x1: a.x,
+          y1: a.y,
+          x2: b.x,
+          y2: b.y,
+          floor: b.floor,
+          past,
+          liftHop: a.floor !== b.floor,
+        })
+      }
+    }
+    prevPt = { x: pt.x, y: pt.y, deptId: e.deptId, areaId: e.areaId }
+  }
+  return legs
 }
 
 // ---------------------------------------------------------------- zone loads
@@ -291,10 +467,10 @@ function loadOf(count: number, capacity: number, longest: number, outside: boole
     : count === 0
       ? 'Quiet'
       : level === 'over'
-        ? `${count} waiting · longest ${fmtDur(longest)}`
+        ? `${count} inside · longest ${fmtDur(longest)}`
         : level === 'busy'
-          ? `${count} in zone · longest ${fmtDur(longest)}`
-          : `${count} in zone · flowing`
+          ? `${count} inside · longest ${fmtDur(longest)}`
+          : `${count} inside · flowing`
   return { count, capacity, ratio, level, status, longestWaitMin: longest }
 }
 
@@ -349,8 +525,8 @@ export function zoneLoadsAt(agents: MapAgent[], tMin: number, resolvedAtMin: num
       if (!extra && load.count > 0) {
         load.status =
           worstArea === 'over'
-            ? `${load.count} in zone · a room over capacity · longest ${fmtDur(load.longestWaitMin)}`
-            : `${load.count} in zone · longest ${fmtDur(load.longestWaitMin)}`
+            ? `${load.count} inside · a room over capacity`
+            : `${load.count} inside · longest ${fmtDur(load.longestWaitMin)}`
       }
     }
     depts.set(dept.id, load)
@@ -360,32 +536,58 @@ export function zoneLoadsAt(agents: MapAgent[], tMin: number, resolvedAtMin: num
 
 export function dischargedTodayCount(tMin: number): number {
   if (tMin < 0) return 0
+  const midnight = -11 * 60 // 00:00 of the demo day, in sim-minutes
   let n = 0
-  for (const t of todayTracks) {
-    if (!t.admitted && t.endMin <= tMin) n++
+  // journeys that completed earlier today live in the history file — the
+  // counter must see them too, or 11:00 opens on a bogus zero
+  for (const t of [...todayTracks, ...historyTracks]) {
+    if (t.inpatient) continue
+    if (t.endMin <= tMin && t.endMin >= midnight) n++
   }
   return n
 }
 
 // ---------------------------------------------------------------- global status
 
+export interface FloorStatus {
+  count: number
+  worst: LoadLevel
+}
+
 export interface HospitalStatus {
   onFloor: number
   blocked: number
   atRisk: number
+  waitingHall: number
   line: string
+  perFloor: Record<FloorId, FloorStatus>
 }
 
-export function hospitalStatusAt(agents: MapAgent[]): HospitalStatus {
+export function hospitalStatusAt(agents: MapAgent[], zones: ZoneLoads): HospitalStatus {
   const present = agents.filter((a) => !a.exiting)
   const blocked = present.filter((a) => a.risk === 'high').length
   const atRisk = present.filter((a) => a.risk === 'elevated').length
-  const cal = adminKpis.eta_calibration
+  const waitingHall = zones.areas.get('emergency/waiting-hall')?.count ?? 0
+  const perFloor: Record<FloorId, FloorStatus> = {
+    g: { count: 0, worst: 'ok' },
+    f1: { count: 0, worst: 'ok' },
+    f2: { count: 0, worst: 'ok' },
+  }
+  for (const a of present) perFloor[a.floorId].count++
+  const rank: Record<LoadLevel, number> = { ok: 0, busy: 1, over: 2 }
+  for (const dept of DEPTS) {
+    const z = zones.depts.get(dept.id)
+    if (!z) continue
+    const f = perFloor[dept.floor]
+    if (rank[z.level] > rank[f.worst]) f.worst = z.level
+  }
   return {
     onFloor: present.length,
     blocked,
     atRisk,
-    line: `${present.length} on floor · ${blocked} blocked · ${atRisk} at risk · ETA calibration ${cal.coverage_pct}% @ 80%`,
+    waitingHall,
+    line: `${present.length} in building · ${waitingHall} in waiting hall · ${blocked} blocked`,
+    perFloor,
   }
 }
 
@@ -394,27 +596,36 @@ export function hospitalStatusAt(agents: MapAgent[]): HospitalStatus {
 const EVENT_LABELS: Record<string, string> = {
   arrival: 'Arrived',
   triage: 'Triage assessment',
-  bed_assigned: 'Bed assigned',
+  waiting: 'In the queue — first consultation ahead',
+  bed_assigned: 'Cubicle assigned',
   labs_ordered: 'Bloods drawn → lab',
   ecg: 'ECG taken',
   consult_requested: 'Cardiology consult requested',
-  consult_done: 'Consult completed',
+  consult_done: 'Doctor consultation',
   observation: 'Observation',
+  telemetry: 'On telemetry',
   decision: 'Disposition decision',
   discharge: 'Discharged',
   imaging: 'Imaging',
   treatment: 'Treatment',
-  admit: 'Admitted to ward',
+  resus: 'Resus bay',
+  pre_op: 'Pre-op preparation',
+  surgery: 'In theatre',
+  recovery: 'Recovery',
+  endoscopy: 'Endoscopy',
+  pharmacy: 'Pharmacy pick-up',
+  boarding: 'Boarding — waiting for the ward bed',
+  admit: 'Admitted — handed off to the ward',
   lab_delay: 'Lab delay — troponin re-run queued',
-  dept_overload: 'Cardiology overload — 4 consults queued',
-  moved_to_observation: 'Moved to Observation (bed O-12)',
+  dept_overload: 'Cardiology overload — consults queued past capacity',
+  moved_to_observation: 'Moved to the obs ward (bed O-6)',
   consult_escalated: 'Consult coverage escalated',
 }
 
 export const eventLabel = (type: string) => EVENT_LABELS[type] ?? type.replace(/_/g, ' ')
 
 export interface FlowSegment {
-  /** zone shown to the user, e.g. "ER Bays" */
+  /** zone shown to the user, e.g. "Cubicles" */
   zoneLabel: string
   deptId: string
   areaId: string | null
@@ -450,8 +661,10 @@ export interface SheetVM {
   onFloor: boolean
   notArrivedYet: boolean
   departed: boolean
-  /** admitted and settled on the ward — the ED prediction is closed */
+  /** admitted and settled in a seeded ward bed */
   admittedNow: boolean
+  /** admitted and handed off beyond the twin's scope */
+  handoff: boolean
   risk: Risk
   elapsedMin: number
   exitMin: number
@@ -464,6 +677,8 @@ export interface SheetVM {
   losPredictedMin: number
   losBenchmarkMin: number
   losActualMin: number | null
+  /** the wait actually drawn from the hospital's published distribution */
+  realWaitMin: number | null
   pendingSteps: string[]
   blockerLabel: string | null
   recommendation: {
@@ -487,24 +702,25 @@ export interface SheetVM {
 }
 
 const RECOMMEND_TITLES: Record<string, string> = {
-  move_to_observation: 'Move to Observation + escalate consult',
+  move_to_observation: 'Move to the obs ward + escalate consult',
   prioritize_lab_sample: 'Flag troponin re-run as cardiac priority',
   monitor: 'Monitor — on pathway',
   done_monitor: 'Done — monitoring recovery',
-  escalate_consult_or_move_to_observation: 'Escalate consult or move to Observation',
+  escalate_consult_or_move_to_observation: 'Escalate consult or move to the obs ward',
   chase_lab_result: 'Chase the pending lab result',
   prioritize_imaging_slot: 'Prioritize an imaging slot',
-  confirm_discharge_or_bed: 'Confirm disposition to free the bay',
+  confirm_discharge_or_bed: 'Confirm disposition to free the bed',
 }
 
 /** Segment types an optimization would compress, in priority order — later
     entries are fallbacks so the saving lands on a stop that can absorb it. */
 function optimizationAnchors(issue: string): string[] {
   const t = issue.toLowerCase()
-  if (t.includes('troponin') || t.includes('lab')) return ['labs_ordered', 'bed_assigned']
+  if (t.includes('troponin') || t.includes('lab') || t.includes('blood'))
+    return ['labs_ordered', 'bed_assigned', 'waiting']
   if (t.includes('consult') || t.includes('wearable') || t.includes('arrhythmia'))
-    return ['consult_requested', 'labs_ordered']
-  return ['observation', 'consult_requested', 'bed_assigned']
+    return ['consult_requested', 'waiting', 'labs_ordered']
+  return ['observation', 'waiting', 'consult_requested', 'bed_assigned']
 }
 
 function buildSegments(events: TrackEvent[], upTo: number | null, notes?: Map<number, string>): FlowSegment[] {
@@ -579,7 +795,7 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
         current: false,
         predicted: true,
         savedMin: 0,
-      appliedMin: 0,
+        appliedMin: 0,
       })
     })
   } else if (track.kind === 'history') {
@@ -606,7 +822,7 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
         current: false,
         predicted: true,
         savedMin: 0,
-      appliedMin: 0,
+        appliedMin: 0,
       })
     }
   }
@@ -631,7 +847,9 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
   for (const s of segments) s.appliedMin = Math.min(s.savedMin, s.minutes)
 
   // --- prediction numbers ---
-  const onFloor = track.arrivalMin <= tMin && tMin < track.endMin
+  const heroEnd = isHero && sarah ? (sarah.departed ? sarah.exitMin : SIM_END_MIN + 1) : null
+  const effectiveEnd = heroEnd ?? track.endMin
+  const onFloor = track.arrivalMin <= tMin && tMin < effectiveEnd
   const notArrivedYet = track.arrivalMin > tMin
   const idx = eventIndexAt(track.events, tMin)
   const cur = idx >= 0 ? track.events[idx] : null
@@ -647,8 +865,8 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
   if (isHero && sarah) {
     risk = sarah.risk
     exitMin = sarah.exitMin
-    ciLowMin = sarah.ciLowMin
-    ciHighMin = sarah.ciHighMin
+    ciLowMin = sarah.departed ? null : sarah.ciLowMin
+    ciHighMin = sarah.departed ? null : sarah.ciHighMin
     pendingSteps = sarah.pendingSteps
     blockerLabel = sarah.blockerLabel
     rec = sarah.recommendation
@@ -698,21 +916,22 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
     if (isHero) {
       blockerLabel = null
       rec = null
-      pendingSteps = pendingSteps.length ? pendingSteps : []
     }
   }
 
-  // admitted-and-settled: the ED prediction is closed, the exit chip should
-  // say "Admitted", not a time that already passed
+  // settled in a seeded ward bed / handed off — the A&E prediction is closed
   const lastEvent = track.events[track.events.length - 1]
   const admittedNow =
-    track.kind === 'today' && track.admitted && tMin >= lastEvent.tMin
-  if (admittedNow) {
+    track.kind === 'today' && track.admitted && track.inpatient && tMin >= lastEvent.tMin
+  const handoffNow = track.handoff && tMin >= lastEvent.tMin
+  if (admittedNow || handoffNow) {
     exitMin = lastEvent.tMin
     ciLowMin = null
     ciHighMin = null
     pendingSteps = []
-    blockerLabel = 'Admitted — ward care continues outside the ED scope'
+    blockerLabel = admittedNow
+      ? 'Admitted — ward care continues outside the A&E scope'
+      : `Handed off to ${lastEvent.rawDept} — beyond the A&E twin's scope`
   }
 
   const ciLabel =
@@ -734,10 +953,11 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
     arrivalMin: track.arrivalMin,
     onFloor,
     notArrivedYet,
-    departed: tMin >= track.endMin,
+    departed: tMin >= effectiveEnd,
     admittedNow,
+    handoff: handoffNow,
     risk,
-    elapsedMin: Math.max(0, Math.min(tMin, track.endMin) - track.arrivalMin),
+    elapsedMin: Math.max(0, Math.min(tMin, effectiveEnd) - track.arrivalMin),
     exitMin,
     exitIsActual: track.kind === 'history',
     exitClock: fmtClock(exitMin),
@@ -752,6 +972,7 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
         : (q?.p50 ?? track.endMin - track.arrivalMin),
     losBenchmarkMin: p?.benchmark_los_min ?? q?.p50 ?? 0,
     losActualMin: track.kind === 'history' ? track.endMin - track.arrivalMin : null,
+    realWaitMin: p?.real_wait_draw_min ?? null,
     pendingSteps,
     blockerLabel,
     recommendation: rec,
@@ -763,9 +984,9 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
     wearable: p?.signals.wearable ?? null,
     provenance: p?.provenance ?? null,
     modelLine: q
-      ? `FlowTwin ETA — empirical quantile model over the 7-day log (${track.pathway}, n=${q.n})`
-      : 'FlowTwin ETA — empirical quantile model over the 7-day log',
-    calibrationLine: `80% interval covered ${cal.coverage_pct}% of ${cal.n} past journeys · median error ±${cal.median_abs_error_min} min`,
+      ? `FlowTwin ETA — LOS quantiles from ${q.n} real ED stays (MIMIC-IV-ED)`
+      : 'FlowTwin ETA — planned ward discharge',
+    calibrationLine: `${cal.interval} · in-sample on ${cal.n} MIMIC-IV-ED stays — full-dataset calibration planned`,
     guard: { topicOk: p?.guard.topic_ok ?? true, safetyOk: p?.guard.safety_ok ?? true },
   }
 }
@@ -776,6 +997,8 @@ function blockerText(blocker: string): string | null {
     labs_pending: 'Awaiting lab result before disposition',
     imaging_queue: 'Waiting on an imaging slot',
     awaiting_disposition: 'Medically progressing — awaiting disposition',
+    awaiting_consult: 'In the waiting hall — consultation ahead',
+    awaiting_triage: 'Waiting for triage',
     none: 'No blocker',
   }
   return map[blocker] ?? blocker.replace(/_/g, ' ')
@@ -788,24 +1011,38 @@ export interface AdminVM {
   bedOccupancyPct: number
   dischargedToday: number
   avgWaitNowMin: number
+  waitingHall: number
   arrivalForecast: typeof adminKpis.arrival_forecast_next_3h
-  avoidableRank: typeof adminKpis.avoidable_wait_rank
   bottleneck: typeof adminKpis.recurring_bottleneck
   calibration: typeof adminKpis.eta_calibration
   benchmark: typeof adminKpis.hf_admissions_benchmark
   assumptions: typeof adminKpis.assumptions
+  hk: typeof adminKpis.hk
+  optimizePlan: typeof adminKpis.optimize_plan
   /** the live reallocation play, when the consult queue is over capacity */
   play: {
     active: boolean
     queued: number
     blockedBeds: number
     overstayMin: number
+    costHkd: number
     costEur: number
     resolvedNote: string | null
   }
 }
 
-const BED_AREAS = ['emergency/er-bay', 'emergency/observation', 'wards/medical-ward', 'wards/surgical-ward']
+const BED_AREAS = [
+  'emergency/cubicles',
+  'emergency/resus',
+  'emw/obs-beds',
+  'icu/beds',
+  'cardiology/telemetry',
+  'surgery/recovery',
+  'medical-ward/beds',
+  'surgical-ward/beds',
+  'geriatric-ward/beds',
+  'step-down/beds',
+]
 
 export function adminModelAt(
   agents: MapAgent[],
@@ -825,9 +1062,9 @@ export function adminModelAt(
   const consult = zones.areas.get('cardiology/consult')
   const queued = consult?.count ?? 0
   const over = (consult?.level ?? 'ok') === 'over'
-  // each queued chest-pain patient holds an ER bay ~50 extra min (see PLAN §3 beat 8)
+  // each queued chest-pain patient holds a cubicle ~50 extra min
   const overstayMin = queued * 50
-  const cost = Math.round((overstayMin / 60) * adminKpis.assumptions.bed_hour_cost_eur)
+  const costHkd = Math.round((overstayMin / 60) * adminKpis.assumptions.bed_hour_cost_hkd)
   const resolved = resolvedAtMin != null && tMin >= resolvedAtMin
 
   const present = agents.filter((a) => !a.exiting)
@@ -835,7 +1072,7 @@ export function adminModelAt(
   const avgWait = waits.length ? waits.reduce((s, a) => s + a.waitMin, 0) / waits.length : 0
 
   // the forecast follows the scrubbed clock: next 3 hour-of-day buckets from
-  // the historical rate table (falls back to the static 11:00 snapshot)
+  // the arrival-rate table (falls back to the static anchor snapshot)
   const rates = adminKpis.arrival_rates_by_hour
   const hourNow = simToDate(tMin).getHours()
   const forecast = rates?.length === 24
@@ -847,24 +1084,90 @@ export function adminModelAt(
     bedOccupancyPct: bedCap ? Math.round((beds / bedCap) * 100) : 0,
     dischargedToday: dischargedTodayCount(tMin),
     avgWaitNowMin: Math.round(avgWait),
+    waitingHall: zones.areas.get('emergency/waiting-hall')?.count ?? 0,
     arrivalForecast: forecast,
-    avoidableRank: adminKpis.avoidable_wait_rank,
     bottleneck: adminKpis.recurring_bottleneck,
     calibration: adminKpis.eta_calibration,
     benchmark: adminKpis.hf_admissions_benchmark,
     assumptions: adminKpis.assumptions,
+    hk: adminKpis.hk,
+    optimizePlan: adminKpis.optimize_plan,
     play: {
-      // the live play is a TODAY affordance — scrubbing a historic afternoon
-      // must not offer to resolve a queue that no longer exists
+      // the live play is a demo-day affordance — scrubbing a historic
+      // afternoon must not offer to resolve a queue that no longer exists
       active: tMin >= 0 && over && !resolved,
       queued,
       blockedBeds: queued,
       overstayMin,
-      costEur: cost,
+      costHkd,
+      costEur: Math.round(costHkd / adminKpis.assumptions.hkd_per_eur),
       resolvedNote: resolved
         ? 'Play executed: consult coverage escalated 60 min — queue draining.'
         : null,
     },
+  }
+}
+
+// ---------------------------------------------------------------- day review
+
+export interface DayReview {
+  hospital: string
+  cluster: string
+  district: string
+  /** counts up to the scrubbed moment (today) */
+  arrived: number
+  discharged: number
+  admitted: number
+  inBuilding: number
+  /** the real feed's climb on the demo day */
+  realClimb: { fromMin: number | null; fromClock: string; toMin: number | null; toClock: string }
+  /** Sarah's case strip */
+  sarah: {
+    resolved: boolean
+    baselineExit: string
+    slippedExit: string
+    finalExit: string
+    recoveredMin: number
+  }
+  optimizePlan: typeof adminKpis.optimize_plan
+  assumptions: typeof adminKpis.assumptions
+}
+
+export function dayReviewAt(tMin: number, resolvedAtMin: number | null): DayReview {
+  const midnight = -11 * 60
+  let arrived = 0
+  let admitted = 0
+  for (const t of todayTracks) {
+    if (t.arrivalMin >= midnight && t.arrivalMin <= tMin) {
+      arrived++
+      if (t.admitted && t.events[t.events.length - 1].tMin <= tMin) admitted++
+    }
+  }
+  const resolved = resolvedAtMin != null && tMin >= resolvedAtMin
+  const world = worldAt(tMin, resolvedAtMin)
+  return {
+    hospital: adminKpis.hk.hospital,
+    cluster: adminKpis.hk.cluster,
+    district: adminKpis.hk.district,
+    arrived,
+    discharged: dischargedTodayCount(tMin),
+    admitted,
+    inBuilding: world.status.onFloor,
+    realClimb: {
+      fromMin: adminKpis.recurring_bottleneck.avg_los_other_min,
+      fromClock: adminKpis.recurring_bottleneck.window.split('→')[0]?.trim() ?? '08:00',
+      toMin: adminKpis.recurring_bottleneck.avg_los_in_window_min,
+      toClock: adminKpis.recurring_bottleneck.window.split('→')[1]?.trim() ?? '17:00',
+    },
+    sarah: {
+      resolved,
+      baselineExit: '14:20',
+      slippedExit: '16:50',
+      finalExit: resolved ? '16:05' : '16:50',
+      recoveredMin: resolved ? 45 : 0,
+    },
+    optimizePlan: adminKpis.optimize_plan,
+    assumptions: adminKpis.assumptions,
   }
 }
 
@@ -885,10 +1188,10 @@ export function worldAt(tMin: number, resolvedAtMin: number | null): World {
   if (lastWorld && key === lastKey) return lastWorld
   const agents = agentsAt(tMin, resolvedAtMin)
   const zones = zoneLoadsAt(agents, tMin, resolvedAtMin)
-  const status = hospitalStatusAt(agents)
+  const status = hospitalStatusAt(agents, zones)
   lastKey = key
   lastWorld = { agents, zones, status }
   return lastWorld
 }
 
-export { BEAT_MIN }
+export { BEAT_MIN, LIVE_MIN }

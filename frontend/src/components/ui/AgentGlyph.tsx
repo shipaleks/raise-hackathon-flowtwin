@@ -74,26 +74,27 @@ export function AgentGlyph({ sex, risk, size = 16, variant = 'map', pulse = fals
     )
   }
 
+  // map variant: a little person (head + shoulders) — the floor reads as
+  // people, while the sheet header keeps the agent's sparkle mark
   return (
     <svg className={cls} width={size} height={size} viewBox="0 0 24 24" role="img" aria-label={title}>
       {title ? <title>{title}</title> : null}
-      <rect x="3.5" y="3.5" width="17" height="17" rx="5.5" fill={fill} />
-      <rect
-        x="1.25"
-        y="1.25"
-        width="21.5"
-        height="21.5"
-        rx="7"
+      <circle
+        cx="12"
+        cy="12.5"
+        r="10.4"
         fill="none"
         stroke={ring}
-        strokeWidth="1.8"
+        strokeWidth="1.9"
         className="agent-glyph__ring"
       />
+      <circle cx="12" cy="7.6" r="3.5" fill={fill} />
+      <path d="M5.6 20.4v-1.2a6.4 6.4 0 0 1 12.8 0v1.2z" fill={fill} />
       <text
         x="12"
-        y="16.2"
+        y="19"
         textAnchor="middle"
-        fontSize="11"
+        fontSize="6.4"
         fontWeight="700"
         fill={SEX_INK[sex]}
       >

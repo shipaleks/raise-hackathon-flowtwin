@@ -47,9 +47,12 @@ interface StepDef {
 export function DemoControls() {
   const simMin = useStore((s) => s.simMin)
   const resolvedAtMin = useStore((s) => s.resolvedAtMin)
+  const wrapOpen = useStore((s) => s.wrapOpen)
   const jumpToBeat = useStore((s) => s.jumpToBeat)
   const select = useStore((s) => s.select)
   const resolveNow = useStore((s) => s.resolveNow)
+  const setSimMin = useStore((s) => s.setSimMin)
+  const setWrapOpen = useStore((s) => s.setWrapOpen)
 
   const inline = useInline()
   const [open, setOpen] = useState(false)
@@ -86,6 +89,16 @@ export function DemoControls() {
       go: () => {
         jumpToBeat('resolveSuggested')
         resolveNow()
+      },
+    },
+    {
+      id: 'wrap',
+      label: 'Day review',
+      done: wrapOpen,
+      go: () => {
+        select(null)
+        setSimMin(6.5 * 60) // 17:30 — past the real afternoon peak
+        setWrapOpen(true)
       },
     },
   ]

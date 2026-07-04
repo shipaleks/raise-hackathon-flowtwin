@@ -155,7 +155,7 @@ export function TimeScrubber() {
   const showBeats = !scopeTrack || selectedId === HERO_ID
   const trackLabel = scopeTrack
     ? `Time scrubber — scoped to ${scopeTrack.name}'s journey`
-    : 'Time scrubber — 7 days of history plus today'
+    : 'Time scrubber — 48 hours of the real feed, ending at the live moment'
 
   return (
     <footer className="scrub" aria-label="Time controls">
@@ -216,9 +216,21 @@ export function TimeScrubber() {
           <div
             className="scrub-track__anchor"
             style={{ left: `${xPct(0)}%` }}
-            title="Today 11:00 — anchor"
+            title="Demo day 11:00 — anchor"
             aria-hidden="true"
           />
+        )}
+
+        {!scopeTrack && (
+          <div
+            className={`scrub-track__live${simMin >= SIM_END_MIN - 8 ? ' is-at' : ''}`}
+            style={{ left: '100%' }}
+            title="LIVE — the real feed's latest snapshot"
+            aria-hidden="true"
+          >
+            <span className="scrub-track__live-dot" />
+            LIVE
+          </div>
         )}
 
         <input

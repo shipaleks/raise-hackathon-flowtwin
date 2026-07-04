@@ -1,21 +1,28 @@
 /* Typed access to the committed seed (data/seed/*.json).
-   Identity/complaint = real (Synthea sample); LOS-days/outcomes = real
-   (HF HospitalAdmissions); arrival hours (ED diurnal curve), station times,
-   vitals, and the afternoon cardiology backup = synthesized and labeled
-   per-record (see data/README.md). */
+   REAL: hk_live / hk_history (HA A&E feed — waits, p50/p95, 48h+7d archive)
+         and the MIMIC-derived distributions baked into the cast.
+   SYNTHETIC (labeled): the individual personas — the feed has no
+   patient-level data, by design. See About → honesty ledger. */
 
 import patientsJson from '@seed/patients_today.json'
 import historyJson from '@seed/history_7d.json'
 import scenarioJson from '@seed/scenario.json'
 import kpisJson from '@seed/admin_kpis.json'
-import type { AdminKpis, History7d, PatientsToday, Scenario } from '../types'
+import hkLiveJson from '@seed/hk_live.json'
+import hkHistoryJson from '@seed/hk_history.json'
+import type { AdminKpis, History7d, HkHistory, HkLive, PatientsToday, Scenario } from '../types'
 
 export const patientsToday = patientsJson as unknown as PatientsToday
 export const history7d = historyJson as unknown as History7d
 export const scenario = scenarioJson as unknown as Scenario
 export const adminKpis = kpisJson as unknown as AdminKpis
+export const hkLive = hkLiveJson as unknown as HkLive
+export const hkHistory = hkHistoryJson as unknown as HkHistory
 
-/** Everyone who is (or will be) on the floor today: 7 in-house + 10 scheduled arrivals. */
+/** Everyone the twin tracks today: in-house at the anchor + scheduled arrivals. */
 export const todayCast = [...patientsToday.patients, ...patientsToday.arrivals_today]
 
 export const HERO_ID = scenario.hero
+
+/** The real hospital this build is calibrated to. */
+export const HOSPITAL = adminKpis.hk

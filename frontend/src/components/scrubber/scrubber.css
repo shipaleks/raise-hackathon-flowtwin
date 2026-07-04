@@ -546,3 +546,34 @@
   height: 16px;
   font-size: 9.5px;
 }
+
+/* --- LIVE end-cap ------------------------------------------- */
+
+.scrub-track__live {
+  position: absolute;
+  top: -12px;
+  left: auto !important;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.scrub-track__live.is-at {
+  color: var(--ok-text);
+}
+
+.scrub-track__live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  animation: map-live-pulse 1.6s var(--ease) infinite;
+}

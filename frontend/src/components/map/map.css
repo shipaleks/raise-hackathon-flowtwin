@@ -1,11 +1,12 @@
-/* Drill-down hospital map — soft rounded zones drawn in hairlines on
-   parchment, with a quiet atmospheric wash behind the plate. */
+/* Drill-down hospital map — floor plates drawn like a building on parchment:
+   corridor spine, lift core, rooms with hairline walls, furniture, meeples.
+   Quiet atmospheric wash behind the plate; night falls with the real clock. */
 
 .map-wrap {
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 20px 24px;
+  padding: 16px 20px;
   background: var(--page);
   overflow: hidden;
 }
@@ -57,10 +58,74 @@
   user-select: none;
 }
 
+/* night wash — a real-clock veil over the plate (03:00 reads as 03:00) */
+.map-night {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 50% 10%, rgba(28, 34, 64, 0.16), rgba(18, 20, 38, 0.30));
+  transition: opacity var(--dur-slow) var(--ease);
+}
+
+[data-theme='dark'] .map-night {
+  background:
+    radial-gradient(120% 90% at 50% 10%, rgba(4, 6, 18, 0.30), rgba(2, 3, 10, 0.45));
+}
+
 /* Viewport transform + counter-scaled labels share one clock, so zooms stay coherent. */
 .map-viewport,
 .map-cs {
   transition: transform var(--dur-zone) var(--ease);
+}
+
+/* --- building shell --- */
+
+.map-plate {
+  fill: var(--surface);
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.map-corridor {
+  fill: var(--page);
+  stroke: var(--border);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.map-corridor__mid {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+  stroke-dasharray: 7 9;
+  opacity: 0.55;
+  vector-effect: non-scaling-stroke;
+}
+
+.map-lift rect {
+  fill: var(--surface-2);
+  stroke: var(--border-strong);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+.map-lift line {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.map-lift__tri {
+  fill: var(--ink-3);
+  opacity: 0.8;
+}
+
+.map-lift__label {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.16em;
+  fill: var(--ink-3);
 }
 
 /* --- zones --- */
@@ -68,7 +133,7 @@
 .map-zone__rect {
   fill: var(--surface);
   stroke: var(--border-strong);
-  stroke-width: 1;
+  stroke-width: 1.4;
   cursor: pointer;
   transition:
     fill var(--dur-med) var(--ease),
@@ -79,9 +144,14 @@
   stroke: var(--ink-3);
 }
 
+.map-zone__rect--over {
+  stroke: var(--crit);
+}
+
 .map-zone--outside .map-zone__rect {
   fill: transparent;
   stroke-dasharray: 5 4;
+  stroke-width: 1;
 }
 
 .map-zone__hdr {
@@ -89,7 +159,8 @@
 }
 
 /* zone names carry the serif voice — the map reads like a floor-plan plate.
-   The paint-order halo lifts labels off any hairline passing behind them. */
+   Headers paint LAST in the DOM and carry a halo, so no hairline or room
+   fill can ever slice them (the old truncation bug). */
 .map-zone__name {
   font-family: var(--font-serif);
   font-size: 14px;
@@ -116,7 +187,7 @@
 
 .map-zone__status {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 9.5px;
   letter-spacing: 0.02em;
   fill: var(--ink-3);
   paint-order: stroke;
@@ -129,20 +200,21 @@
   stroke: var(--page);
 }
 
-/* --- areas: faint hints at hospital level, live rooms inside a dept --- */
+/* --- areas: rooms with walls, faint at hospital level --- */
 
 .map-area__rect {
-  fill: none;
+  fill: var(--page);
+  fill-opacity: 0.55;
   stroke: var(--grid);
   stroke-width: 1;
   pointer-events: none;
   transition:
-    fill var(--dur-med) var(--ease),
+    fill-opacity var(--dur-med) var(--ease),
     stroke var(--dur-med) var(--ease);
 }
 
 .map-area--live .map-area__rect {
-  fill: var(--page);
+  fill-opacity: 1;
   stroke: var(--border-strong);
   pointer-events: all;
   cursor: pointer;
@@ -150,6 +222,22 @@
 
 .map-area--live .map-area__rect:hover {
   stroke: var(--ink-3);
+}
+
+.map-area__rect.is-over {
+  stroke: var(--crit);
+  stroke-width: 1.4;
+}
+
+.map-door {
+  stroke: var(--surface);
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.map-door--room {
+  stroke: var(--page);
 }
 
 .map-area__label {
@@ -161,11 +249,15 @@
 
 .map-area__label text {
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   fill: var(--ink-2);
+  paint-order: stroke;
+  stroke: var(--page);
+  stroke-width: 3px;
+  stroke-linejoin: round;
 }
 
 .map-area__count {
@@ -173,23 +265,40 @@
   fill: var(--ink-3);
 }
 
-/* --- room-level spot grid (bays read as bays) --- */
+/* --- furniture --- */
+
+.map-furniture {
+  pointer-events: none;
+  opacity: 0.5;
+  transition: opacity var(--dur-med) var(--ease);
+}
+
+.map-furniture.is-close {
+  opacity: 0.9;
+}
+
+.map-furn rect,
+.map-furn circle {
+  fill: var(--surface-2);
+  stroke: var(--border-strong);
+  stroke-width: 0.8;
+}
+
+.map-furn line {
+  stroke: var(--border-strong);
+  stroke-width: 0.8;
+}
+
+/* --- room-level slot names --- */
 
 .map-slots {
   pointer-events: none;
   animation: map-fade var(--dur-zone) var(--ease);
 }
 
-.map-slot {
-  fill: none;
-  stroke: var(--border-strong);
-  stroke-width: 1;
-  opacity: 0.75;
-}
-
 .map-slot__name {
   font-family: var(--font-mono);
-  font-size: 3.2px;
+  font-size: 3.1px;
   font-weight: 500;
   fill: var(--ink-2);
   opacity: 0.85;
@@ -204,13 +313,69 @@
   }
 }
 
+/* --- the selected patient's way --- */
+
+.map-trace {
+  pointer-events: none;
+}
+
+.map-trace__leg {
+  stroke: var(--accent);
+  stroke-linecap: round;
+}
+
+.map-trace__leg.is-past {
+  stroke-width: 2;
+  opacity: 0.75;
+}
+
+.map-trace__leg.is-future {
+  stroke-width: 1.6;
+  stroke-dasharray: 5 5;
+  opacity: 0.45;
+}
+
+.map-trace__lift circle {
+  fill: var(--accent-soft);
+  stroke: var(--accent-line);
+  stroke-width: 1;
+}
+
+.map-trace__lift text {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  fill: var(--accent);
+}
+
+/* --- ambulances --- */
+
+.map-amb rect {
+  fill: var(--surface);
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.map-amb__cab {
+  fill: var(--surface-2);
+}
+
+.map-amb__cross {
+  stroke: var(--crit);
+  stroke-width: 1.6;
+}
+
+.map-amb__wheel {
+  fill: var(--ink-3);
+  stroke: none;
+}
+
 /* --- agents --- */
 
 .map-agent {
   cursor: pointer;
   animation: map-fade var(--dur-med) var(--ease);
   transition:
-    transform var(--dur-zone) var(--ease),
+    transform 180ms linear,
     opacity var(--dur-med) var(--ease);
 }
 
@@ -244,59 +409,235 @@
   outline-offset: 2px;
 }
 
-/* --- legend --- */
+/* --- floor rail --- */
+
+.map-floors {
+  position: absolute;
+  left: 20px;
+  top: 18px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 176px;
+}
+
+.map-floors__btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px 8px 9px;
+  background: color-mix(in oklab, var(--surface) 88%, transparent);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-m);
+  cursor: pointer;
+  text-align: left;
+  color: var(--ink-2);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.map-floors__btn:hover {
+  border-color: var(--ink-3);
+}
+
+.map-floors__btn.is-active {
+  background: var(--surface);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-panel);
+}
+
+.map-floors__short {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  color: var(--ink);
+  width: 22px;
+  text-align: center;
+  flex: none;
+}
+
+.map-floors__btn.is-active .map-floors__short {
+  color: var(--accent);
+}
+
+.map-floors__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.map-floors__name {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.map-floors__count {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.map-floors__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+}
+
+.map-floors__dot--busy {
+  background: var(--warn);
+}
+
+.map-floors__dot--over {
+  background: var(--crit);
+}
+
+.map-floors__note {
+  margin: 2px 0 0 2px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  opacity: 0.8;
+}
+
+/* --- live / replay badge --- */
+
+.map-live {
+  position: absolute;
+  right: 20px;
+  top: 18px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  background: color-mix(in oklab, var(--surface) 90%, transparent);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.03em;
+  color: var(--ink-2);
+}
+
+.map-live.is-live {
+  border-color: var(--ok);
+  color: var(--ok-text);
+}
+
+.map-live__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ok);
+  animation: map-live-pulse 1.6s var(--ease) infinite;
+}
+
+@keyframes map-live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* --- legend (HTML overlay) --- */
 
 .map-legend {
-  pointer-events: none;
+  position: absolute;
+  right: 20px;
+  bottom: 16px;
+  z-index: 3;
+  width: 300px;
+  padding: 12px 14px;
+  background: color-mix(in oklab, var(--surface) 92%, transparent);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-m);
   transition: opacity var(--dur-med) var(--ease);
 }
 
-.map-legend__card {
-  fill: var(--surface);
-  stroke: var(--border-strong);
-  stroke-width: 1;
+.map-legend.is-hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .map-legend__title {
+  margin: 0 0 8px;
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  fill: var(--ink-3);
+  color: var(--ink-3);
 }
 
-.map-legend__label {
+.map-legend__rows {
+  display: flex;
+  gap: 22px;
+  margin-bottom: 9px;
+}
+
+.map-legend__col {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.map-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-mono);
-  font-size: 11px;
-  fill: var(--ink-2);
+  font-size: 10.5px;
+  color: var(--ink-2);
 }
 
 .map-legend__ring {
-  fill: none;
-  stroke-width: 2.5;
-}
-
-.map-legend__ring--ok {
-  stroke: var(--ok);
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 2.5px solid var(--ok);
+  flex: none;
 }
 
 .map-legend__ring--warn {
-  stroke: var(--warn);
+  border-color: var(--warn);
 }
 
 .map-legend__ring--crit {
-  stroke: var(--crit);
+  border-color: var(--crit);
 }
 
 .map-legend__caption {
+  margin: 0;
   font-family: var(--font-mono);
-  font-size: 10.5px;
-  fill: var(--ink-2);
+  font-size: 9.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.map-legend__caption strong {
+  color: var(--ok-text);
+  font-weight: 600;
 }
 
 .map-legend__caption--src {
-  fill: var(--ink-3);
+  color: var(--ink-3);
 }
 
 /* --- hover preview tooltip --- */
@@ -348,6 +689,14 @@
   font-size: 11px;
   color: var(--ink-2);
   margin-top: 7px;
+}
+
+.map-tip__srcnote {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.02em;
+  color: var(--ok-text);
+  margin-top: 4px;
 }
 
 .map-tip__foot {

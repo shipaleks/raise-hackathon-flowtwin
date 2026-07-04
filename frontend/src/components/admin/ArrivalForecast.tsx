@@ -163,7 +163,8 @@ export function ArrivalForecast({ forecast }: { forecast: Forecast }) {
       </div>
 
       <p className="admin-chart__caption">
-        FlowTwin Arrival Forecast — historical rate by hour-of-day over the 7-day log.
+        FlowTwin Arrival Forecast — MIMIC-IV-ED hour-of-day shape scaled to a stated ~300
+        attendances/day.
       </p>
     </div>
   )

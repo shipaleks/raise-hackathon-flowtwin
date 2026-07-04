@@ -1,11 +1,13 @@
-/* Top chrome: wordmark, drill-down breadcrumb (doctor view), global status
-   line, the Doctor/Administrator switch, theme toggle, and About. */
+/* Top chrome: wordmark, the REAL hospital identity, drill-down breadcrumb
+   (doctor view), the live wait readout at the scrubbed moment, the
+   Doctor/Administrator switch, Optimize-the-day, theme, About. */
 
 import { Fragment, useState } from 'react'
-import { adminKpis } from '../../data/seed'
+import { HOSPITAL } from '../../data/seed'
+import { heroWaitsAt, fmtWait } from '../../data/live'
 import { worldAt } from '../../sim/engine'
-import { areaById, deptById } from '../../sim/layout'
-import { fmtDayClock } from '../../sim/time'
+import { areaById, deptById, floorById } from '../../sim/layout'
+import { LIVE_MIN, fmtDayClock } from '../../sim/time'
 import { useStore, type View } from '../../store'
 import { SegmentedControl, type SegmentedOption } from '../ui/SegmentedControl'
 import './chrome.css'
@@ -31,14 +33,16 @@ function Wordmark() {
 /** Hospital / Department / Area — ancestors zoom out, current is plain text. */
 function Breadcrumb() {
   const zoomPath = useStore((s) => s.zoomPath)
+  const floorId = useStore((s) => s.floorId)
   const zoomTo = useStore((s) => s.zoomTo)
 
   const dept = zoomPath.length > 0 ? deptById.get(zoomPath[0]) : undefined
   const area =
     dept && zoomPath.length > 1 ? areaById.get(`${zoomPath[0]}/${zoomPath[1]}`)?.area : undefined
+  const floor = floorById.get(dept?.floor ?? floorId)
 
   const crumbs: Array<{ label: string; jump?: () => void }> = [
-    { label: 'Hospital', jump: () => zoomTo([]) },
+    { label: `Floor ${floor?.short ?? 'G'}`, jump: () => zoomTo([]) },
   ]
   if (dept) crumbs.push({ label: dept.name, jump: () => zoomTo([dept.id]) })
   if (dept && area) crumbs.push({ label: area.name })
@@ -54,7 +58,7 @@ function Breadcrumb() {
                 ›
               </span>
             )}
-            {isCurrent ? (
+            {isCurrent && i > 0 ? (
               <span className="chrome-topbar__crumb is-current" aria-current="location">
                 {c.label}
               </span>
@@ -74,16 +78,23 @@ function Breadcrumb() {
   )
 }
 
-/** Live sim clock + floor counts. Operational numbers only — never money. */
+/** Sim clock + the REAL published waits at that moment. Never money. */
 function StatusLine() {
   const simMin = useStore((s) => s.simMin)
   const resolvedAtMin = useStore((s) => s.resolvedAtMin)
   const { status } = worldAt(simMin, resolvedAtMin)
-  const cal = adminKpis.eta_calibration
+  const w = heroWaitsAt(simMin)
+  const live = simMin >= LIVE_MIN - 8
   return (
     <p className="chrome-topbar__status tnum">
-      {fmtDayClock(simMin)} · {status.onFloor} on floor · {status.blocked} blocked
-      <span className="chrome-topbar__calib"> · ETA calib {cal.coverage_pct}% @ 80%</span>
+      {fmtDayClock(simMin)} HKT · {status.onFloor} in building
+      {w && (
+        <span className={`chrome-topbar__waits${live ? ' is-live' : ''}`}>
+          {' '}
+          · cat-3 {fmtWait(w.t3p50)} · cat-4/5 {fmtWait(w.t45p50)}{' '}
+          <span className="chrome-topbar__waits-src">{live ? 'live' : 'feed'}</span>
+        </span>
+      )}
     </p>
   )
 }
@@ -133,9 +144,12 @@ function AnnouncementBar({ onAbout }: { onAbout: () => void }) {
   if (dismissed) return null
   return (
     <div className="chrome-announce" role="note">
-      <span>Hackathon demo — synthetic patients, operational suggestions only</span>
+      <span>
+        Real hospital, real waits ({HOSPITAL.hospital}, HA live feed) — patients are synthetic
+        personas, operational suggestions only
+      </span>
       <button type="button" className="chrome-announce__link" onClick={onAbout}>
-        data honesty →
+        how it works →
       </button>
       <button
         type="button"
@@ -153,29 +167,41 @@ function AnnouncementBar({ onAbout }: { onAbout: () => void }) {
 
 export function TopBar() {
   const view = useStore((s) => s.view)
+  const simMin = useStore((s) => s.simMin)
   const setView = useStore((s) => s.setView)
   const setAboutOpen = useStore((s) => s.setAboutOpen)
+  const setWrapOpen = useStore((s) => s.setWrapOpen)
+  const dayNearlyDone = simMin >= 6 * 60 // from the 17:00 real peak onward
 
   return (
     <div className="chrome">
       <AnnouncementBar onAbout={() => setAboutOpen(true)} />
       <header className="chrome-topbar">
-      <div className="chrome-topbar__brand">
-        <Wordmark />
-        <span className="chrome-topbar__name">FlowTwin</span>
-        <span className="chrome-topbar__tagline">a live twin of your hospital’s flow</span>
-      </div>
+        <div className="chrome-topbar__brand">
+          <Wordmark />
+          <span className="chrome-topbar__name">FlowTwin</span>
+          <span className="chrome-topbar__tagline">
+            live twin of {HOSPITAL.hospital} A&amp;E · {HOSPITAL.cluster}
+          </span>
+        </div>
 
-      {view === 'doctor' && <Breadcrumb />}
+        {view === 'doctor' && <Breadcrumb />}
 
-      <div className="chrome-topbar__right">
-        <StatusLine />
-        <SegmentedControl options={VIEW_OPTIONS} value={view} onChange={setView} ariaLabel="View" />
-        <ThemeToggle />
-        <button type="button" className="chrome-topbar__about" onClick={() => setAboutOpen(true)}>
-          About
-        </button>
-      </div>
+        <div className="chrome-topbar__right">
+          <StatusLine />
+          <button
+            type="button"
+            className={`chrome-topbar__optimize${dayNearlyDone ? ' is-ready' : ''}`}
+            onClick={() => setWrapOpen(true)}
+          >
+            Optimize the day
+          </button>
+          <SegmentedControl options={VIEW_OPTIONS} value={view} onChange={setView} ariaLabel="View" />
+          <ThemeToggle />
+          <button type="button" className="chrome-topbar__about" onClick={() => setAboutOpen(true)}>
+            About
+          </button>
+        </div>
       </header>
     </div>
   )

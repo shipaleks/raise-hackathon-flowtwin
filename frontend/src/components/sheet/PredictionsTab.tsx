@@ -103,7 +103,7 @@ export function PredictionsTab({ vm }: { vm: SheetVM }) {
             <OpsOnlyBadge />
             {rec.canResolve && (
               <button type="button" className="sheet-pred__resolve" onClick={resolveNow}>
-                Resolve — move to Observation
+                Resolve — move to the obs ward
               </button>
             )}
           </div>

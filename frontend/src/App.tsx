@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { AboutOverlay } from './components/chrome/AboutOverlay'
 import { TopBar } from './components/chrome/TopBar'
+import { WrapUpOverlay } from './components/chrome/WrapUp'
 import { AdminView } from './components/admin/AdminView'
 import { MapView } from './components/map/MapView'
 import { PatientSheet } from './components/sheet/PatientSheet'
@@ -36,11 +37,14 @@ function useKeyboard() {
       const tag = (e.target as HTMLElement)?.tagName
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
       const s = useStore.getState()
-      // while the About dialog is open, only Escape acts on the app behind it
-      if (s.aboutOpen && e.key !== 'Escape') return
+      // while an overlay is open, only Escape acts on the app behind it
+      if ((s.aboutOpen || s.wrapOpen) && e.key !== 'Escape') return
       switch (e.key) {
         case 'Escape':
           if (escapeStep()) e.preventDefault()
+          break
+        case 'f':
+          if (s.view === 'doctor') s.cycleFloor()
           break
         case ' ':
           // Space on a focused control must activate the control, never hijack
@@ -97,6 +101,7 @@ export default function App() {
       </main>
       <TimeScrubber />
       <AboutOverlay />
+      <WrapUpOverlay />
     </div>
   )
 }

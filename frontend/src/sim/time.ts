@@ -1,5 +1,7 @@
-/* Sim time: minutes relative to the seed anchor (2026-07-04T11:00 local).
-   Negative = the 7-day history; positive = today's demo-beat window. */
+/* Sim time: minutes relative to the demo anchor (11:00 HKT on the last full
+   day inside the real 48-h feed archive). Negative = the recorded past;
+   the right edge of the domain is the LIVE feed moment itself.
+   All wall-clock labels are HKT — the hospital's own clock. */
 
 import { adminKpis } from '../data/seed'
 
@@ -8,13 +10,16 @@ export const DAY_MIN = 1440
 
 export const ANCHOR_MS = new Date(adminKpis.generated_now).getTime()
 
-/** Scrubber domain: from 00:00 seven days ago to 14:45 today. */
-export const SIM_START_MIN = -(7 * DAY_MIN + 11 * 60)
-export const SIM_END_MIN = 225
+export const parseT = (iso: string) => (new Date(iso).getTime() - ANCHOR_MS) / MIN_MS
+
+/** Scrubber domain: 00:00 of the day before the demo day → the live moment. */
+export const SIM_START_MIN = -(11 * 60 + DAY_MIN)
+export const SIM_END_MIN = Math.round(parseT(adminKpis.hk.live_anchor))
+
+/** Sim-minute of the real LIVE feed snapshot (the domain's right edge). */
+export const LIVE_MIN = SIM_END_MIN
 
 export const clampSim = (m: number) => Math.min(SIM_END_MIN, Math.max(SIM_START_MIN, m))
-
-export const parseT = (iso: string) => (new Date(iso).getTime() - ANCHOR_MS) / MIN_MS
 
 export const simToDate = (m: number) => new Date(ANCHOR_MS + m * MIN_MS)
 
@@ -28,21 +33,20 @@ export const fmtClock = (m: number) => {
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-/** Day-of-sim label: "Today", "Yesterday", or "Mon Jun 29". */
+/** Day label with real dates: "Fri Jul 4" (the demo day is a real day). */
 export const fmtDay = (m: number) => {
   const d = simToDate(m)
-  const anchor = simToDate(0)
-  const dayDiff = Math.floor(
-    (new Date(anchor.getFullYear(), anchor.getMonth(), anchor.getDate()).getTime() -
-      new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime()) /
-      (DAY_MIN * MIN_MS),
-  )
-  if (dayDiff === 0) return 'Today'
-  if (dayDiff === 1) return 'Yesterday'
   return `${WEEKDAYS[d.getDay()]} ${MONTHS[d.getMonth()]} ${d.getDate()}`
 }
 
 export const fmtDayClock = (m: number) => `${fmtDay(m)} ${fmtClock(m)}`
+
+/** True on the demo day (the anchor's calendar day). */
+export const isDemoDay = (m: number) => {
+  const d = simToDate(m)
+  const a = simToDate(0)
+  return d.getDate() === a.getDate() && d.getMonth() === a.getMonth()
+}
 
 /** "45 min" | "1h 20m" */
 export const fmtDur = (min: number) => {
@@ -57,12 +61,10 @@ export const fmtDur = (min: number) => {
 export const fmtDelta = (min: number) =>
   `${min < 0 ? '−' : '+'}${fmtDur(Math.abs(min))}`
 
-/** Preset jumps are pinned to the history moments that best show each state
-    (today hasn't reached these hours yet): a dead-quiet 2 AM, a brisk
-    mid-morning, a full lunchtime floor, and the post-backup 18:00 hand-off. */
+/** Preset jumps — pinned to real recorded moments that read differently. */
 export const PRESETS: Array<{ id: string; label: string; simMin: number }> = [
-  { id: 'night', label: '2 AM', simMin: -2 * DAY_MIN + (2 - 11) * 60 },
-  { id: 'rounds', label: 'Morning rounds', simMin: -2 * DAY_MIN + (9.5 - 11) * 60 },
-  { id: 'lunch', label: 'Lunchtime', simMin: -DAY_MIN + (12.5 - 11) * 60 },
-  { id: 'shift', label: 'Shift change 18:00', simMin: -DAY_MIN + (18 - 11) * 60 },
+  { id: 'night', label: 'Night 03:30', simMin: -(11 * 60) + 3.5 * 60 },
+  { id: 'trough', label: 'Morning trough', simMin: -3 * 60 },
+  { id: 'peak', label: 'Afternoon climb', simMin: 6 * 60 },
+  { id: 'live', label: 'LIVE', simMin: SIM_END_MIN },
 ]

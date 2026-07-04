@@ -1,12 +1,12 @@
-/* Legend card in the free canvas region (hospital level only). */
+/* Legend overlay (bottom-right) — reads the encoding and states the data
+   split in one glance: load & waits real, personas synthetic. */
 
 import { AgentGlyph } from '../ui/AgentGlyph'
-import { LEGEND_RECT } from '../../sim/layout'
+import { HOSPITAL } from '../../data/seed'
 
 const SEXES = [
   ['male', 'Male'],
   ['female', 'Female'],
-  ['unknown', 'Unknown'],
 ] as const
 
 const RINGS = [
@@ -16,39 +16,33 @@ const RINGS = [
 ] as const
 
 export function MapLegend({ hidden }: { hidden: boolean }) {
-  const { x, y, w, h } = LEGEND_RECT
-  const rowY = (i: number) => y + 46 + i * 23
   return (
-    <g className="map-legend" style={{ opacity: hidden ? 0 : 1 }} aria-hidden={hidden || undefined}>
-      <rect className="map-legend__card" x={x} y={y} width={w} height={h} rx={16} />
-      <text className="map-legend__title" x={x + 20} y={y + 26}>
-        Legend
-      </text>
-
-      {SEXES.map(([sex, label], i) => (
-        <g key={sex} transform={`translate(${x + 20} ${rowY(i) - 8})`}>
-          <AgentGlyph sex={sex} risk="on_track" size={16} variant="map" />
-          <text className="map-legend__label" x={24} y={12}>
-            {label}
-          </text>
-        </g>
-      ))}
-
-      {RINGS.map(([tone, label], i) => (
-        <g key={tone} transform={`translate(${x + 150} ${rowY(i)})`}>
-          <circle className={`map-legend__ring map-legend__ring--${tone}`} cx={8} cy={0} r={6} />
-          <text className="map-legend__label" x={24} y={4}>
-            {label}
-          </text>
-        </g>
-      ))}
-
-      <text className="map-legend__caption" x={x + 20} y={y + 120}>
-        Color is never the only signal — every token carries its letter.
-      </text>
-      <text className="map-legend__caption map-legend__caption--src" x={x + 20} y={y + 137}>
-        Seeded from Synthea + HF HospitalAdmissions — see About.
-      </text>
-    </g>
+    <aside className={`map-legend${hidden ? ' is-hidden' : ''}`} aria-hidden={hidden || undefined}>
+      <p className="map-legend__title">Legend</p>
+      <div className="map-legend__rows">
+        <div className="map-legend__col">
+          {SEXES.map(([sex, label]) => (
+            <span key={sex} className="map-legend__item">
+              <AgentGlyph sex={sex} risk="on_track" size={15} variant="map" />
+              {label}
+            </span>
+          ))}
+        </div>
+        <div className="map-legend__col">
+          {RINGS.map(([tone, label]) => (
+            <span key={tone} className="map-legend__item">
+              <span className={`map-legend__ring map-legend__ring--${tone}`} aria-hidden="true" />
+              {label}
+            </span>
+          ))}
+        </div>
+      </div>
+      <p className="map-legend__caption">
+        Waits &amp; load: <strong>real</strong> — {HOSPITAL.hospital} live feed.
+      </p>
+      <p className="map-legend__caption map-legend__caption--src">
+        People: synthetic personas on MIMIC-IV-ED statistics — see About.
+      </p>
+    </aside>
   )
 }

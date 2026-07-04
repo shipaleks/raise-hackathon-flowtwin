@@ -40,6 +40,8 @@ export interface SarahPresentation {
   /** the Resolve affordance is live only while the overload is on */
   canResolve: boolean
   resolved: boolean
+  /** past her (beat-driven) exit — she has left the floor */
+  departed: boolean
   /** where the hero sits on the map */
   position: { dept: string; area: string }
   /** beat events appended to her real intake events for the Flow tab */
@@ -58,7 +60,7 @@ const atClock = (simMin: number) => {
 }
 
 const IN_CONSULT = { dept: 'Cardiology', area: 'Consult' }
-const IN_OBSERVATION = { dept: 'Emergency', area: 'Observation' }
+const IN_OBSERVATION = { dept: 'EMW', area: 'Obs Beds' }
 
 const LAB_DELAY_EVENT: JourneyEvent & { note: string } = {
   t: atClock(BEAT_MIN.labDelay),
@@ -89,9 +91,9 @@ const resolveEvents = (resolvedAtMin: number): Array<JourneyEvent & { note: stri
   {
     t: atClock(resolvedAtMin),
     type: 'moved_to_observation',
-    dept: 'Emergency',
-    area: 'Observation',
-    note: 'Moved to Observation — bed O-12 assigned',
+    dept: 'EMW',
+    area: 'Obs Beds',
+    note: 'Moved to the obs ward — bed O-6 assigned',
   },
 ]
 
@@ -100,49 +102,86 @@ export function sarahAt(tMin: number, resolvedAtMin: number | null): SarahPresen
   const resolved = resolvedAtMin != null && tMin >= resolvedAtMin
 
   if (resolved) {
+    const exitMin = BEAT_MIN.overload + 125 // 16:05 — one action bought ~45 min back
+    const departed = tMin >= exitMin
     return {
       phase: 'resolved',
       risk: 'on_track',
-      exitMin: BEAT_MIN.overload + 125, // 16:05 — one action bought ~45 min back
+      exitMin,
       ciLowMin: BEAT_MIN.overload + 95,
       ciHighMin: BEAT_MIN.overload + 155,
       blocker: 'none',
-      blockerLabel: 'In Observation (bed O-12) — escalated consult on its way',
-      pendingSteps: ['Escalated cardiology consult', 'Disposition decision'],
+      blockerLabel: departed
+        ? 'Discharged 16:05 — recovered ~45 min against the queue'
+        : 'In the obs ward (bed O-6) — escalated consult on its way',
+      pendingSteps: departed ? [] : ['Escalated cardiology consult', 'Disposition decision'],
       recommendation: {
         action: 'done_monitor',
-        explanation: 'Action taken: moved to Observation, consult coverage escalated. Recovered ~45 min.',
+        explanation: 'Action taken: moved to the obs ward, consult coverage escalated. Recovered ~45 min.',
         impact_min: 0,
       },
       canResolve: false,
       resolved: true,
-      position: IN_OBSERVATION,
-      extraEvents: [LAB_DELAY_EVENT, OVERLOAD_EVENT, ...resolveEvents(resolvedAtMin)],
+      departed,
+      position: departed ? { dept: 'Discharge', area: 'Exit' } : IN_OBSERVATION,
+      extraEvents: [
+        LAB_DELAY_EVENT,
+        OVERLOAD_EVENT,
+        ...resolveEvents(resolvedAtMin),
+        ...(departed
+          ? [{
+              t: atClock(exitMin),
+              type: 'discharge',
+              dept: 'Discharge',
+              area: 'Exit',
+              note: 'Discharged — journey closed at 16:05',
+            }]
+          : []),
+      ],
     }
   }
 
   if (tMin >= BEAT_MIN.overload) {
+    const exitMin = BEAT_MIN.overload + 170 // 16:50 — the queue, not the medicine
+    const departed = tMin >= exitMin
     return {
       phase: 'overload',
-      risk: 'high',
-      exitMin: BEAT_MIN.overload + 170, // 16:50 — the queue, not the medicine
+      risk: departed ? 'on_track' : 'high',
+      exitMin,
       ciLowMin: BEAT_MIN.overload + 130,
       ciHighMin: BEAT_MIN.overload + 210, // ±40 min
-      blocker: 'cardiology_queue',
-      blockerLabel: '4 consults queued · 1 cardiologist on duty (recurring 14:00–17:00 pattern)',
-      pendingSteps: ['Troponin re-run', 'Cardiology consult', 'Observation window', 'Disposition'],
+      blocker: departed ? 'none' : 'cardiology_queue',
+      blockerLabel: departed
+        ? 'Discharged 16:50 — the queue cost her ~45 min that one action would have saved'
+        : '4 consults queued · 1 cardiologist on duty (the real afternoon climb — see the feed)',
+      pendingSteps: departed
+        ? []
+        : ['Troponin re-run', 'Cardiology consult', 'Observation window', 'Disposition'],
       recommendation: {
         action: 'move_to_observation',
         explanation:
-          'Stable, first troponin negative. Move to Observation (bed O-12 free) and escalate consult coverage — she stops holding ER Bay 4 while she waits.',
+          'Stable, first troponin negative. Move to the obs ward (bed O-6 free) and escalate consult coverage — she stops holding a cubicle while she waits.',
         impact_min: 45,
       },
       // one-shot: after the presenter resolves once, rewinding into the
       // overload window must not re-offer a button that would silently no-op
-      canResolve: resolvedAtMin == null,
+      canResolve: resolvedAtMin == null && !departed,
       resolved: false,
-      position: IN_CONSULT,
-      extraEvents: [LAB_DELAY_EVENT, OVERLOAD_EVENT],
+      departed,
+      position: departed ? { dept: 'Discharge', area: 'Exit' } : IN_CONSULT,
+      extraEvents: [
+        LAB_DELAY_EVENT,
+        OVERLOAD_EVENT,
+        ...(departed
+          ? [{
+              t: atClock(exitMin),
+              type: 'discharge',
+              dept: 'Discharge',
+              area: 'Exit',
+              note: 'Discharged — the unresolved queue held her to 16:50',
+            }]
+          : []),
+      ],
     }
   }
 
@@ -163,6 +202,7 @@ export function sarahAt(tMin: number, resolvedAtMin: number | null): SarahPresen
       },
       canResolve: false,
       resolved: false,
+      departed: false,
       position: IN_CONSULT,
       extraEvents: [LAB_DELAY_EVENT],
     }
@@ -184,6 +224,7 @@ export function sarahAt(tMin: number, resolvedAtMin: number | null): SarahPresen
     },
     canResolve: false,
     resolved: false,
+    departed: false,
     position: IN_CONSULT,
     extraEvents: [],
   }

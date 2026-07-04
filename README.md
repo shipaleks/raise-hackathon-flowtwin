@@ -1,8 +1,25 @@
-# FlowTwin — a live twin of your hospital's flow
+# FlowTwin — a live twin of a REAL hospital's A&E
 
-Every patient gets a stateful **AI agent** that shadows them from arrival to discharge, remembers the whole journey, predicts when they'll leave (with a confidence interval), spots where the flow is stuck, and suggests the next operational move. **Operations only — time, beds, and queues. Care stays with clinicians.**
+**This is Queen Mary Hospital, Hong Kong — right now.** FlowTwin plugs into the
+Hospital Authority's public A&E waiting-time feed (18 hospitals, updated every
+15 minutes, real p50/p95 per triage category), replays the last 48 hours of it
+person-by-person on a three-storey floor plate, and gives every patient a
+stateful **AI agent** that shadows the journey, predicts the exit with a
+confidence interval, and suggests the next operational move.
+**Operations only — time, beds, and queues. Care stays with clinicians.**
 
-This repo contains the **interactive clickable prototype** built for the RAISE hackathon (Google DeepMind track × NVIDIA Nemotron): a responsive, keyboard-navigable, light+dark web app running a deterministic simulation over real open hospital datasets. No live API calls in this build — the full live architecture (Gemini Interactions chains, Antigravity Ops Chief, PersonaPlex voice, NemoGuard gating, Computer Use on a legacy EHR) is specified in [PLAN.md](./PLAN.md).
+The trick that keeps it honest: the hospital, the waits, and the daily
+pattern are **real**; the individual patients are **synthetic personas by
+design** (the feed publishes no patient-level data — that's the point), with
+their statistics drawn from **MIMIC-IV-ED** (real de-identified ED stays) and
+each persona's wait drawn from **the hospital's own published p50/p95
+distribution at their arrival snapshot**. Every layer is labeled in-app
+(About → honesty ledger).
+
+Built for the RAISE hackathon (Google DeepMind track × NVIDIA Nemotron). No
+live API calls in the browser build — the full live architecture (Gemini
+Interactions chains, Antigravity Ops Chief, PersonaPlex voice, NemoGuard
+gating) is specified in [PLAN.md](./PLAN.md).
 
 ## Quickstart (30 seconds)
 
@@ -12,60 +29,95 @@ npm install
 npm run dev        # → http://localhost:5173
 ```
 
-Production build: `npm run build` → static site in `frontend/dist/` (relative base — host anywhere).
+**Go live before a demo** (re-anchors the twin to the feed's newest snapshot):
+
+```bash
+python3 data/fetch_hk.py && python3 data/build_mimic_stats.py && python3 data/build_seed.py
+```
+
+Production build: `npm run build` → static site in `frontend/dist/`.
 
 ## The demo, click by click
 
-1. **Calm overview** — Doctor view, 11:00. Seven agents on the floor, load rings green.
-2. **Meet Sarah** — click her glyph in the Cardiology consult queue (or use the `DEMO` rail, bottom right). The patient sheet shows her journey, predicted exit **14:20 · 80% CI**, and the "Ops-only ✓ NemoGuard" badge.
-3. **Lab delay** (demo step 2, sim 12:30) — her exit slides to 15:05, ring turns amber, blocker: "troponin re-run — chemistry congestion".
-4. **Cardiology overload** (step 3, sim 14:00) — three more chest-pain arrivals hit the consult queue *on their own seeded tracks* exactly as the recurring 14:00–17:00 backup window opens: 4 queued, ring red, Sarah's exit 16:50 ±40.
-5. **Flow tab → "Optimized path"** — the ghost overlay shows −35/−50/−40 min timing/sequence opportunities (never "wrong diagnosis"). Jacquelin P. is the near-optimal control track — no waste flagged.
-6. **Resolve** (step 4) — one action: Sarah visibly moves to Observation (bed O-12), consult coverage escalates 60 min, exit recovers to 16:05.
-7. **Administrator view** (toggle, or `V`) — the same bottleneck as a reallocation play with cost-of-delay (€45/bed-hour, stated assumption), arrival forecast by entry mode, avoidable-wait ranking. Money lives **only** here — the Doctor view never shows it.
-8. **Time scrubber** — drag across 7 days of history; presets (2 AM · Morning rounds · Lunchtime · Shift change 18:00) each look visibly different; the afternoon cardiology backup recurs every day.
-9. **Intake & Signals** — real dataset fields; Gerda W. carries an example wearable import (overnight-arrhythmia flag, "screening, not diagnosis"); wearable/vocal-biomarker chips are greyed **pluggable, mention-only** sources.
+1. **Sat Jul 4, 11:00 HKT — floor G.** The A&E plate: waiting hall, triage,
+   resus, consult rooms, cubicles, imaging, labs, pharmacy — plus the real
+   cat-3/cat-4/5 waits in the top bar, straight from the feed. The floor rail
+   stacks G / 1 / 2 (acute floor, wards) with live census; patients walk the
+   corridors and take the lift between floors.
+2. **Meet Sarah** (DEMO rail, step 1) — chest pain, cat-2, in the cardiology
+   consult queue on floor 1. Her sheet shows the whole way she came (journey
+   rail: came from → NOW + what she's waiting for → predicted next), her exit
+   **14:20 ±30 min**, and her trace drawn on the map — lift ride included.
+3. **Lab delay** (step 2, 12:30) — troponin re-run queued, exit slides to
+   15:05, ring amber.
+4. **The real afternoon climb** (step 3, 14:00) — three more chest-pain
+   arrivals hit the consult queue *on their own tracks* exactly as the
+   hospital's real daily climb opens (QMH's cat-4/5 median wait rises from
+   ~2 h at the 08:00 trough to ~4¾ h by 17:00 — 7-day mean of the actual
+   feed). Consult reads 4/3, Sarah goes red: exit 16:50.
+5. **Resolve** (step 4) — one action: she walks to the obs ward (bed O-6),
+   consult coverage escalates 60 min, the queue drains, exit recovers to
+   **16:05 (−45 min)**.
+6. **Administrator view** (`V`) — money lives only here: the same bottleneck
+   priced at HK$400/bed-hour (stated), the **real network table** (all 18 HA
+   A&E sites, live), and **the real daily pattern** chart — the hospital's own
+   published curve, not a simulation.
+7. **Optimize the day** (step 5, or the button) — the day in review: what
+   happened (real numbers), what FlowTwin changed (14:20 → 16:50 → 16:05,
+   −45 min), and **tomorrow's plan** — five exact operational changes with
+   measured evidence, labeled assumptions, and the money:
+   ≈ **HK$54.5k/day (€6.4k), ≈ HK$19.9M/yr** — every line carries its basis.
+8. **Time scrubber** — 48 h of the real feed, ending at the **LIVE** edge.
+   Presets: Night 03:30 (the backlog that never clears — real), the morning
+   trough, the afternoon climb, LIVE.
 
-Keyboard: `Esc` close/zoom out · `Space` play/pause · `←/→` scrub (`Shift` ×6) · `V` view · `T` theme · `1–4` presets.
+Keyboard: `Esc` close/zoom out · `Space` play/pause · `←/→` scrub
+(`Shift` ×6) · `F` floors · `V` view · `T` theme · `1–4` presets.
 
-## Honesty (also shown in-UI, About → Data honesty)
+## Honesty (the ledger is in-app: About → honesty ledger)
 
-- **Real (Synthea open synthetic records):** identities, sex, age, chief complaints — 817 ED encounters.
-- **Real (HF `infinite-dataset-hub/HospitalAdmissions`):** admitted length-of-stay benchmark + outcome mix (n=91).
-- **Synthesized and labeled:** arrival hours (ED diurnal curve — the Synthea sample's encounter hours are generator batch artifacts), station-level times, vitals, and the recurring afternoon cardiology backup. No open dataset records ED boarding at station level (MIMIC-IV-ED planned).
-- **Every model-derived number names its model** — "FlowTwin ETA — empirical quantile model over the 7-day log", "FlowTwin Arrival Forecast".
-- **Calibration shown live:** the 80% interval covered ~81% of 455 past journeys, median error ±13 min — because history has known outcomes, the model shows its track record.
-
-Rebuild the seed deterministically: `python3 data/build_seed.py` (see [data/README.md](./data/README.md); raw downloads are gitignored).
-
-## Visual direction
-
-The brief asked for 2–3 candidate directions before building. Considered:
-
-1. **Clinical Calm** *(chosen — locked by [DESIGN.md](./DESIGN.md))* — Linear × Apple Health: near-white/near-black planes, one teal accent, reserved status colors, tabular numbers, hairline geometry, meaningful motion only.
-2. *Mission Control* — dark-first, denser telemetry, stronger data-ink. Rejected: reads "dashboard toy", not a shippable clinical product.
-3. *Paper Ward* — warm neutrals, softer cards, illustrated glyphs. Rejected: undercuts the precision story the calibration readout needs.
-
-Palettes were validated programmatically (CVD separation, chroma, contrast) against both surfaces; sex encoding (blue M / pink F / grey unknown) always pairs with a letter so color is never the only signal.
+- **REAL · live:** the hospital; waits per triage category (p50/p95); the
+  15-min update cadence; 48 h + 7 days of archive; the recurring daily climb
+  *and* the overnight backlog — measured from the feed.
+- **REAL statistics (MIMIC-IV-ED):** arrival hour-of-day shape, acuity
+  conditionals, LOS tails, triage vitals ranges. Open demo subset (n=222)
+  bundled; the full credentialed dataset drops into `data/raw/mimic-ed/`
+  unchanged.
+- **Stated assumptions:** triage mix, ~27 % admission share, ~300
+  attendances/day, HK$400/bed-hour, every "recoverable" share in the plan.
+- **Synthetic · labeled:** the individual personas (names from Synthea),
+  station-level rooms and minutes, the floor plan, Sarah's scripted beats.
+- **Every model names itself** on every surface: the wait sampler (lognormal
+  through the real p50/p95), FlowTwin ETA (MIMIC LOS quantiles, escalating
+  ladder), the arrival model, risk thresholds, and the optimizer.
 
 ## Architecture (prototype)
 
 ```
-frontend/
-  src/sim/        time model · floor-plate geometry · demo beats · the engine
-                  (pure worldAt(t) → agents, zone loads, sheet + admin view-models)
-  src/store.ts    zustand UI state (view, sim clock, zoom path, selection, resolve)
-  src/components/ map/ (drill-down SVG) · sheet/ (3 tabs) · admin/ · scrubber/ · chrome/ · ui/
-  src/styles/     design tokens (light+dark, reduced-motion collapse)
 data/
-  build_seed.py   deterministic seed builder (seed=42, anchor 2026-07-04T11:00)
-  seed/           patients_today · history_7d (455 journeys) · scenario · admin_kpis
+  fetch_hk.py            HA live feed + data.gov.hk archive → hk_live / hk_history
+  build_mimic_stats.py   MIMIC-IV-ED → real ED distributions
+  build_seed.py          deterministic cast calibrated to the real feed (seed 42)
+frontend/
+  src/sim/        time model · 3-floor plate w/ corridors + lift · demo beats ·
+                  the engine (pure worldAt(t): walking agents, zone loads,
+                  journey traces, sheet/admin/day-review view-models)
+  src/data/       typed seed access + live-series helpers
+  src/store.ts    zustand UI state (view, floor, clock, zoom, selection, resolve)
+  src/components/ map/ (floor plates, furniture, meeples, traces) · sheet/ ·
+                  admin/ (network, real pattern) · chrome/ (About, Optimize-the-day) ·
+                  scrubber/ · ui/
 ```
 
-Everything on screen is a pure function of `(simMinute, resolvedAt)` — scrubbing is perfectly reversible and the demo can never desync.
+Everything on screen is a pure function of `(simMinute, resolvedAt)` —
+scrubbing is perfectly reversible and the demo can never desync.
 
 ## Sovereignty (the closing slide)
 
-On-prem open models (PersonaPlex voice, Nemotron department fleet, NemoGuard ops-gate) keep voice and patient data inside the hospital; frontier reasoning sees only de-identified operational metadata. As on-device open models (Gemma) mature, the entire agent layer runs fully in-hospital — swap the reasoning endpoint and nothing leaves the building.
+On-prem open models (PersonaPlex voice, Nemotron department fleet, NemoGuard
+ops-gate) keep voice and patient data inside the hospital; frontier reasoning
+sees only de-identified operational metadata — and here even that layer is
+built from public + open data. As on-device open models (Gemma) mature, the
+entire agent stack runs fully in-hospital.
 
-*Gemini runs the agents. Nemotron runs the hospital.*
+*Gemini runs the agents. Nemotron runs the hospital. The feed keeps it honest.*

@@ -81,6 +81,10 @@ export interface OpsPatient {
   arrives_later?: boolean
   extra_signal_track?: boolean
   near_optimal_track?: boolean
+  /** seeded upstairs cast — keeps their ward bed for the whole window */
+  inpatient?: boolean
+  /** the wait actually drawn from the hospital's published distribution */
+  real_wait_draw_min?: number
 }
 
 export interface HistoryJourney {
@@ -94,6 +98,7 @@ export interface HistoryJourney {
   arrival_mode: ArrivalMode
   arrival: string
   los_min: number
+  ed_los_min?: number
   admitted: boolean
   disposition: 'admitted' | 'discharged'
   events: JourneyEvent[]
@@ -149,9 +154,90 @@ export interface AdminKpis {
     source: string
   }
   assumptions: {
+    bed_hour_cost_hkd: number
     bed_hour_cost_eur: number
+    hkd_per_eur: number
     lean_targets_min: Record<string, number>
   }
+  /** the real hospital this build is calibrated to */
+  hk: {
+    hospital_slug: string
+    hospital: string
+    cluster: string
+    district: string
+    live_update_raw: string
+    live_anchor: string
+    attendance_per_day_assumption: number
+    admit_share_assumption: number
+    triage_mix_assumption: Record<string, number>
+    live_now: Record<string, number | null>
+  }
+  optimize_plan: OptimizePlan
+}
+
+export interface OptimizePlanItem {
+  id: string
+  change: string
+  window: string
+  evidence: string
+  saved_min_per_day: number
+  saved_hkd_per_day: number
+  saved_eur_per_day: number
+  basis: string
+}
+
+export interface OptimizePlan {
+  model: string
+  assumption_note: string
+  items: OptimizePlanItem[]
+  total_saved_min_per_day: number
+  total_hkd_per_day: number
+  total_eur_per_day: number
+  total_hkd_per_year: number
+  total_eur_per_year: number
+}
+
+/* ---------------------------------------------------------------- HK feed */
+
+export interface HkHospitalRow {
+  name: string
+  t1_min: number
+  t2_min: number | null
+  t3p50_min: number | null
+  t3p95_min: number | null
+  t45p50_min: number | null
+  t45p95_min: number | null
+  manage_t1: boolean
+  manage_t2: boolean
+  raw: Record<string, string>
+}
+
+export interface HkLive {
+  source: string
+  fetched_at_hkt: string
+  updateTime_raw: string
+  hospitals: Record<string, HkHospitalRow>
+  meta: Record<string, { name: string; cluster: string; district: string }>
+}
+
+export interface HkSeriesPoint {
+  t: string
+  t2: number | null
+  t3p50: number | null
+  t3p95: number | null
+  t45p50: number | null
+  t45p95: number | null
+}
+
+export interface HkHistory {
+  source: string
+  anchor_hkt: string
+  resolution: string
+  series: Record<string, HkSeriesPoint[]>
+  hour_pattern_7d: Record<
+    string,
+    Array<{ hour: number; t3p50_mean: number | null; t45p50_mean: number | null; n: number }>
+  >
 }
 
 export interface ScenarioBeat {
@@ -163,6 +249,7 @@ export interface ScenarioBeat {
 export interface Scenario {
   hero: string
   now: string
+  hospital?: string
   beats: ScenarioBeat[]
   patient: OpsPatient
 }

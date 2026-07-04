@@ -455,6 +455,96 @@
   border-radius: var(--r-m);
 }
 
+/* how-it-works pipeline */
+
+.chrome-about__pipeline {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.chrome-about__pipeline li::marker {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-3);
+}
+
+.chrome-about__pipeline code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 0 4px;
+  background: var(--surface-2);
+  border-radius: 5px;
+}
+
+/* the honesty ledger table */
+
+.chrome-about__ledger {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+.chrome-about__ledger th {
+  padding: 5px 8px;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.chrome-about__ledger td {
+  padding: 8px;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink-2);
+}
+
+.chrome-about__ledger td:first-child {
+  color: var(--ink);
+}
+
+.chrome-about__status {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.chrome-about__status--real {
+  background: var(--ok-soft);
+  color: var(--ok-text);
+}
+
+.chrome-about__status--real-stats {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.chrome-about__status--synthetic {
+  background: var(--surface-2);
+  color: var(--ink-2);
+}
+
+.chrome-about__status--assumption {
+  background: var(--warn-soft);
+  color: var(--warn-text);
+}
+
 /* keyboard */
 
 .chrome-about__keys {
@@ -496,4 +586,283 @@
   font-size: 11px;
   line-height: 1.55;
   color: var(--ink-2);
+}
+
+/* ------------------------------------------------ live waits in the top bar */
+
+.chrome-topbar__waits {
+  color: var(--ink-2);
+}
+
+.chrome-topbar__waits.is-live {
+  color: var(--ok-text);
+}
+
+.chrome-topbar__waits-src {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+/* --------------------------------------------------- optimize-the-day pill */
+
+.chrome-topbar__optimize {
+  padding: 6px 15px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    filter var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease),
+    box-shadow var(--dur-med) var(--ease);
+}
+
+.chrome-topbar__optimize:hover {
+  filter: brightness(1.1);
+}
+
+.chrome-topbar__optimize:active {
+  transform: scale(0.97);
+}
+
+.chrome-topbar__optimize.is-ready {
+  animation: optimize-glow 2.6s var(--ease) infinite;
+}
+
+@keyframes optimize-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 var(--accent-soft);
+  }
+  50% {
+    box-shadow: 0 0 0 6px var(--accent-soft);
+  }
+}
+
+/* ------------------------------------------------------------ wrap overlay */
+
+.chrome-wrap__card {
+  max-width: 780px;
+}
+
+.chrome-wrap__head {
+  margin-bottom: 4px;
+  padding-right: 40px;
+}
+
+.chrome-wrap__kicker {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.chrome-wrap__title {
+  font-family: var(--font-serif);
+  font-size: 27px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.chrome-wrap__sub {
+  margin-top: 4px;
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+
+.chrome-wrap__stats {
+  display: flex;
+  gap: 10px;
+  margin: 4px 0 12px;
+  flex-wrap: wrap;
+}
+
+.chrome-wrap__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 96px;
+  padding: 10px 14px;
+  background: var(--page);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-m);
+}
+
+.chrome-wrap__stat-v {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.chrome-wrap__stat-l {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* the Sarah case strip */
+
+.chrome-wrap__case {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chrome-wrap__case-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  background: var(--periwinkle);
+  color: var(--periwinkle-ink);
+  border-radius: var(--r-l);
+}
+
+.chrome-wrap__case-step {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.chrome-wrap__case-t {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.chrome-wrap__case-t--crit {
+  color: var(--crit-text);
+}
+
+.chrome-wrap__case-t--ok {
+  color: var(--ok-text);
+}
+
+.chrome-wrap__case-l {
+  font-size: 10px;
+  opacity: 0.8;
+  max-width: 130px;
+  line-height: 1.35;
+}
+
+.chrome-wrap__case-arrow {
+  font-size: 16px;
+  opacity: 0.5;
+}
+
+/* the plan table */
+
+.chrome-wrap__plan-model {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  color: var(--ink-3);
+  margin-bottom: 8px;
+}
+
+.chrome-wrap__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.chrome-wrap__table th {
+  padding: 6px 10px;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.chrome-wrap__table td {
+  padding: 10px;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+}
+
+.chrome-wrap__table tfoot td {
+  border-bottom: none;
+  border-top: 1.5px solid var(--border-strong);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.chrome-wrap__table tfoot .chrome-wrap__annual td {
+  border-top: none;
+  padding-top: 0;
+  font-weight: 400;
+  color: var(--ink-2);
+  font-size: 11px;
+}
+
+.chrome-wrap__num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.chrome-wrap__win {
+  white-space: nowrap;
+  color: var(--ink-2);
+  font-size: 11px;
+}
+
+.chrome-wrap__change {
+  display: block;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.chrome-wrap__evidence {
+  display: block;
+  margin-top: 3px;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.chrome-wrap__basis {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+}
+
+.chrome-wrap__eur {
+  color: var(--ink-3);
+  font-size: 10.5px;
+}
+
+.chrome-wrap__assumption {
+  margin-top: 10px;
+  padding: 7px 12px;
+  font-size: 10.5px;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  border-radius: var(--r-m);
+}
+
+.chrome-wrap__footer {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
 }
