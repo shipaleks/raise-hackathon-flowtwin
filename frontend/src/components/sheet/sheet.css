@@ -17,7 +17,8 @@
   border: 1px solid var(--border-strong);
   border-radius: 20px;
   box-shadow: var(--shadow-plate);
-  animation: sheet-in var(--dur-slow) var(--ease-out);
+  transform-origin: 100% 18%;
+  animation: sheet-in 0.55s var(--ease-3d);
   overflow: hidden;
 }
 
@@ -43,7 +44,7 @@
 @keyframes sheet-in {
   from {
     opacity: 0;
-    transform: translateX(32px);
+    transform: perspective(1400px) rotateY(-14deg) translateX(36px) scale(0.985);
   }
   to {
     opacity: 1;

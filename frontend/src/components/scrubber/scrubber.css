@@ -415,13 +415,14 @@
   border-radius: var(--r-l);
   box-shadow: var(--shadow-panel);
   z-index: 30;
-  animation: scrub-pop-rise var(--dur-med) var(--ease-out);
+  transform-origin: 85% 100%;
+  animation: scrub-pop-rise 0.45s var(--ease-spring);
 }
 
 @keyframes scrub-pop-rise {
   from {
     opacity: 0;
-    transform: translateY(6px) scale(0.98);
+    transform: perspective(900px) rotateX(-16deg) translateY(10px) scale(0.97);
   }
   to {
     opacity: 1;
