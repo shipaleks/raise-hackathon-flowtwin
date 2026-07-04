@@ -1,4 +1,38 @@
-# Monad — Style Reference
+# FlowTwin design system
+
+## v2 — "Atelier" (current)
+> a printed architectural folio on warm beige paper
+
+The live system evolved from Monad (below) after the Shopify Editions
+Winter '26 reference pass. What changed:
+
+- **One theme only** — the warm beige paper (`--page: #f1ece1`); dark mode
+  removed entirely. Canonical tokens: `frontend/src/styles/tokens.css`.
+- **Display voice** — Instrument Serif (`--font-display`) for headlines,
+  zone names, big figures; Source Serif 4 stays for body/italic; JetBrains
+  Mono remains the instrument voice (eyebrows, labels, numbers).
+- **The map is a drawing sheet** — hairline frame with registration
+  crosshairs, edge ticks, grid refs (A–K / 1–6), plan-symbol doors
+  (opening + leaf + swing arc), lift core with crossed diagonals, and a
+  drawn title block (hospital · floor · legend · credits · scale bar ·
+  north arrow) instead of a floating HTML legend.
+- **3D** — the floor rail is an isometric mini-stack of blueprint plates
+  (`FloorStack`), and `B` opens the exploded axonometric building view
+  (`BuildingView`, GSAP-choreographed) with the lift shaft threaded
+  through the storeys.
+- **Choreography** — opening draw-on sequence, editorial act cards on
+  demo beats, drifting corridor dashes, lift hum, walking gait, paper
+  grain overlay (SVG turbulence in `global.css`).
+- **Ornament vocabulary** — corner registration ticks (`.reg-ticks`),
+  eyebrow + hairline rule with diamond end-cap (`.folio-eyebrow`), index
+  numerals, stamp pills (see `chrome.css` / `ui.css`).
+
+Everything below is the original Monad reference — kept for provenance;
+values that conflict with `tokens.css` are superseded.
+
+---
+
+# Monad — Style Reference (v1, historical)
 > editorial tech journal on warm parchment
 
 **Theme:** light

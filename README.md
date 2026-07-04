@@ -21,6 +21,9 @@ live API calls in the browser build — the full live architecture (Gemini
 Interactions chains, Antigravity Ops Chief, PersonaPlex voice, NemoGuard
 gating) is specified in [PLAN.md](./PLAN.md).
 
+**Live:** <https://divine-roch-grounded-bf796e9a.koyeb.app/> (auto-deploys
+from `main` — Dockerfile builds the frontend, nginx serves it on :8000).
+
 ## Quickstart (30 seconds)
 
 ```bash
@@ -72,7 +75,7 @@ Production build: `npm run build` → static site in `frontend/dist/`.
    trough, the afternoon climb, LIVE.
 
 Keyboard: `Esc` close/zoom out · `Space` play/pause · `←/→` scrub
-(`Shift` ×6) · `F` floors · `V` view · `T` theme · `1–4` presets.
+(`Shift` ×6) · `F` floors · `B` building view · `V` view · `1–4` presets.
 
 ## Honesty (the ledger is in-app: About → honesty ledger)
 
