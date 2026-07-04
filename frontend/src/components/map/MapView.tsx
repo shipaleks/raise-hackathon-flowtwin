@@ -5,7 +5,7 @@
    patient's whole way through the building is drawn as a trace.
    Zooming is a viewport transform into a rect — never a re-layout. */
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { AgentGlyph } from '../ui/AgentGlyph'
 import { Chip, type ChipTone } from '../ui/Chip'
@@ -46,6 +46,7 @@ const ZOOM_MARGIN = 24
 const GLYPH = 16
 const TIP_W = 264
 const TIP_H = 128
+const CORRIDOR_MID_Y = (CORRIDOR.y1 + CORRIDOR.y2) / 2
 
 const RISK_WORD: Record<Risk, string> = { on_track: 'On track', elevated: 'At risk', high: 'Blocked' }
 const RISK_TONE: Record<Risk, ChipTone> = { on_track: 'ok', elevated: 'warn', high: 'crit' }
@@ -244,6 +245,8 @@ export function MapView() {
   const zoomPath = useStore((s) => s.zoomPath)
   const selectedId = useStore((s) => s.selectedId)
   const stackOpen = useStore((s) => s.stackOpen)
+  const beatToast = useStore((s) => s.beatToast)
+  const setBeatToast = useStore((s) => s.setBeatToast)
   const setFloor = useStore((s) => s.setFloor)
   const zoomTo = useStore((s) => s.zoomTo)
   const zoomOut = useStore((s) => s.zoomOut)
@@ -293,6 +296,32 @@ export function MapView() {
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [floorId])
+
+  // opening choreography: the sheet frame draws itself, the building rises,
+  // the annotation settles — once, on first mount
+  const introRan = useRef(false)
+  useLayoutEffect(() => {
+    if (introRan.current || !svgRef.current || !wrapRef.current) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    introRan.current = true
+    const ctx = gsap.context(() => {
+      const frame = svgRef.current!.querySelector<SVGRectElement>('.orn-frame')
+      const tl = gsap.timeline({ defaults: { ease: 'power2.out' } })
+      if (frame) {
+        const len = 2 * (frame.width.baseVal.value + frame.height.baseVal.value)
+        gsap.set(frame, { strokeDasharray: len, strokeDashoffset: len })
+        tl.to(frame, { strokeDashoffset: 0, duration: 1.15, ease: 'power2.inOut' }, 0)
+      }
+      tl.from('.map-plate', { opacity: 0, duration: 0.5 }, 0.15)
+        .from('.map-corridor, .map-corridor__mid, .map-lift', { opacity: 0, duration: 0.4 }, 0.35)
+        .from('.map-zone', { opacity: 0, y: 16, duration: 0.55, stagger: 0.055 }, 0.4)
+        .from('.orn-ticks, .orn-refs, .orn-cross, .orn-street', { opacity: 0, duration: 0.5 }, 0.85)
+        .from('.orn-tb', { opacity: 0, duration: 0.6 }, 0.95)
+        .from('.fstack', { opacity: 0, x: -18, duration: 0.5 }, 0.5)
+        .from('.map-live', { opacity: 0, y: -8, duration: 0.45 }, 1.05)
+    }, wrapRef)
+    return () => ctx.revert()
+  }, [])
 
   // follow the selected patient: snap on selection, then track their lift
   // rides — but never fight a manual floor change while they sit still
@@ -439,8 +468,18 @@ export function MapView() {
             y2={(CORRIDOR.y1 + CORRIDOR.y2) / 2}
           />
           {/* lift core — the classic plan symbol: shaft, crossed diagonals,
-              door opening on the corridor side */}
-          <g className="map-lift">
+              door opening on the corridor side; lights up while riding */}
+          <g
+            className={`map-lift${
+              floorAgents.some(
+                (a) =>
+                  a.walking &&
+                  Math.hypot(a.x - (LIFT.x + LIFT.w / 2), a.y - CORRIDOR_MID_Y) < 36,
+              )
+                ? ' is-busy'
+                : ''
+            }`}
+          >
             <rect x={LIFT.x} y={LIFT.y} width={LIFT.w} height={LIFT.h} />
             <line x1={LIFT.x} y1={LIFT.y} x2={LIFT.x + LIFT.w} y2={LIFT.y + LIFT.h} />
             <line x1={LIFT.x + LIFT.w} y1={LIFT.y} x2={LIFT.x} y2={LIFT.y + LIFT.h} />
@@ -754,6 +793,21 @@ export function MapView() {
           {simMin > 0
             ? `Quiet floor · ${dischargedTodayCount(simMin)} discharged today`
             : 'Quiet floor'}
+        </div>
+      ) : null}
+
+      {/* editorial act card — flashes when a presenter beat is jumped to */}
+      {beatToast ? (
+        <div
+          key={beatToast}
+          className="map-act"
+          role="status"
+          onAnimationEnd={(e) => {
+            if (e.animationName === 'act-out') setBeatToast(null)
+          }}
+        >
+          <span className="map-act__kicker">Demo beat</span>
+          <span className="map-act__title">{beatToast}</span>
         </div>
       ) : null}
 

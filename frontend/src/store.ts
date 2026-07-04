@@ -27,6 +27,8 @@ interface FlowTwinState {
   wrapOpen: boolean
   /** the exploded axonometric building view */
   stackOpen: boolean
+  /** editorial act-card flashed when a demo beat is jumped to */
+  beatToast: string | null
   hoveredId: string | null
 
   setView: (v: View) => void
@@ -45,6 +47,7 @@ interface FlowTwinState {
   setAboutOpen: (v: boolean) => void
   setWrapOpen: (v: boolean) => void
   setStackOpen: (v: boolean) => void
+  setBeatToast: (t: string | null) => void
   setHovered: (id: string | null) => void
   /** jump straight to a demo beat (presenter control) */
   jumpToBeat: (beat: 'meet' | 'labDelay' | 'overload' | 'resolveSuggested') => void
@@ -64,6 +67,7 @@ export const useStore = create<FlowTwinState>((set, get) => ({
   aboutOpen: false,
   wrapOpen: false,
   stackOpen: false,
+  beatToast: null,
   hoveredId: null,
 
   setView: (view) => set({ view, selectedId: view === 'admin' ? null : get().selectedId }),
@@ -110,14 +114,23 @@ export const useStore = create<FlowTwinState>((set, get) => ({
   setAboutOpen: (aboutOpen) => set({ aboutOpen }),
   setWrapOpen: (wrapOpen) => set({ wrapOpen }),
   setStackOpen: (stackOpen) => set({ stackOpen }),
+  setBeatToast: (beatToast) => set({ beatToast }),
   setHovered: (hoveredId) => set({ hoveredId }),
 
   jumpToBeat: (beat) => {
     // no floor forcing: with the hero selected, the map already follows her
     const target = BEAT_MIN[beat] + (beat === 'meet' ? 0 : 1)
-    set({ simMin: clampSim(target), playing: false })
+    set({ simMin: clampSim(target), playing: false, beatToast: BEAT_ACT[beat] })
   },
 }))
+
+/** Editorial act cards for the presenter beats. */
+const BEAT_ACT: Record<'meet' | 'labDelay' | 'overload' | 'resolveSuggested', string> = {
+  meet: 'Act I — Meet Sarah',
+  labDelay: 'Act II — The lab delay',
+  overload: 'Act III — Cardiology overload',
+  resolveSuggested: 'Act IV — The resolve',
+}
 
 /** Esc: wrap → about → building stack → sheet → zoom out, in that order.
     Returns true if it consumed the key. */
