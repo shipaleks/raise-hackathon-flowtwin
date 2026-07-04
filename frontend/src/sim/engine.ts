@@ -618,7 +618,9 @@ export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | 
         }
       : null
   } else if (track.kind === 'history') {
-    risk = 'on_track'
+    // while the scrubbed moment has them on the floor, show the same live risk
+    // the map computes; once the journey is over, the record rests at on-track
+    risk = onFloor && cur ? riskFor(track, tMin, cur) : 'on_track'
     exitMin = track.endMin
     ciLowMin = null
     ciHighMin = null
