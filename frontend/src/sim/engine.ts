@@ -52,6 +52,9 @@ const todayTracks: Track[] = todayCast.map((p) => {
   const events = toTrackEvents(p.events, p.arrival_mode)
   const last = events[events.length - 1]
   const admitted = last.type === 'admit'
+  // admitted patients stay on the ward for the rest of the sim window; the hero's
+  // future is governed by the demo beats, never by her seed track's end
+  const endMin = admitted || p.patient_id === HERO_ID ? SIM_END_MIN + 1 : last.tMin
   return {
     id: p.patient_id,
     name: p.name,
@@ -62,8 +65,7 @@ const todayTracks: Track[] = todayCast.map((p) => {
     acuity: p.acuity,
     arrivalMode: p.arrival_mode,
     arrivalMin: parseT(p.arrival_time),
-    // admitted patients stay on the ward for the rest of the sim window
-    endMin: admitted ? SIM_END_MIN + 1 : last.tMin,
+    endMin,
     admitted,
     kind: 'today',
     events,
@@ -290,8 +292,10 @@ export function zoneLoadsAt(agents: MapAgent[], tMin: number, resolvedAtMin: num
 
   const areas = new Map<string, ZoneLoad>()
   const depts = new Map<string, ZoneLoad>()
+  const rank: Record<LoadLevel, number> = { ok: 0, busy: 1, over: 2 }
   for (const dept of DEPTS) {
     let cap = 0
+    let worstArea: LoadLevel = 'ok'
     for (const area of dept.areas) {
       let c = area.capacity
       // the resolve action escalates consult coverage for 60 min
@@ -299,14 +303,28 @@ export function zoneLoadsAt(agents: MapAgent[], tMin: number, resolvedAtMin: num
       cap += c
       const k = `${dept.id}/${area.id}`
       const got = areaCount.get(k) ?? { count: 0, longest: 0 }
-      areas.set(k, loadOf(got.count, c, got.longest, !!dept.outside))
+      const load = loadOf(got.count, c, got.longest, !!dept.outside)
+      areas.set(k, load)
+      if (rank[load.level] > rank[worstArea]) worstArea = load.level
     }
     const got = deptCount.get(dept.id) ?? { count: 0, longest: 0 }
     const extra =
-      dept.id === 'discharge'
+      dept.id === 'discharge' && tMin >= 0
         ? `${dischargedTodayCount(tMin)} discharged today`
         : undefined
-    depts.set(dept.id, loadOf(got.count, cap, got.longest, !!dept.outside, extra))
+    const load = loadOf(got.count, cap, got.longest, !!dept.outside, extra)
+    // a department with an over-capacity room is itself in trouble — the dept
+    // ring must not read calm while its consult queue burns
+    if (rank[worstArea] > rank[load.level]) {
+      load.level = worstArea
+      if (!extra && load.count > 0) {
+        load.status =
+          worstArea === 'over'
+            ? `${load.count} in zone · a room over capacity · longest ${fmtDur(load.longestWaitMin)}`
+            : `${load.count} in zone · longest ${fmtDur(load.longestWaitMin)}`
+      }
+    }
+    depts.set(dept.id, load)
   }
   return { depts, areas }
 }
@@ -477,7 +495,9 @@ function buildSegments(events: TrackEvent[], upTo: number | null, notes?: Map<nu
     })
     if (isCurrent) break
   }
-  return segs.filter((s) => s.minutes > 0 || s.eventType === 'arrival' || s.current)
+  // zero-minute stops (e.g. the instantaneous arrival hand-off) would render
+  // as cryptic slivers on the journey bar — the header carries arrival anyway
+  return segs.filter((s) => s.minutes > 0 || s.current)
 }
 
 export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | null): SheetVM | null {

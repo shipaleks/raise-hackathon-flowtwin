@@ -410,6 +410,8 @@
 .sheet-flow__gseg.is-saved {
   background: var(--ghost);
   border: 1px dashed var(--ghost-line);
+  justify-content: center;
+  min-width: 36px;
 }
 
 .sheet-flow__gseg-zone {

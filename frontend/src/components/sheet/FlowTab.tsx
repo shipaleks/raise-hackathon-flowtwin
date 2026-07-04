@@ -188,9 +188,12 @@ function GhostBar({ segments }: { segments: FlowSegment[] }) {
             }
             aria-label={`${seg.zoneLabel}, ${fmtDur(minutes)}${seg.savedMin > 0 ? `, saves ${Math.round(seg.savedMin)} minutes` : ''}`}
           >
-            <span className="sheet-flow__gseg-zone">{seg.zoneLabel}</span>
-            {seg.savedMin > 0 && (
+            {seg.savedMin > 0 ? (
+              // a compressed segment is too narrow for both texts — the delta
+              // carries the story; the callout list below names the zone
               <span className="sheet-flow__gseg-delta tnum">−{Math.round(seg.savedMin)}m</span>
+            ) : (
+              <span className="sheet-flow__gseg-zone">{seg.zoneLabel}</span>
             )}
           </div>
         )

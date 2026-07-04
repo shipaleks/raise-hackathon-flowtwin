@@ -225,11 +225,19 @@ def arrival_mode_for(acuity):
         return "walk-in" if r < 0.80 else ("ambulance" if r < 0.90 else "referral")
     return "walk-in" if r < 0.75 else "referral"
 
+# Relative ED arrival weights by hour-of-day (typical ED diurnal curve).
+# The Synthea sample's encounter START hours are generator batch artifacts
+# (spikes at 03:00/10:00, near-zero evenings), so hour-of-day is SYNTHESIZED
+# from this curve and labeled as such in data/README.md.
+ED_HOUR_WEIGHTS = [2, 1.5, 1.2, 1, 1, 1.2, 1.8, 3, 4.5, 5.5, 6, 6.5,
+                   6.5, 6, 6, 6, 5.5, 5.5, 5.5, 5, 4.5, 4, 3.5, 2.5]
+
 def make_history(enc_rows):
-    """~48 completed journeys/day for 7 days, remapped into the 7-day window,
-    preserving hour-of-day so the diurnal pattern is real-ish. Cardiac pathways are
-    additionally oversampled into the 14:00-17:00 window so the recurring afternoon
-    cardiology backup is visible on the scrubber and measurable in the KPIs
+    """~60 completed journeys/day for 7 days, remapped into the 7-day window,
+    with arrival hours drawn from a realistic ED diurnal curve (synthesized —
+    see ED_HOUR_WEIGHTS note). Cardiac pathways are additionally oversampled
+    into the 14:00-17:00 window so the recurring afternoon cardiology backup is
+    visible on the scrubber and measurable in the KPIs
     (synthesized pattern — labeled as such everywhere it surfaces).
 
     Also aggregates department load + avoidable-wait minutes from the SAME spans
@@ -238,7 +246,7 @@ def make_history(enc_rows):
     historical moment on the time scrubber."""
     hist = []
     dept_minutes, avoidable_minutes = Counter(), Counter()
-    per_day = 48
+    per_day = 60
     extra_cardiac_per_day = 5
     cardiac_rows = [r for r in enc_rows if pathway_for(r["reason"]) == "Chest Pain Rule-Out"] or enc_rows
     idx = 0
@@ -272,8 +280,9 @@ def make_history(enc_rows):
         for _ in range(per_day):
             src = enc_rows[idx % len(enc_rows)]
             pathway = pathway_for(src["reason"])
+            hour = RNG.choices(range(24), weights=ED_HOUR_WEIGHTS)[0]
             arrival = datetime(day_date.year, day_date.month, day_date.day,
-                               src["start"].hour, RNG.randint(0, 59))
+                               hour, RNG.randint(0, 59))
             add_journey(src, pathway, arrival)
         # the recurring weekday-afternoon cardiology backup (synthesized, labeled);
         # arrivals 12:00-15:59 so the consult (~70 min after arrival) queues inside

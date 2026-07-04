@@ -237,6 +237,9 @@ export function TimeScrubber() {
         {scopeTrack &&
           scopeTrack.events
             .filter((e) => e.tMin >= lo && e.tMin <= hi)
+            // the hero's seed future is replaced by the demo beats — showing
+            // her pre-scripted discharge tick would contradict the story
+            .filter((e) => scopeTrack.id !== HERO_ID || e.tMin <= 0)
             .map((e, i) => {
               const label = `${eventLabel(e.type)} · ${fmtClock(e.tMin)}`
               return (
@@ -299,7 +302,7 @@ export function TimeScrubber() {
             </button>
           </div>
         ) : (
-          <div className="scrub-presets" role="group" aria-label="Preset jumps — yesterday">
+          <div className="scrub-presets" role="group" aria-label="Preset jumps into the 7-day history">
             {PRESETS.map((p) => {
               const active = Math.abs(simMin - p.simMin) < 15
               return (
@@ -307,8 +310,8 @@ export function TimeScrubber() {
                   key={p.id}
                   type="button"
                   className={`scrub-preset${active ? ' is-active' : ''}`}
-                  title={`Yesterday — ${p.label}`}
-                  aria-label={`Jump to yesterday, ${p.label}`}
+                  title={fmtDayClock(p.simMin)}
+                  aria-label={`Jump to ${fmtDayClock(p.simMin)} — ${p.label}`}
                   aria-pressed={active}
                   onClick={() => setSimMin(p.simMin)}
                 >

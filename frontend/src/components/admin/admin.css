@@ -1,0 +1,448 @@
+/* ============================================================
+   Administrator view — hospital-wide KPIs, the one surface where
+   money is allowed. All color/motion/radius via tokens; class
+   prefix .admin-*. Status colors appear only in the load meters
+   (where they ARE status); series colors --cat-1/2/3 only in the
+   arrival chart, in fixed order.
+   ============================================================ */
+
+.admin {
+  height: 100%;
+  overflow-y: auto;
+  padding: 24px;
+  background: var(--page);
+}
+
+.admin__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 1320px;
+  margin: 0 auto;
+  animation: admin-fade var(--dur-med) var(--ease-out);
+}
+
+@keyframes admin-fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+/* --- header ------------------------------------------------- */
+
+.admin-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admin-head__title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.admin-head__role {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.admin-head__dot {
+  color: var(--ink-3);
+}
+
+.admin-head__scope {
+  font-size: 13px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.admin-head__time {
+  font-size: 13px;
+  color: var(--ink-2);
+  white-space: nowrap;
+  flex: none;
+}
+
+/* --- KPI row ------------------------------------------------ */
+
+.admin-kpis {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-l);
+}
+
+.admin-kpi__label {
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+/* proportional figures (not tabular) — the headline numbers */
+.admin-kpi__value {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.admin-kpi__sub {
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--ink-3);
+}
+
+/* --- two-column body --------------------------------------- */
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.admin-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* shared card scaffolding (composes with global .card) */
+.admin-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 18px;
+}
+
+.admin-card__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.admin-card__caption {
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+/* --- bottleneck / reallocation play ------------------------ */
+
+.admin-play {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--r-m);
+}
+
+.admin-play--crit {
+  background: var(--crit-soft);
+}
+
+.admin-play--ok {
+  background: var(--ok-soft);
+}
+
+.admin-play--neutral {
+  background: var(--surface-2);
+}
+
+.admin-play__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.admin-play--crit .admin-play__title {
+  color: var(--crit-text);
+}
+
+.admin-play--ok .admin-play__title {
+  color: var(--ok-text);
+}
+
+.admin-play__line {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.admin-play__move {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.admin-play__note {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+.admin-play__foot {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 6px 10px;
+  border-radius: var(--r-m);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 11.5px;
+  line-height: 1.4;
+  text-align: left;
+  color: var(--ink-2);
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.admin-play__foot:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.admin-play__foot svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent);
+}
+
+/* --- avoidable-wait table ---------------------------------- */
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.admin-table__caption {
+  caption-side: bottom;
+  padding-top: 10px;
+  text-align: left;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+.admin-table th {
+  padding: 6px 8px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-table td {
+  padding: 7px 8px;
+  color: var(--ink);
+  border-bottom: 1px solid var(--grid);
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table__num {
+  text-align: right;
+}
+
+.admin-table__empty {
+  padding: 16px 8px;
+  color: var(--ink-2);
+  text-align: center;
+}
+
+/* --- department load meters -------------------------------- */
+
+.admin-load {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.admin-load__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-load__name {
+  flex: 0 0 96px;
+  font-size: 12.5px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-load__meter {
+  position: relative;
+  flex: 1;
+  height: 8px;
+  border-radius: var(--r-s);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.admin-load__fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--r-s);
+  transition: width var(--dur-med) var(--ease);
+}
+
+.admin-load__fill--ok {
+  background: var(--ok);
+}
+
+.admin-load__fill--busy {
+  background: var(--warn);
+}
+
+.admin-load__fill--over {
+  background: var(--crit);
+}
+
+.admin-load__val {
+  flex: 0 0 48px;
+  text-align: right;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+/* --- arrival forecast chart -------------------------------- */
+
+.admin-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-chart__plot {
+  position: relative;
+  width: 100%;
+}
+
+.admin-chart__svg {
+  display: block;
+}
+
+.admin-chart__grid {
+  stroke: var(--grid);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.admin-chart__tick {
+  font-size: 10px;
+  fill: var(--ink-3);
+}
+
+.admin-chart__total {
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--ink-2);
+}
+
+.admin-chart__hour {
+  font-size: 11px;
+  fill: var(--ink-2);
+}
+
+.admin-chart__hit {
+  fill: transparent;
+}
+
+.admin-chart__tip {
+  position: absolute;
+  z-index: 3;
+  padding: 5px 9px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-s);
+  box-shadow: var(--shadow-pop);
+  font-size: 11.5px;
+  color: var(--ink);
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+}
+
+.admin-chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+}
+
+.admin-chart__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+
+.admin-chart__swatch {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.admin-chart__caption {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+/* --- calibration ------------------------------------------- */
+
+.admin-cal__line {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.admin-cal__bench {
+  margin-top: 2px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+/* --- responsive -------------------------------------------- */
+
+@media (max-width: 1080px) {
+  .admin-kpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1000px) {
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+}

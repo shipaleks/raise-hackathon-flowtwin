@@ -36,6 +36,8 @@ function useKeyboard() {
       const tag = (e.target as HTMLElement)?.tagName
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
       const s = useStore.getState()
+      // while the About dialog is open, only Escape acts on the app behind it
+      if (s.aboutOpen && e.key !== 'Escape') return
       switch (e.key) {
         case 'Escape':
           if (escapeStep()) e.preventDefault()

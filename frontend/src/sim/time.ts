@@ -57,10 +57,12 @@ export const fmtDur = (min: number) => {
 export const fmtDelta = (min: number) =>
   `${min < 0 ? '−' : '+'}${fmtDur(Math.abs(min))}`
 
-/** Preset jumps land on YESTERDAY (rich history) — today hasn't reached them yet. */
+/** Preset jumps are pinned to the history moments that best show each state
+    (today hasn't reached these hours yet): a dead-quiet 2 AM, a brisk
+    mid-morning, a full lunchtime floor, and the post-backup 18:00 hand-off. */
 export const PRESETS: Array<{ id: string; label: string; simMin: number }> = [
-  { id: 'night', label: '2 AM', simMin: -DAY_MIN + (2 - 11) * 60 },
-  { id: 'rounds', label: 'Morning rounds', simMin: -DAY_MIN + (8 - 11) * 60 },
+  { id: 'night', label: '2 AM', simMin: -2 * DAY_MIN + (2 - 11) * 60 },
+  { id: 'rounds', label: 'Morning rounds', simMin: -2 * DAY_MIN + (9.5 - 11) * 60 },
   { id: 'lunch', label: 'Lunchtime', simMin: -DAY_MIN + (12.5 - 11) * 60 },
   { id: 'shift', label: 'Shift change 18:00', simMin: -DAY_MIN + (18 - 11) * 60 },
 ]

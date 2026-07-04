@@ -62,7 +62,7 @@
 
 .map-zone__status {
   font-size: 11px;
-  fill: var(--ink-3);
+  fill: var(--ink-2);
 }
 
 /* --- areas: faint hints at hospital level, live rooms inside a dept --- */
@@ -209,7 +209,7 @@
 }
 
 .map-legend__caption--src {
-  fill: var(--ink-3);
+  fill: var(--ink-2);
 }
 
 /* --- hover preview tooltip --- */

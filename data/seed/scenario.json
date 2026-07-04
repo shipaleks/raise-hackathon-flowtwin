@@ -37,12 +37,12 @@
     "current_area": "Consult",
     "elapsed_min": 100,
     "vitals": {
-      "hr": 116,
-      "sbp": 117,
-      "spo2": 97,
-      "rr": 22,
-      "temp_c": 38.0,
-      "pain": 6
+      "hr": 111,
+      "sbp": 120,
+      "spo2": 92,
+      "rr": 23,
+      "temp_c": 38.2,
+      "pain": 8
     },
     "events": [
       {
@@ -58,69 +58,69 @@
         "area": "Triage"
       },
       {
-        "t": "2026-07-04T09:36",
+        "t": "2026-07-04T09:29",
         "type": "bed_assigned",
         "dept": "Emergency",
         "area": "ER Bay"
       },
       {
-        "t": "2026-07-04T09:44",
+        "t": "2026-07-04T09:39",
         "type": "labs_ordered",
         "dept": "Labs",
         "area": "Chemistry"
       },
       {
-        "t": "2026-07-04T10:24",
+        "t": "2026-07-04T10:14",
         "type": "ecg",
         "dept": "Emergency",
         "area": "ER Bay"
       },
       {
-        "t": "2026-07-04T10:34",
+        "t": "2026-07-04T10:19",
         "type": "consult_requested",
         "dept": "Cardiology",
         "area": "Consult"
       },
       {
-        "t": "2026-07-04T11:12",
+        "t": "2026-07-04T11:42",
         "type": "consult_done",
         "dept": "Cardiology",
         "area": "Consult"
       },
       {
-        "t": "2026-07-04T11:32",
+        "t": "2026-07-04T12:05",
         "type": "observation",
         "dept": "Emergency",
         "area": "Observation"
       },
       {
-        "t": "2026-07-04T12:48",
+        "t": "2026-07-04T13:06",
         "type": "decision",
         "dept": "Emergency",
         "area": "Observation"
       },
       {
-        "t": "2026-07-04T13:07",
+        "t": "2026-07-04T13:20",
         "type": "discharge",
         "dept": "Discharge",
         "area": "Exit"
       }
     ],
     "resources": {
-      "er_bed_min": 129,
-      "nurse_min": 45,
-      "doctor_min": 25,
+      "er_bed_min": 99,
+      "nurse_min": 34,
+      "doctor_min": 19,
       "labs": 1,
       "imaging": 0
     },
-    "predicted_exit": "2026-07-04T14:20",
+    "predicted_exit": "2026-07-04T14:19",
     "predicted_exit_ci": {
-      "low": "2026-07-04T13:04",
-      "high": "2026-07-04T16:03",
+      "low": "2026-07-04T12:59",
+      "high": "2026-07-04T16:07",
       "interval": "80%"
     },
-    "predicted_los_min": 300,
-    "benchmark_los_min": 300,
+    "predicted_los_min": 299,
+    "benchmark_los_min": 299,
     "delay_risk": "high",
     "blocker": "cardiology_queue",
     "recommendation": {
