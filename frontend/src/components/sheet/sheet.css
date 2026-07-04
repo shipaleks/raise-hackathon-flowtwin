@@ -1,0 +1,838 @@
+/* ============================================================
+   Patient sheet — right-hand detail panel.
+   All color/motion/radius via tokens; class prefix .sheet-*
+   ============================================================ */
+
+.sheet {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  width: 420px;
+  max-width: 92vw;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: var(--shadow-panel);
+  animation: sheet-in var(--dur-med) var(--ease-out);
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* --- header ------------------------------------------------ */
+
+.sheet-head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.sheet-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-s);
+  color: var(--ink-2);
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.sheet-close:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.sheet-head__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-right: 32px;
+}
+
+.sheet-head__name {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.sheet-head__meta {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.sheet-head__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* the predicted-exit hero block */
+.sheet-exit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-m);
+}
+
+.sheet-exit__info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sheet-exit__label {
+  font-size: 11px;
+  font-weight: 550;
+  color: var(--ink-2);
+}
+
+.sheet-exit__time {
+  display: inline-block;
+  font-size: 27px;
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  animation: sheet-swap var(--dur-med) var(--ease-out);
+}
+
+.sheet-exit__sub {
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+.sheet-exit__side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+@keyframes sheet-swap {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- body --------------------------------------------------- */
+
+.sheet-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 18px 24px;
+}
+
+/* shared micro-heading */
+.sheet-h3 {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* ============================================================
+   Flow tab
+   ============================================================ */
+
+.sheet-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sheet-flow__empty {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 56px 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.sheet-flow__empty-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-m);
+  background: var(--surface-2);
+  border: 1px dashed var(--border-strong);
+}
+
+.sheet-flow__banner {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-m);
+}
+
+.sheet-flow__caption {
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+
+/* --- journey bar --- */
+
+.sheet-flow__bar {
+  display: flex;
+  gap: 2px; /* surface gap between touching marks */
+  margin-top: 16px; /* room for the "now" tick */
+}
+
+.sheet-flow__seg {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-basis: 0;
+  flex-shrink: 1;
+  min-width: 26px;
+  height: 40px;
+  padding: 3px 5px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  overflow: visible;
+}
+
+.sheet-flow__bar > :first-child {
+  border-top-left-radius: var(--r-s);
+  border-bottom-left-radius: var(--r-s);
+}
+
+.sheet-flow__bar > :last-child {
+  border-top-right-radius: var(--r-s);
+  border-bottom-right-radius: var(--r-s);
+}
+
+.sheet-flow__seg-zone {
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sheet-flow__seg-min {
+  font-size: 10.5px;
+  line-height: 1.3;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sheet-flow__seg.is-current {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.sheet-flow__now {
+  position: absolute;
+  top: -15px;
+  right: -1px;
+  padding-right: 4px;
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-right: 2px solid var(--accent);
+  line-height: 1.4;
+}
+
+.sheet-flow__seg.is-predicted {
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+}
+
+.sheet-flow__seg.is-predicted .sheet-flow__seg-zone {
+  font-style: italic;
+  color: var(--ink-2);
+}
+
+/* --- annotations --- */
+
+.sheet-flow__annos {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sheet-flow__anno {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+
+.sheet-flow__anno-dot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  align-self: center;
+}
+
+.sheet-flow__anno-dot--warn {
+  background: var(--warn);
+}
+
+.sheet-flow__anno-dot--crit {
+  background: var(--crit);
+}
+
+.sheet-flow__anno-dot--ok {
+  background: var(--ok);
+}
+
+.sheet-flow__anno-time {
+  flex-shrink: 0;
+  color: var(--ink-3);
+  font-size: 10.5px;
+}
+
+/* --- optimized path --- */
+
+.sheet-flow__opt {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.sheet-flow__switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  font-size: 12.5px;
+  font-weight: 550;
+  color: var(--ink-2);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.sheet-flow__switch[aria-checked='true'] {
+  color: var(--ink);
+}
+
+.sheet-flow__switch-track {
+  position: relative;
+  width: 30px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.sheet-flow__switch-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.sheet-flow__switch[aria-checked='true'] .sheet-flow__switch-track {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.sheet-flow__switch[aria-checked='true'] .sheet-flow__switch-knob {
+  transform: translateX(12px);
+  background: var(--accent-ink);
+  border-color: var(--accent);
+}
+
+/* ghost bar: the same journey, compressed where a step could move earlier */
+.sheet-flow__bar--ghost {
+  margin-top: 0;
+}
+
+.sheet-flow__gseg {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  flex-basis: 0;
+  flex-shrink: 1;
+  min-width: 20px;
+  height: 24px;
+  padding: 2px 5px;
+  background: transparent;
+  border: 1px dashed var(--border);
+}
+
+.sheet-flow__gseg.is-saved {
+  background: var(--ghost);
+  border: 1px dashed var(--ghost-line);
+}
+
+.sheet-flow__gseg-zone {
+  font-size: 10px;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sheet-flow__gseg-delta {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 650;
+  color: var(--ok-text);
+}
+
+.sheet-flow__callouts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sheet-flow__callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+
+.sheet-flow__callout > .chip {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.sheet-flow__callout-text .chip {
+  margin-left: 6px;
+}
+
+.sheet-flow__total {
+  font-size: 12.5px;
+  color: var(--ink);
+}
+
+.sheet-flow__total strong {
+  font-weight: 650;
+  color: var(--ok-text);
+}
+
+.sheet-flow__optnote {
+  display: flex;
+}
+
+.sheet-flow__none {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+/* ============================================================
+   Predictions tab
+   ============================================================ */
+
+.sheet-pred {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sheet-pred__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.sheet-pred__hero-label {
+  font-size: 11px;
+  font-weight: 550;
+  color: var(--ink-2);
+}
+
+.sheet-pred__hero-time {
+  display: inline-block;
+  font-size: 34px;
+  font-weight: 650;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  animation: sheet-swap var(--dur-med) var(--ease-out);
+}
+
+.sheet-pred__hero-ci {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.sheet-pred__hero-model {
+  margin-top: 5px;
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.sheet-pred__hero-note {
+  margin-top: 4px;
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+
+.sheet-pred__los {
+  font-size: 13px;
+  color: var(--ink-2);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sheet-pred__los strong {
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.sheet-pred__known {
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+
+.sheet-pred__steps-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sheet-pred__step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ink);
+}
+
+.sheet-pred__step-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+}
+
+.sheet-pred__none {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+/* blocker card */
+.sheet-pred__blocker {
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-m);
+  background: var(--surface-2);
+}
+
+.sheet-pred__blocker-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 5px;
+  background: var(--ink-3);
+}
+
+.sheet-pred__blocker-title {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.sheet-pred__blocker-text {
+  font-size: 12.5px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.sheet-pred__blocker--warn {
+  background: var(--warn-soft);
+}
+
+.sheet-pred__blocker--warn .sheet-pred__blocker-dot {
+  background: var(--warn);
+}
+
+.sheet-pred__blocker--warn .sheet-pred__blocker-title {
+  color: var(--warn-text);
+}
+
+.sheet-pred__blocker--crit {
+  background: var(--crit-soft);
+}
+
+.sheet-pred__blocker--crit .sheet-pred__blocker-dot {
+  background: var(--crit);
+}
+
+.sheet-pred__blocker--crit .sheet-pred__blocker-title {
+  color: var(--crit-text);
+}
+
+/* recommendation card */
+.sheet-pred__rec {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--r-m);
+  border: 1px solid var(--border);
+}
+
+.sheet-pred__rec--action {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+}
+
+.sheet-pred__rec--done {
+  border-color: transparent;
+  background: var(--ok-soft);
+}
+
+.sheet-pred__rec--monitor {
+  background: transparent;
+}
+
+.sheet-pred__rec-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sheet-pred__rec-title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.sheet-pred__rec--done .sheet-pred__rec-title {
+  color: var(--ok-text);
+}
+
+.sheet-pred__rec-text {
+  font-size: 12.5px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+
+.sheet-pred__rec-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sheet-pred__resolve {
+  padding: 7px 14px;
+  border-radius: var(--r-m);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 13px;
+  font-weight: 600;
+  transition:
+    filter var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.sheet-pred__resolve:hover {
+  filter: brightness(1.08);
+}
+
+.sheet-pred__resolve:active {
+  transform: translateY(1px);
+}
+
+/* calibration readout */
+.sheet-pred__cal {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-m);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sheet-pred__cal-line {
+  font-size: 12px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.sheet-pred__cal-why {
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+/* ============================================================
+   Intake & Signals tab
+   ============================================================ */
+
+.sheet-intake {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sheet-intake__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 14px;
+}
+
+.sheet-intake__cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.sheet-intake__cell-label {
+  font-size: 10.5px;
+  font-weight: 550;
+  color: var(--ink-2);
+}
+
+.sheet-intake__cell-value {
+  font-size: 13px;
+  color: var(--ink);
+  overflow-wrap: break-word;
+}
+
+.sheet-intake__swatch {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.sheet-intake__vitals {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.sheet-intake__vital {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 7px 9px;
+  background: var(--surface-2);
+  border-radius: var(--r-s);
+}
+
+.sheet-intake__vital-label {
+  font-size: 10.5px;
+  color: var(--ink-3);
+}
+
+.sheet-intake__vital-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.sheet-intake__caption {
+  margin-top: 7px;
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+/* wearable card — the extra-signal track */
+.sheet-intake__wear {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-m);
+}
+
+.sheet-intake__wear-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sheet-intake__wear-rows {
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+.sheet-intake__wear-impact {
+  font-size: 12px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.sheet-intake__sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sheet-intake__prov {
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 10.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}

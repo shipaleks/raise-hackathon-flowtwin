@@ -1,0 +1,285 @@
+/* Drill-down hospital map — soft rounded zones on a quiet page. */
+
+.map-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 20px 24px;
+  background: var(--page);
+  overflow: hidden;
+}
+
+.map-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+
+/* Viewport transform + counter-scaled labels share one clock, so zooms stay coherent. */
+.map-viewport,
+.map-cs {
+  transition: transform var(--dur-zone) var(--ease);
+}
+
+/* --- zones --- */
+
+.map-zone__rect {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 1;
+  cursor: pointer;
+  transition:
+    fill var(--dur-med) var(--ease),
+    stroke var(--dur-med) var(--ease);
+}
+
+.map-zone__rect:hover {
+  stroke: var(--border-strong);
+}
+
+.map-zone--outside .map-zone__rect {
+  fill: var(--page);
+  stroke-dasharray: 5 4;
+}
+
+.map-zone__hdr {
+  pointer-events: none;
+}
+
+.map-zone__name {
+  font-size: 12.5px;
+  font-weight: 600;
+  fill: var(--ink-2);
+}
+
+.map-zone__tag {
+  font-size: 10.5px;
+  font-weight: 500;
+  font-style: italic;
+  fill: var(--ink-3);
+}
+
+.map-zone__status {
+  font-size: 11px;
+  fill: var(--ink-3);
+}
+
+/* --- areas: faint hints at hospital level, live rooms inside a dept --- */
+
+.map-area__rect {
+  fill: none;
+  stroke: var(--grid);
+  stroke-width: 1;
+  pointer-events: none;
+  transition:
+    fill var(--dur-med) var(--ease),
+    stroke var(--dur-med) var(--ease);
+}
+
+.map-area--live .map-area__rect {
+  fill: var(--surface-2);
+  stroke: var(--border);
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.map-area--live .map-area__rect:hover {
+  stroke: var(--border-strong);
+}
+
+.map-area__label {
+  pointer-events: none;
+  transition:
+    transform var(--dur-zone) var(--ease),
+    opacity var(--dur-med) var(--ease);
+}
+
+.map-area__label text {
+  font-size: 11px;
+  font-weight: 550;
+  fill: var(--ink-2);
+}
+
+.map-area__count {
+  font-weight: 500;
+  fill: var(--ink-3);
+}
+
+/* --- room-level spot grid (bays read as bays) --- */
+
+.map-slots {
+  pointer-events: none;
+  animation: map-fade var(--dur-zone) var(--ease);
+}
+
+.map-slot {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 1;
+  opacity: 0.7;
+}
+
+@keyframes map-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --- agents --- */
+
+.map-agent {
+  cursor: pointer;
+  animation: map-fade var(--dur-med) var(--ease);
+  transition:
+    transform var(--dur-zone) var(--ease),
+    opacity var(--dur-med) var(--ease);
+}
+
+.map-agent__hit {
+  fill: transparent;
+}
+
+.map-agent__halo {
+  fill: var(--accent-soft);
+  stroke: var(--accent-line);
+  stroke-width: 1;
+}
+
+.map-agent__selected {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.map-svg [role='button']:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* --- legend --- */
+
+.map-legend {
+  pointer-events: none;
+  transition: opacity var(--dur-med) var(--ease);
+}
+
+.map-legend__card {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.map-legend__title {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: var(--ink-3);
+}
+
+.map-legend__label {
+  font-size: 11px;
+  fill: var(--ink-2);
+}
+
+.map-legend__ring {
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.map-legend__ring--ok {
+  stroke: var(--ok);
+}
+
+.map-legend__ring--warn {
+  stroke: var(--warn);
+}
+
+.map-legend__ring--crit {
+  stroke: var(--crit);
+}
+
+.map-legend__caption {
+  font-size: 11px;
+  fill: var(--ink-2);
+}
+
+.map-legend__caption--src {
+  fill: var(--ink-3);
+}
+
+/* --- hover preview tooltip --- */
+
+.map-tip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 252px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-m);
+  box-shadow: var(--shadow-pop);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-med) var(--ease);
+  z-index: 4;
+}
+
+.map-tip.is-on {
+  opacity: 1;
+}
+
+.map-tip__name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.map-tip__meta {
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.map-tip__complaint {
+  font-size: 12px;
+  color: var(--ink-2);
+  margin-top: 1px;
+}
+
+.map-tip__row {
+  font-size: 11.5px;
+  color: var(--ink-2);
+  margin-top: 6px;
+}
+
+.map-tip__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--ink-2);
+  margin-top: 6px;
+}
+
+/* --- quiet floor note --- */
+
+.map-quiet {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 8px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-pop);
+  color: var(--ink-2);
+  font-size: 12.5px;
+  pointer-events: none;
+}
