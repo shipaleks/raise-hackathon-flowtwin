@@ -4,12 +4,10 @@ import { FLOORS, floorOfDept, type FloorId } from './sim/layout'
 import { SIM_END_MIN, clampSim } from './sim/time'
 
 export type View = 'doctor' | 'admin'
-export type Theme = 'light' | 'dark'
 export type SheetTab = 'flow' | 'predictions' | 'intake'
 
 interface FlowTwinState {
   view: View
-  theme: Theme
   /** sim time in minutes relative to the 11:00 anchor (negative = the recorded past) */
   simMin: number
   playing: boolean
@@ -30,7 +28,6 @@ interface FlowTwinState {
   hoveredId: string | null
 
   setView: (v: View) => void
-  toggleTheme: () => void
   setSimMin: (m: number) => void
   nudgeSim: (dm: number) => void
   setPlaying: (p: boolean) => void
@@ -52,7 +49,6 @@ interface FlowTwinState {
 
 export const useStore = create<FlowTwinState>((set, get) => ({
   view: 'doctor',
-  theme: (document.documentElement.dataset.theme as Theme) ?? 'light',
   simMin: 0,
   playing: false,
   speed: 30,
@@ -67,13 +63,6 @@ export const useStore = create<FlowTwinState>((set, get) => ({
   hoveredId: null,
 
   setView: (view) => set({ view, selectedId: view === 'admin' ? null : get().selectedId }),
-
-  toggleTheme: () => {
-    const theme: Theme = get().theme === 'light' ? 'dark' : 'light'
-    document.documentElement.dataset.theme = theme
-    localStorage.setItem('flowtwin-theme', theme)
-    set({ theme })
-  },
 
   setSimMin: (m) => set({ simMin: clampSim(m) }),
   nudgeSim: (dm) => set({ simMin: clampSim(get().simMin + dm), playing: false }),

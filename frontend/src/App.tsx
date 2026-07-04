@@ -64,9 +64,6 @@ function useKeyboard() {
         case 'v':
           s.setView(s.view === 'doctor' ? 'admin' : 'doctor')
           break
-        case 't':
-          s.toggleTheme()
-          break
         case '1':
         case '2':
         case '3':

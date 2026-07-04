@@ -69,11 +69,6 @@
   transition: opacity var(--dur-slow) var(--ease);
 }
 
-[data-theme='dark'] .map-night {
-  background:
-    radial-gradient(120% 90% at 50% 10%, rgba(4, 6, 18, 0.30), rgba(2, 3, 10, 0.45));
-}
-
 /* Viewport transform + counter-scaled labels share one clock, so zooms stay coherent. */
 .map-viewport,
 .map-cs {

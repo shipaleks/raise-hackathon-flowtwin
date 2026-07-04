@@ -99,45 +99,6 @@ function StatusLine() {
   )
 }
 
-function ThemeToggle() {
-  const theme = useStore((s) => s.theme)
-  const toggleTheme = useStore((s) => s.toggleTheme)
-  const next = theme === 'light' ? 'dark' : 'light'
-  return (
-    <button
-      type="button"
-      className="chrome-topbar__icon-btn"
-      aria-label={`Switch to ${next} theme`}
-      onClick={toggleTheme}
-    >
-      {theme === 'light' ? (
-        // moon — the theme this button switches to
-        <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">
-          <path
-            d="M17.2 12.6a7.4 7.4 0 0 1-9.8-9.8 7.4 7.4 0 1 0 9.8 9.8z"
-            fill="currentColor"
-          />
-        </svg>
-      ) : (
-        // sun
-        <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">
-          <circle cx="10" cy="10" r="3.4" fill="currentColor" />
-          <g stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
-            <line x1="10" y1="1.4" x2="10" y2="3.6" />
-            <line x1="10" y1="16.4" x2="10" y2="18.6" />
-            <line x1="1.4" y1="10" x2="3.6" y2="10" />
-            <line x1="16.4" y1="10" x2="18.6" y2="10" />
-            <line x1="3.9" y1="3.9" x2="5.5" y2="5.5" />
-            <line x1="14.5" y1="14.5" x2="16.1" y2="16.1" />
-            <line x1="16.1" y1="3.9" x2="14.5" y2="5.5" />
-            <line x1="3.9" y1="16.1" x2="5.5" y2="14.5" />
-          </g>
-        </svg>
-      )}
-    </button>
-  )
-}
-
 /** Monad-style announcement strip: the honesty note, one glance, dismissible. */
 function AnnouncementBar({ onAbout }: { onAbout: () => void }) {
   const [dismissed, setDismissed] = useState(false)
@@ -197,7 +158,6 @@ export function TopBar() {
             Optimize the day
           </button>
           <SegmentedControl options={VIEW_OPTIONS} value={view} onChange={setView} ariaLabel="View" />
-          <ThemeToggle />
           <button type="button" className="chrome-topbar__about" onClick={() => setAboutOpen(true)}>
             About
           </button>
