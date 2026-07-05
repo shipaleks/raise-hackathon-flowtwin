@@ -23,13 +23,26 @@ export function ResultBand({ r }: { r: DayReview }) {
   const board = actionBoardAt(simMin)
   const g = r.globalOptimize
 
+  // the one end-of-day number: hero action + the executed board, added up
+  const totalActions = (resolved ? 1 : 0) + (g?.actions ?? 0)
+  const totalMin = (resolved ? r.sarah.recoveredMin : 0) + (g?.minutesSaved ?? 0)
+  const totalHkd =
+    (g?.hkdFreed ?? 0) +
+    (resolved ? Math.round((r.sarah.recoveredMin / 60) * r.assumptions.bed_hour_cost_hkd) : 0)
+
   return (
     <section className="live-band reg-ticks" aria-label="The result">
       <p className="live-band__kicker">
         {g
-          ? `The result — the whole board executed at ${g.atClock}`
+          ? `The day's result — board executed at ${g.atClock}`
           : 'The result — one action executed, a board full of them, one plan'}
       </p>
+      {g && totalActions > 0 && (
+        <p className="live-band__total tnum">
+          {totalActions} operational actions · {totalMin} min of patient-time returned ·
+          ≈{hkd(totalHkd)} of bed-time today
+        </p>
+      )}
       <div className="live-band__stats">
         <div className="live-band__stat">
           <span className="live-band__v tnum">{resolved ? `−${r.sarah.recoveredMin} min` : '—'}</span>
