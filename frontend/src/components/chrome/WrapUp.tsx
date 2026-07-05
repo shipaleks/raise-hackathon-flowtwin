@@ -5,7 +5,7 @@
    in the Administrator view only. */
 
 import { useEffect, useRef } from 'react'
-import { boardLedger, dayReviewAt, type DayReview } from '../../sim/engine'
+import { boardLedger, dayReviewAt, trackedTodayCount, type DayReview } from '../../sim/engine'
 import { LIVE_MIN, fmtDay, fmtDur } from '../../sim/time'
 import { useStore } from '../../store'
 import { Chip, OpsOnlyBadge } from '../ui/Chip'
@@ -24,6 +24,12 @@ function BoardTable({ r, optimizedAtMin }: { r: DayReview; optimizedAtMin: numbe
   return (
     <section className="chrome-about__section">
       <h3 className="chrome-about__h">The board — every move, with its minutes</h3>
+      <p className="chrome-about__body">
+        The twin tracked <strong className="tnum">{trackedTodayCount}</strong> journeys today and
+        found an actionable operational blocker in{' '}
+        <strong className="tnum">{rows.length + 1}</strong> of them — the rest ran on pathway and
+        were left alone (monitor-only). One bed-and-queue move per blocker:
+      </p>
       <table className="chrome-wrap__table">
         <thead>
           <tr>
@@ -170,9 +176,9 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
           </p>
         </section>
 
-        {/* ---------------- 2 · what FlowTwin changed ---------------- */}
+        {/* ---------------- 2 · the walked case ---------------- */}
         <section className="chrome-about__section">
-          <h3 className="chrome-about__h">What FlowTwin changed</h3>
+          <h3 className="chrome-about__h">The walked case — Sarah, end to end</h3>
           <div className="chrome-wrap__case">
             <div className="chrome-wrap__case-row">
               <span className="chrome-wrap__case-step">
@@ -198,7 +204,7 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
                   {r.sarah.finalExit}
                 </span>
                 <span className="chrome-wrap__case-l">
-                  {r.sarah.resolved ? 'after one op action' : 'no action taken this run'}
+                  {r.sarah.resolved ? 'after her one move — the obs-ward bed' : 'her move not taken this run'}
                 </span>
               </span>
               {r.sarah.resolved && (

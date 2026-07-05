@@ -1286,6 +1286,9 @@ export interface BoardAction {
   savedMin: number
 }
 
+/** How many journeys the twin tracked today (in-house at 00:00 + arrivals). */
+export const trackedTodayCount = todayTracks.length
+
 export function boardLedger(optimizedAtMin: number | null): BoardAction[] {
   const cast = castFor(optimizedAtMin)
   return todayTracks
