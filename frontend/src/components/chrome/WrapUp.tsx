@@ -143,7 +143,11 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
                   {r.sarah.finalExit}
                 </span>
                 <span className="chrome-wrap__case-l">
-                  {r.sarah.resolved ? 'after one op action' : 'no action taken this run'}
+                  {r.sarah.resolved
+                    ? 'after one op action'
+                    : resolvedAtMin != null && simMin < resolvedAtMin
+                      ? `action lands ${fmtClock(resolvedAtMin)} — scrub forward`
+                      : 'no action taken this run'}
                 </span>
               </span>
               {r.sarah.resolved && (
@@ -155,13 +159,22 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
             <ul className="chrome-about__bullets">
               <li>
                 The twin read the climb out of the live feed as it opened — not from intuition —
-                and flagged Sarah's slip about two hours before it would have bitten.
+                and flagged the slip about two hours before it would have bitten. Sarah is the one
+                case we walk end to end; the same watch ran on everyone in the building.
               </li>
               <li>
                 {r.sarah.resolved
                   ? 'One operational move (obs-ward bed + escalated consult cover) recovered ~45 minutes and freed a monitored cubicle during the crunch.'
                   : 'The suggested move (obs-ward bed + escalated consult cover) would have recovered ~45 minutes — replay the Resolve beat to see it land.'}
               </li>
+              {r.globalOptimize && (
+                <li>
+                  The rest of the board executed at {r.globalOptimize.atClock}:{' '}
+                  {r.globalOptimize.actions} more actions of the same shape —{' '}
+                  {r.globalOptimize.minutesSaved} minutes returned,{' '}
+                  {r.globalOptimize.patientsOutEarlier} more patients out earlier.
+                </li>
+              )}
               <li>
                 Every suggestion stayed operational — time, beds, queues. Care decisions never left
                 the clinicians.

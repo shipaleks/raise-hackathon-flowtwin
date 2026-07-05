@@ -111,13 +111,20 @@ export const useStore = create<FlowTwinState>((set, get) => ({
 
   resolveNow: () => {
     const t = get().simMin
-    if (t >= BEAT_MIN.overload && get().resolvedAtMin == null) {
+    const cur = get().resolvedAtMin
+    // manual resolve wins over a board-scheduled one that hasn't landed yet
+    if (t >= BEAT_MIN.overload && (cur == null || cur > t)) {
       set({ resolvedAtMin: t })
     }
   },
 
   optimizeAll: () => {
-    if (get().optimizedAtMin == null) set({ optimizedAtMin: get().simMin })
+    if (get().optimizedAtMin != null) return
+    const t = get().simMin
+    // the board includes the hero's action — it executes the moment her
+    // bottleneck exists (the resolve beat), never preemptively
+    const resolvedAtMin = get().resolvedAtMin ?? Math.max(t, BEAT_MIN.resolveSuggested)
+    set({ optimizedAtMin: t, resolvedAtMin })
   },
 
   setAboutOpen: (aboutOpen) => set({ aboutOpen }),
