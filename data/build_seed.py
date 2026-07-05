@@ -507,6 +507,71 @@ def _journey_rec(events):
                     "impact_min": impact}
     return best
 
+
+# ---- best-quartile benchmark (the board's real basis) ----
+# The completed journeys of the last 48 h give an empirical distribution for
+# every compressible step type. A move's claimed minutes is the step's EXCESS
+# over the best quartile (p25) of the same step type — "run this queue the way
+# it runs when it runs well" — capped per blocker. Variable per patient,
+# grounded in the same calibrated data, no flat share.
+_STEP_GROUP = {
+    "consult_requested": "consult", "labs_ordered": "lab", "imaging": "imaging",
+    "observation": "disposition", "decision": "disposition",
+    "telemetry": "disposition", "recovery": "disposition",
+}
+_GROUP_META = {
+    "consult": ("escalate_consult", 45, "consult queue"),
+    "lab": ("chase_lab_result", 25, "lab turnaround"),
+    "imaging": ("prioritize_imaging_slot", 20, "imaging queue"),
+    "disposition": ("confirm_discharge_or_bed", 30, "disposition wait"),
+}
+_MIN_BENCH_N = 20  # below this the group has no credible benchmark
+
+
+def step_benchmarks(journeys):
+    durs = defaultdict(list)
+    for p in journeys:
+        evs = p["events"]
+        for i, e in enumerate(evs[:-1]):
+            g = _STEP_GROUP.get(e["type"])
+            if not g:
+                continue
+            d = (datetime.fromisoformat(evs[i + 1]["t"])
+                 - datetime.fromisoformat(e["t"])).total_seconds() / 60
+            if d > 0:
+                durs[g].append(d)
+    out = {}
+    for g, xs in durs.items():
+        if len(xs) < _MIN_BENCH_N:
+            continue
+        xs.sort()
+        out[g] = {"p25": xs[int(len(xs) * 0.25)], "n": len(xs)}
+    return out
+
+
+_MONITOR = {"action": "monitor", "explanation": "On the expected pathway.", "impact_min": 0}
+
+
+def benchmark_rec(events, bench):
+    best = None
+    for i, e in enumerate(events[:-1]):
+        g = _STEP_GROUP.get(e["type"])
+        if not g or g not in bench:
+            continue
+        step_min = (datetime.fromisoformat(events[i + 1]["t"])
+                    - datetime.fromisoformat(e["t"])).total_seconds() / 60
+        action, cap, label = _GROUP_META[g]
+        b = bench[g]
+        impact = min(cap, int(step_min - b["p25"]))
+        if impact >= _MIN_IMPACT and (best is None or impact > best["impact_min"]):
+            best = {"action": action,
+                    "explanation": (f"The {label} step ran {int(step_min)} min vs a "
+                                    f"{int(b['p25'])}-min best quartile for the same step over "
+                                    f"the last 48 h (n={b['n']}) — the excess is flagged, "
+                                    f"capped {cap}."),
+                    "impact_min": impact}
+    return best or dict(_MONITOR)
+
 def ops_state(pid, who, pathway, acuity, arrival, events, ed_los, mode, inpatient=False):
     spec = PATHWAYS[pathway]
     m = ETA_MODEL.get(pathway) or {"p10": int(ed_los * .7), "p50": ed_los,
@@ -1018,6 +1083,13 @@ def main():
         "disposition": "admitted" if any(e["type"] == "admit" for e in p["events"]) else "discharged",
         "events": p["events"],
     } for p in hist_cast]
+
+    # the board's real basis: re-derive every today-recommendation against the
+    # best-quartile benchmark from the completed journeys (hero excluded —
+    # her scripted move is set in build_sarah)
+    bench = step_benchmarks(hist_cast)
+    for p in today_present + today_later:
+        p["recommendation"] = benchmark_rec(p["events"], bench)
 
     patients = [sarah] + today_present + inpatients
     kpis = admin_kpis(patients + today_later)

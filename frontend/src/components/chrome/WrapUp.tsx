@@ -4,7 +4,7 @@
    changes with the money, every assumption labeled. Money lives here and
    in the Administrator view only. */
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { boardLedger, dayReviewAt, trackedTodayCount, type DayReview } from '../../sim/engine'
 import { LIVE_MIN, fmtDay, fmtDur } from '../../sim/time'
 import { useStore } from '../../store'
@@ -22,10 +22,11 @@ const BOARD_SHOWN = 10
 
 /** The board, move by move — the section the result band's numbers add up. */
 function BoardTable({ r, optimizedAtMin }: { r: DayReview; optimizedAtMin: number | null }) {
+  const [expanded, setExpanded] = useState(false)
   const executed = r.globalOptimize != null
   const rows = boardLedger(optimizedAtMin)
-  const shown = rows.slice(0, BOARD_SHOWN)
-  const rest = rows.slice(BOARD_SHOWN)
+  const shown = expanded ? rows : rows.slice(0, BOARD_SHOWN)
+  const rest = expanded ? [] : rows.slice(BOARD_SHOWN)
   const restMin = rest.reduce((s, a) => s + a.savedMin, 0)
   return (
     <section className="chrome-about__section">
@@ -63,9 +64,29 @@ function BoardTable({ r, optimizedAtMin }: { r: DayReview; optimizedAtMin: numbe
           ))}
           {rest.length > 0 && (
             <tr>
-              <td>… and {rest.length} more patients</td>
-              <td>same move types — consults, labs, imaging, dispositions</td>
+              <td colSpan={2}>
+                <button
+                  type="button"
+                  className="chrome-wrap__expand"
+                  onClick={() => setExpanded(true)}
+                >
+                  Show all — {rest.length} more patients, same move types ↓
+                </button>
+              </td>
               <td className="chrome-wrap__num tnum">{fmtDur(restMin)}</td>
+            </tr>
+          )}
+          {expanded && rows.length > BOARD_SHOWN && (
+            <tr>
+              <td colSpan={3}>
+                <button
+                  type="button"
+                  className="chrome-wrap__expand"
+                  onClick={() => setExpanded(false)}
+                >
+                  Collapse ↑
+                </button>
+              </td>
             </tr>
           )}
         </tbody>
@@ -83,9 +104,10 @@ function BoardTable({ r, optimizedAtMin }: { r: DayReview; optimizedAtMin: numbe
         </tfoot>
       </table>
       <p className="chrome-wrap__assumption">
-        Personas are synthetic (the feed publishes no patient-level data); each move’s minutes
-        is bounded by half its queue step’s length and capped per blocker type (10–45 min,
-        stated).
+        Personas are synthetic (the feed publishes no patient-level data). Each move’s minutes
+        is the step’s excess over the best-quartile duration of the same step type across the
+        last 48 h of journeys, capped 10–45 per blocker — the benchmark and n are cited on each
+        patient’s sheet.
       </p>
     </section>
   )

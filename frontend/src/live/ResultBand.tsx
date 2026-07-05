@@ -77,10 +77,10 @@ export function ResultBand({ r }: { r: DayReview }) {
         )}
       </p>
       <p className="live-band__basis">
-        Basis: each move’s minutes are bounded by half its named queue step and capped per
-        blocker type (10–45 min — stated assumption); bed-time priced at{' '}
-        {hkd(r.assumptions.bed_hour_cost_hkd)}/bed-hour, stated. Measured: the waits, the
-        daily climb, and the arithmetic.{' '}
+        Basis: each move’s minutes = its step’s excess over the best-quartile duration of the
+        same step type in the last 48 h of journeys (benchmark + n cited per patient), capped
+        10–45; bed-time priced at {hkd(r.assumptions.bed_hour_cost_hkd)}/bed-hour, stated.
+        Measured: the waits, the daily climb, the benchmarks, and the arithmetic.{' '}
         <button type="button" className="live-band__undo" onClick={undoOptimize}>
           revert to the baseline day
         </button>

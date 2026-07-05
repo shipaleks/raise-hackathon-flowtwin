@@ -58,8 +58,8 @@ const LEDGER: Array<{ layer: string; source: string; status: LedgerStatus }> = [
     status: 'synthetic',
   },
   {
-    layer: 'The action board — one move per journey (194 of 322), minutes per move',
-    source: 'journey scan; each move ≤ half its named queue step, capped 10–45 min — stated',
+    layer: 'The action board — one move per journey, minutes per move',
+    source: 'excess over the same step type’s best-quartile duration in the last 48 h (n cited per patient), capped 10–45',
     status: 'assumption',
   },
   {
@@ -217,8 +217,9 @@ function AboutDialog({ onClose }: { onClose: () => void }) {
               the pathway's p50/p80.
             </li>
             <li>
-              <strong>Board recommendations</strong> — journey scan; each move's minutes ≤ half
-              its named queue step, capped 10–45 per blocker (stated).
+              <strong>Board recommendations</strong> — each move's minutes is the step's excess
+              over the best-quartile duration of the same step type in the last 48 h, capped
+              10–45 per blocker (benchmark + n cited per patient).
             </li>
             <li>
               <strong>Live plane</strong> — Gemini 3.5 Flash (Interactions chains) ·

@@ -128,9 +128,9 @@ export function ArchDiagram() {
         h={86}
         title="The action board"
         lines={[
-          'one move per journey (194 of 322)',
-          'minutes ≤ half its queue step,',
-          'capped 10–45 per blocker — stated',
+          'one move per journey with a blocker',
+          'minutes = excess over the step’s',
+          '48 h best quartile · capped 10–45',
         ]}
       />
       <Box

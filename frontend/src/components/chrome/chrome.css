@@ -1056,3 +1056,20 @@
   stroke-width: 1.2;
   color: var(--ink-3);
 }
+
+/* expand/collapse row in the board table */
+.chrome-wrap__expand {
+  border: none;
+  background: none;
+  padding: 2px 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.chrome-wrap__expand:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
