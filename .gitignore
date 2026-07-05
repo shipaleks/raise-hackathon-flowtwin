@@ -29,3 +29,6 @@ data/raw/
 
 # Large demo media (keep fallbacks out of git unless you decide otherwise)
 # /fallbacks/
+
+# Python venv for the local TFT pipeline (build artifact — never commit)
+data/.venv-tft/
