@@ -15,7 +15,7 @@ FROM nginx:alpine
 # FLOWTWIN_GEMINI_KEY / FLOWTWIN_NVIDIA_KEY in the service env to go live;
 # without them /api/live-status reports both planes off (deterministic build)
 COPY deploy/nginx.conf.template /etc/nginx/templates/default.conf.template
-COPY deploy/15-flowtwin-env.sh /docker-entrypoint.d/15-flowtwin-env.sh
-RUN chmod +x /docker-entrypoint.d/15-flowtwin-env.sh && rm -f /etc/nginx/conf.d/default.conf
+COPY deploy/15-flowtwin-env.envsh /docker-entrypoint.d/15-flowtwin-env.envsh
+RUN chmod +x /docker-entrypoint.d/15-flowtwin-env.envsh && rm -f /etc/nginx/conf.d/default.conf
 COPY --from=build /app/frontend/dist /usr/share/nginx/html
 EXPOSE 8000
