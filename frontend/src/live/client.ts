@@ -57,6 +57,23 @@ export function interactionText(ix: Interaction): string {
     .join('\n')
 }
 
+/* ---------------- Gemini generateContent (plain, non-Interactions) ----------------
+   Used for Gemma models, which live on the same API but reject systemInstruction
+   and JSON mode — the whole instruction travels in the single user turn. */
+
+export async function generateContent(model: string, prompt: string): Promise<string> {
+  const r = await fetch(`/api/gemini/models/${model}:generateContent`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }),
+  })
+  if (!r.ok) throw new Error(`generateContent ${r.status}: ${(await r.text()).slice(0, 200)}`)
+  const d = await r.json()
+  return ((d?.candidates?.[0]?.content?.parts ?? []) as Array<{ text?: string }>)
+    .map((p) => p.text ?? '')
+    .join('')
+}
+
 /* ---------------- NVIDIA API catalog (OpenAI-compatible) ---------------- */
 
 export async function nvidiaChat(body: Record<string, unknown>): Promise<string> {
