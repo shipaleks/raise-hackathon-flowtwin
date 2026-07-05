@@ -376,3 +376,36 @@
   opacity: 0.55;
   cursor: default;
 }
+
+/* ---- TFT backtest badge ---- */
+
+.tft-backtest {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.tft-backtest__badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+
+.tft-backtest__badge--win {
+  background: var(--ok-soft);
+  color: var(--ok-text);
+}
+
+.tft-backtest__num {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-2);
+}

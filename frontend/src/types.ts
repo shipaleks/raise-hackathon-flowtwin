@@ -267,3 +267,29 @@ export interface History7d {
   count: number
   journeys: HistoryJourney[]
 }
+
+/** TFT forecast — trained offline on the real feed, committed as seed. */
+export interface TftForecastPoint {
+  t: string // ISO HKT of the forecast hour
+  p10: number
+  p50: number
+  p90: number
+}
+
+export interface TftForecast {
+  model: string
+  trained_on: string
+  generated: string
+  anchor_hkt: string
+  horizon_h: number
+  quantiles: number[]
+  backtest: {
+    holdout_h: number
+    n_sites: number
+    tft_mae_min: number
+    naive24_mae_min: number
+    hero_tft_mae_min: number | null
+    hero_naive24_mae_min: number | null
+  }
+  forecast: Record<string, TftForecastPoint[]>
+}
