@@ -12,6 +12,7 @@ import { Chip, OpsOnlyBadge } from '../ui/Chip'
 import { AgentResultLine } from '../../live/AgentResultLine'
 import { OpsChiefSection } from '../../live/OpsChiefSection'
 import { ResultBand } from '../../live/ResultBand'
+import { FlowCompare } from './FlowCompare'
 import './chrome.css'
 
 const hkd = (n: number) => `HK$${n.toLocaleString('en-US')}`
@@ -180,6 +181,19 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
         </header>
 
         <ResultBand r={r} />
+
+        {r.globalOptimize && (
+          <section className="chrome-about__section">
+            <h3 className="chrome-about__h">Before / after — the same journeys, drawn</h3>
+            <p className="chrome-about__body">
+              Same arrivals, same real feed. Each lane is one patient: the muted bar is how
+              they actually moved through the building; the blue bar replays the identical
+              journey with their one move executed. The hatched green tail is the time
+              handed back — and the chart above shows the whole building breathing easier.
+            </p>
+            <FlowCompare />
+          </section>
+        )}
 
         <BoardTable r={r} optimizedAtMin={optimizedAtMin} />
 
