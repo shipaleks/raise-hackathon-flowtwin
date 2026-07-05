@@ -1276,6 +1276,184 @@ export function dayReviewAt(
   }
 }
 
+// ---------------------------------------------------------------- before/after comparison
+
+/* The side-by-side of the executed board: for every patient whose journey the
+   warp actually compressed, the baseline day and the replayed day as two
+   comparable stop sequences on one shared clock — plus the whole-building
+   census under both runs. Pure presentation data; the numbers are the same
+   savedById deltas the result band and the ledger already report. */
+
+export interface CompareStop {
+  zoneLabel: string
+  deptId: string
+  startMin: number
+  endMin: number
+  /** the replayed day shortened this stop (only set on `after` stops) */
+  compressedMin: number
+}
+
+export interface PatientCompare {
+  id: string
+  name: string
+  moveTitle: string
+  isHero: boolean
+  arrivalMin: number
+  before: CompareStop[]
+  after: CompareStop[]
+  beforeExitMin: number
+  afterExitMin: number
+  savedMin: number
+}
+
+export interface FlowComparisonVM {
+  patients: PatientCompare[]
+  /** shared time axis (rounded to whole hours) */
+  axisStartMin: number
+  axisEndMin: number
+  /** whole-building census sampled along the axis */
+  census: Array<{ tMin: number; before: number; after: number }>
+  peakGap: { tMin: number; count: number }
+  totalSavedMin: number
+}
+
+/** Beat annotations are state changes, not moves — they must not split stops. */
+const COMPARE_ANNOTATIONS = new Set(['lab_delay', 'dept_overload', 'consult_escalated'])
+
+function compareStops(events: TrackEvent[], exitMin: number): CompareStop[] {
+  const moves = events.filter((e) => !COMPARE_ANNOTATIONS.has(e.type))
+  const stops: CompareStop[] = []
+  for (let i = 0; i < moves.length; i++) {
+    const e = moves[i]
+    const end = i + 1 < moves.length ? moves[i + 1].tMin : exitMin
+    if (end - e.tMin <= 0) continue
+    const zone = e.areaId
+      ? areaById.get(`${e.deptId}/${e.areaId}`)?.area.name
+      : deptById.get(e.deptId)?.name
+    const label = zone ?? e.rawArea
+    const prev = stops[stops.length - 1]
+    if (prev && prev.deptId === e.deptId && prev.zoneLabel === label) {
+      prev.endMin = end
+      continue
+    }
+    stops.push({ zoneLabel: label, deptId: e.deptId, startMin: e.tMin, endMin: end, compressedMin: 0 })
+  }
+  return stops
+}
+
+/** Mark which `after` stops the warp shortened (stop lists align by zone). */
+function markCompression(before: CompareStop[], after: CompareStop[]) {
+  if (before.length !== after.length) return
+  for (let i = 0; i < after.length; i++) {
+    if (before[i].zoneLabel !== after[i].zoneLabel) continue
+    const delta = before[i].endMin - before[i].startMin - (after[i].endMin - after[i].startMin)
+    if (delta > 0.5) after[i].compressedMin = Math.round(delta)
+  }
+}
+
+const trackExitMin = (t: Track) => t.events[t.events.length - 1].tMin
+
+export function flowComparison(
+  resolvedAtMin: number | null,
+  optimizedAtMin: number | null,
+): FlowComparisonVM | null {
+  if (optimizedAtMin == null) return null
+  const warped = castFor(optimizedAtMin)
+  const patients: PatientCompare[] = []
+
+  // the hero's before/after is beat-driven, not warp-driven — build her lane
+  // from the same presentation layer the rest of the demo shows
+  const heroTrack = trackById.get(HERO_ID)
+  if (heroTrack && resolvedAtMin != null) {
+    const beforeSarah = sarahAt(SIM_END_MIN + 1, null)
+    const afterSarah = sarahAt(SIM_END_MIN + 1, resolvedAtMin)
+    const mkEvents = (extra: SarahPresentation['extraEvents']) =>
+      toTrackEvents(
+        [...sarahBaseEvents(), ...extra].sort((a, b) => parseT(a.t) - parseT(b.t)),
+        heroTrack.arrivalMode,
+      )
+    patients.push({
+      id: HERO_ID,
+      name: `${heroTrack.name} — the walked case`,
+      moveTitle: 'Obs-ward bed + escalated consult cover',
+      isHero: true,
+      arrivalMin: heroTrack.arrivalMin,
+      before: compareStops(mkEvents(beforeSarah.extraEvents), beforeSarah.exitMin),
+      after: compareStops(mkEvents(afterSarah.extraEvents), afterSarah.exitMin),
+      beforeExitMin: beforeSarah.exitMin,
+      afterExitMin: afterSarah.exitMin,
+      savedMin: Math.round(beforeSarah.exitMin - afterSarah.exitMin),
+    })
+  }
+
+  for (const base of todayTracks) {
+    if (!isActionable(base)) continue
+    const saved = warped.savedById.get(base.id) ?? 0
+    if (saved <= 0) continue
+    const after = warped.byId.get(base.id)!
+    const rec = base.patient!.recommendation!
+    const p: PatientCompare = {
+      id: base.id,
+      name: base.name,
+      moveTitle: RECOMMEND_TITLES[rec.action] ?? rec.action.replace(/_/g, ' '),
+      isHero: false,
+      arrivalMin: base.arrivalMin,
+      before: compareStops(base.events, trackExitMin(base)),
+      after: compareStops(after.events, trackExitMin(after)),
+      beforeExitMin: trackExitMin(base),
+      afterExitMin: trackExitMin(after),
+      savedMin: Math.round(saved),
+    }
+    markCompression(p.before, p.after)
+    patients.push(p)
+  }
+  if (patients.length === 0) return null
+
+  // hero first, then the biggest wins
+  patients.sort((a, b) => (a.isHero ? -1 : b.isHero ? 1 : b.savedMin - a.savedMin))
+
+  const axisStartMin =
+    Math.floor(Math.min(...patients.map((p) => p.arrivalMin)) / 60) * 60
+  const axisEndMin =
+    Math.ceil(Math.max(...patients.map((p) => p.beforeExitMin)) / 60) * 60
+
+  // whole-building census under both runs — the aggregate the lanes add up to
+  const heroBeforeExit = resolvedAtMin != null ? sarahAt(SIM_END_MIN + 1, null).exitMin : null
+  const heroAfterExit =
+    resolvedAtMin != null ? sarahAt(SIM_END_MIN + 1, resolvedAtMin).exitMin : null
+  const countAt = (tMin: number, tracks: Track[], heroExit: number | null): number => {
+    let n = 0
+    for (const t of tracks) {
+      if (t.arrivalMin > tMin) continue
+      let end = t.endMin
+      if (t.id === HERO_ID && heroExit != null) end = heroExit
+      if (tMin < end) n++
+    }
+    for (const h of historyTracks) {
+      if (h.arrivalMin <= tMin && tMin < h.endMin) n++
+    }
+    return n
+  }
+  const census: FlowComparisonVM['census'] = []
+  const STEP = 10
+  let peakGap = { tMin: axisStartMin, count: 0 }
+  for (let t = axisStartMin; t <= axisEndMin; t += STEP) {
+    const before = countAt(t, todayTracks, heroBeforeExit)
+    const afterN = countAt(t, warped.tracks, heroAfterExit)
+    census.push({ tMin: t, before, after: afterN })
+    if (before - afterN > peakGap.count) peakGap = { tMin: t, count: before - afterN }
+  }
+
+  return {
+    patients,
+    axisStartMin,
+    axisEndMin,
+    census,
+    peakGap,
+    totalSavedMin: patients.reduce((s, p) => s + p.savedMin, 0),
+  }
+}
+
 /** The board, action by action — every actionable recommendation the twin
     holds for today's cast (hero excluded; her case renders separately).
     Before execution savedMin is the stated per-blocker impact; after

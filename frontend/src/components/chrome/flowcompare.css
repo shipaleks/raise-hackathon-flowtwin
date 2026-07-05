@@ -1,0 +1,380 @@
+/* Before/after comparison — folio language: hairline rules, mono microcopy,
+   ink for the baseline, the one Lake Blue accent for the acted day, status
+   green strictly for the returned time. The compress transition rides the
+   scene duration token so reduced-motion collapses it automatically. */
+
+.fcomp {
+  margin-top: 10px;
+}
+
+/* ---------------------------------------------------------------- legend */
+
+.fcomp__legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.fcomp__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+
+.fcomp__swatch {
+  display: inline-block;
+  width: 14px;
+  height: 7px;
+  border-radius: 2px;
+}
+
+.fcomp__swatch--before {
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+}
+
+.fcomp__swatch--after {
+  background: var(--accent);
+}
+
+.fcomp__swatch--saved {
+  background: repeating-linear-gradient(
+    -55deg,
+    var(--ok-soft),
+    var(--ok-soft) 3px,
+    rgba(33, 122, 60, 0.32) 3px,
+    rgba(33, 122, 60, 0.32) 4.5px
+  );
+  border: 1px solid rgba(33, 122, 60, 0.45);
+}
+
+.fcomp__replay {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r-pill);
+  padding: 3px 10px;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.fcomp__replay:hover {
+  background: var(--accent-soft);
+}
+
+/* ---------------------------------------------------------------- census */
+
+.fcomp__census {
+  border: 1px solid var(--border);
+  border-radius: var(--r-s);
+  background: var(--surface);
+  padding: 10px 12px 6px;
+  margin-bottom: 14px;
+}
+
+.fcomp__census-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.fcomp__census-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.fcomp__census-note {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+  opacity: 0.75;
+}
+
+.fcomp__census-peak {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ok-text);
+}
+
+.fcomp__census-plot {
+  position: relative;
+  height: 96px;
+}
+
+.fcomp__census-plot svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.fcomp__census-area-before {
+  fill: rgba(33, 30, 24, 0.05);
+}
+
+.fcomp__census-line-before {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 1.1;
+  stroke-dasharray: 4 3;
+}
+
+.fcomp__census-area-after {
+  fill: var(--accent-soft);
+}
+
+.fcomp__census-line-after {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.4;
+}
+
+/* the band between the runs — revealed once the lanes settle */
+.fcomp__census-gap {
+  fill: rgba(33, 122, 60, 0.38);
+  opacity: 0;
+  transition: opacity var(--dur-scene) var(--ease-out) 500ms;
+}
+
+.fcomp__census-plot.is-settled .fcomp__census-gap {
+  opacity: 1;
+}
+
+.fcomp__census-peakline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 1px dashed rgba(33, 122, 60, 0.55);
+}
+
+/* ---------------------------------------------------------------- grid */
+
+.fcomp__grid {
+  position: relative;
+  padding-bottom: 26px;
+}
+
+.fcomp__gridlines {
+  position: absolute;
+  top: 0;
+  bottom: 26px;
+  left: 158px;
+  right: 0;
+}
+
+.fcomp__gridline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 1px solid var(--grid);
+}
+
+/* ---------------------------------------------------------------- lanes */
+
+.fcomp__lane {
+  position: relative;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 0 8px;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.fcomp__lane + .fcomp__lane {
+  border-top: 1px solid var(--border);
+}
+
+.fcomp__lane.is-hero {
+  background: linear-gradient(90deg, rgba(43, 89, 209, 0.05), transparent 60%);
+  border-radius: 6px;
+}
+
+.fcomp__lane-label {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.fcomp__lane-name {
+  font-size: 11px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.is-hero .fcomp__lane-name {
+  font-weight: 600;
+}
+
+.fcomp__lane-delta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ok-text);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+}
+
+.fcomp__lane-delta.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.fcomp__lane-track {
+  position: relative;
+  height: 34px;
+}
+
+.fcomp__bar {
+  position: absolute;
+  display: flex;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.fcomp__bar--before {
+  top: 3px;
+  height: 11px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+}
+
+.fcomp__bar--after {
+  bottom: 3px;
+  height: 13px;
+  background: var(--accent);
+  box-shadow: 0 1px 3px rgba(43, 89, 209, 0.3);
+  transition: width var(--dur-scene) var(--ease-3d);
+}
+
+/* the reclaimed tail sits on the after-row, where the baseline still ran */
+.fcomp__bar--saved {
+  bottom: 3px;
+  height: 13px;
+  background: repeating-linear-gradient(
+    -55deg,
+    var(--ok-soft),
+    var(--ok-soft) 3px,
+    rgba(33, 122, 60, 0.32) 3px,
+    rgba(33, 122, 60, 0.32) 4.5px
+  );
+  border: 1px dashed rgba(33, 122, 60, 0.5);
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-out);
+  transition-duration: var(--dur-scene);
+}
+
+.fcomp__bar--saved.is-in {
+  opacity: 1;
+}
+
+/* stop boundaries inside a bar — the patient's actual moves between zones */
+.fcomp__stop {
+  min-width: 2px;
+}
+
+.fcomp__bar--before .fcomp__stop + .fcomp__stop {
+  border-left: 1px solid var(--border-strong);
+}
+
+.fcomp__bar--after .fcomp__stop + .fcomp__stop {
+  border-left: 1px solid rgba(245, 241, 232, 0.55);
+}
+
+.fcomp__bar--after .fcomp__stop.is-compressed {
+  background: linear-gradient(180deg, rgba(245, 241, 232, 0.22), transparent);
+}
+
+/* exit clocks — the walked case carries them; the rest stay uncluttered */
+.fcomp__exit {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  transform: translateX(4px);
+  white-space: nowrap;
+  display: none;
+}
+
+.fcomp__lane.is-hero .fcomp__exit {
+  display: block;
+}
+
+.fcomp__exit--before {
+  top: 4px;
+  color: var(--ink-3);
+}
+
+.fcomp__exit--after {
+  bottom: 4px;
+  color: var(--ok-text);
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity var(--dur-scene) var(--ease-out);
+}
+
+.fcomp__exit--after.is-in {
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------- ruler */
+
+.fcomp__ruler {
+  position: absolute;
+  left: 158px;
+  right: 0;
+  bottom: 0;
+  height: 16px;
+  border-top: 1px solid var(--border-strong);
+}
+
+.fcomp__tick {
+  position: absolute;
+  top: 2px;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-3);
+}
+
+/* ---------------------------------------------------------------- misc */
+
+.fcomp__more {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px 0 6px 158px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  color: var(--accent);
+}
+
+.fcomp__more:hover {
+  text-decoration: underline;
+}
+
+.fcomp__foot {
+  margin-top: 8px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--ink-3);
+}
