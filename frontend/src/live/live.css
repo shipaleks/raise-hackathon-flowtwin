@@ -235,6 +235,14 @@
   color: var(--ink);
 }
 
+.live-band__basis {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
 .live-band__stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

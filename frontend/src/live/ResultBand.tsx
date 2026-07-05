@@ -38,10 +38,17 @@ export function ResultBand({ r }: { r: DayReview }) {
           : 'The result — one action executed, a board full of them, one plan'}
       </p>
       {g && totalActions > 0 && (
-        <p className="live-band__total tnum">
-          {totalActions} operational actions · {totalMin} min of patient-time returned ·
-          ≈{hkd(totalHkd)} of bed-time today
-        </p>
+        <>
+          <p className="live-band__total tnum">
+            {totalActions} operational actions · {totalMin} min of patient-time returned ·
+            ≈{hkd(totalHkd)} of bed-time today
+          </p>
+          <p className="live-band__basis">
+            Basis: each action’s saved minutes is a stated per-blocker assumption (20–45 min,
+            in the seed) that the twin executes; the money is HK$400/bed-hour, stated. What’s
+            measured: the waits, the daily climb, and the arithmetic.
+          </p>
+        </>
       )}
       <div className="live-band__stats">
         <div className="live-band__stat">
