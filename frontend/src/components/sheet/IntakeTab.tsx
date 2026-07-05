@@ -3,9 +3,12 @@
    mention-only). */
 
 import type { ReactNode } from 'react'
+import { selfReportFor } from '../../data/selfReports'
+import { GEMMA_LABEL, translateSelfReport } from '../../live/gemmaTranslate'
+import { IDLE_TRANSLATION, useLiveStore } from '../../live/liveStore'
 import type { SheetVM } from '../../sim/engine'
 import { fmtDayClock } from '../../sim/time'
-import { Chip } from '../ui/Chip'
+import { Chip, OpsOnlyBadge } from '../ui/Chip'
 
 const MODE_SWATCH: Record<string, string> = {
   ambulance: 'var(--cat-1)',
@@ -60,6 +63,8 @@ export function IntakeTab({ vm }: { vm: SheetVM }) {
         </div>
       </section>
 
+      <PatientVoice id={vm.id} />
+
       {vitals && (
         <section aria-label="Vitals">
           <h3 className="sheet-h3">Vitals</h3>
@@ -105,6 +110,65 @@ export function IntakeTab({ vm }: { vm: SheetVM }) {
 
       <p className="sheet-intake__prov">{provText}</p>
     </div>
+  )
+}
+
+/* The patient's own words in Cantonese + the Gemma language-assistance plane.
+   The quote is authored seed-like content and always renders; the translate
+   button is live-gated and cached per patient in the live store. */
+function PatientVoice({ id }: { id: string }) {
+  const report = selfReportFor(id)
+  const gemini = useLiveStore((s) => s.gemini)
+  const snap = useLiveStore((s) => s.translations[id]) ?? IDLE_TRANSLATION
+  if (!report) return null
+
+  return (
+    <section className="sheet-intake__voice" aria-label="Patient self-report">
+      <h3 className="sheet-h3">In the patient's own words</h3>
+      <blockquote className="sheet-intake__quote" lang="zh-Hant">
+        {report.text}
+      </blockquote>
+      <div className="sheet-intake__voice-row">
+        <Chip tone="ghost">{report.langLabel}</Chip>
+        {report.speaker && <Chip tone="ghost">{report.speaker.toLowerCase()}</Chip>}
+        {gemini && snap.status !== 'done' && (
+          <button
+            type="button"
+            className="live-wake"
+            disabled={snap.status === 'running'}
+            onClick={() => translateSelfReport(id, report)}
+          >
+            {snap.status === 'running' ? 'Gemma is translating…' : `Translate & summarise · ${GEMMA_LABEL}`}
+          </button>
+        )}
+        {!gemini && <Chip tone="ghost">live translation off — deterministic build</Chip>}
+      </div>
+      {snap.result && (
+        <div className="sheet-intake__voice-out">
+          <p className="sheet-intake__translation">“{snap.result.translation}”</p>
+          {snap.result.summary_points.length > 0 && (
+            <ul className="sheet-intake__voice-points">
+              {snap.result.summary_points.map((p, i) => (
+                <li key={i}>{p}</li>
+              ))}
+            </ul>
+          )}
+          <p className="sheet-intake__voice-meta">
+            <span className="live-panel__model">
+              {GEMMA_LABEL} · {snap.result.detected_lang}
+            </span>{' '}
+            <OpsOnlyBadge />
+          </p>
+        </div>
+      )}
+      {snap.status === 'error' && (
+        <p className="live-error">Translation failed — the original words above still stand. {snap.error}</p>
+      )}
+      <p className="sheet-intake__caption">
+        Synthetic persona — self-report authored for the demo; translation is communication assistance, not
+        clinical input.
+      </p>
+    </section>
   )
 }
 

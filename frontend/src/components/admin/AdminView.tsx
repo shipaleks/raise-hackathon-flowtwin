@@ -13,6 +13,7 @@ import { simToDate } from '../../sim/time'
 import { useStore } from '../../store'
 import { ArrivalForecast } from './ArrivalForecast'
 import { NemotronForecastCard } from '../../live/NemotronForecastCard'
+import { TftForecastCard } from '../../live/TftForecastCard'
 import './admin.css'
 
 const hkd = (n: number) => `HK$${n.toLocaleString('en-US')}`
@@ -318,6 +319,7 @@ export function AdminView() {
           <div className="admin-col">
             <PlayCard vm={vm} onGoToDoctor={() => setView('doctor')} />
             <PatternCard simMin={simMin} />
+            <TftForecastCard />
             <NemotronForecastCard />
             <CalibrationCard vm={vm} />
           </div>

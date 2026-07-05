@@ -3,6 +3,7 @@
    map stays visible and interactive while the sheet is open. */
 
 import { useEffect, useRef } from 'react'
+import { selfReportFor } from '../../data/selfReports'
 import { sheetModelFor, type SheetVM } from '../../sim/engine'
 import { useStore, type SheetTab } from '../../store'
 import type { Risk } from '../../types'
@@ -105,6 +106,11 @@ function SheetPanel({ vm, simMin }: { vm: SheetVM; simMin: number }) {
         <div className="sheet-head__chips">
           <Chip>{vm.complaint}</Chip>
           <Chip>{vm.pathway}</Chip>
+          {selfReportFor(vm.id) && (
+            <Chip tone="ghost" title="Speaks Cantonese only — self-report on the Intake tab">
+              廣東話
+            </Chip>
+          )}
         </div>
 
         <div className="sheet-exit">

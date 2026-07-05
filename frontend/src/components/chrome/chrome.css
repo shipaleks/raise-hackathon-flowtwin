@@ -637,7 +637,12 @@
 }
 
 .chrome-about__status--live-model {
-  color: var(--accent-ink);
+  color: var(--accent);
+}
+
+.chrome-about__status--real-model {
+  color: var(--ok-text);
+  font-weight: 700;
 }
 
 /* keyboard */

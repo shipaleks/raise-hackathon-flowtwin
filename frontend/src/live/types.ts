@@ -37,6 +37,19 @@ export interface AgentSnap {
   error?: string
 }
 
+/** JSON the Gemma translator returns for one patient self-report. */
+export interface GemmaTranslation {
+  detected_lang: string
+  translation: string
+  summary_points: string[]
+}
+
+export interface TranslationSnap {
+  status: 'idle' | 'running' | 'done' | 'error'
+  result: GemmaTranslation | null
+  error?: string
+}
+
 export interface ChiefState {
   status: 'idle' | 'running' | 'done' | 'error'
   insight: string | null
