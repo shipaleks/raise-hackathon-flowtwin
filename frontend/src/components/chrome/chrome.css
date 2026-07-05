@@ -990,3 +990,69 @@
   align-items: flex-start;
   gap: 12px;
 }
+
+/* ---- the architecture diagram (About) ---- */
+
+.adg {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-top: 4px;
+}
+
+.adg-col {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  fill: var(--ink-3);
+}
+
+.adg-col--live {
+  fill: var(--accent);
+}
+
+.adg-box {
+  fill: var(--surface);
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.adg-box--live {
+  fill: var(--accent-soft);
+  stroke: var(--accent-line);
+}
+
+.adg-fence {
+  fill: none;
+  stroke: var(--accent-line);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.adg-boxtitle {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  fill: var(--ink);
+}
+
+.adg-sub {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  fill: var(--ink-2);
+}
+
+.adg-note {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-style: italic;
+  fill: var(--ink-3);
+}
+
+.adg-arrow {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.2;
+  color: var(--ink-3);
+}

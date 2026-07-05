@@ -7,7 +7,8 @@
 import { useEffect, useRef } from 'react'
 import { adminKpis, hkLive, HOSPITAL } from '../../data/seed'
 import { useStore } from '../../store'
-import { OpsOnlyBadge, Chip } from '../ui/Chip'
+import { OpsOnlyBadge } from '../ui/Chip'
+import { ArchDiagram } from './ArchDiagram'
 import './chrome.css'
 
 const KEYS: Array<{ keys: string; does: string }> = [
@@ -32,58 +33,48 @@ const STATUS_LABEL: Record<LedgerStatus, string> = {
 
 const LEDGER: Array<{ layer: string; source: string; status: LedgerStatus }> = [
   {
-    layer: 'The hospital — Queen Mary Hospital, Hong Kong West cluster',
-    source: 'Hospital Authority (18 A&E sites in the feed)',
+    layer: 'The hospital & its waits — Queen Mary Hospital; cat-2/3/4-5 p50/p95, the daily climb',
+    source: 'HA open-data feed, every 15 min · 48 h full-resolution + 7-day archive · all 18 A&E sites',
     status: 'real',
   },
   {
-    layer: 'Waiting times by triage category — cat-2, cat-3 p50/p95, cat-4/5 p50/p95',
-    source: 'HA open-data feed, updated every 15 min; 48 h at full resolution + 7 days hourly via the data.gov.hk archive',
-    status: 'real',
-  },
-  {
-    layer: 'The recurring daily climb (and the overnight backlog that never clears)',
-    source: 'computed from that same archive — 7-day mean by hour',
-    status: 'real',
-  },
-  {
-    layer: 'Arrival diurnal shape · acuity-conditional LOS tails · admit ordering · triage vitals ranges',
-    source: 'MIMIC-IV-ED (real de-identified ED stays; open demo subset n=222 bundled — the full dataset drops in unchanged)',
+    layer: 'Arrival shape · LOS tails by acuity · admit ordering · triage vitals ranges',
+    source: 'MIMIC-IV-ED — real de-identified ED stays (open demo subset bundled; full set drops in unchanged)',
     status: 'real-stats',
   },
   {
-    layer: 'Triage mix (1/3/44/48/4%) · ~27% admission share · ~300 attendances/day',
-    source: 'HA-published approximate levels, used to scale the shapes',
+    layer: 'Scale — triage mix · ~27% admission share · ~300 attendances/day · HK$400/bed-hour',
+    source: 'HA-published approximate levels + stated rates',
     status: 'assumption',
   },
   {
-    layer: 'Individual patients — names (Synthea registry), station-level rooms and minutes, the floor plan',
-    source: 'synthetic by design: the feed publishes no patient-level data, and that is the point (privacy)',
+    layer: 'Individual patients (Synthea names), station rooms & minutes, the floor plan',
+    source: 'synthetic by design — the feed publishes no patient-level data, and that is the point',
     status: 'synthetic',
   },
   {
-    layer: "Sarah's four demo beats (lab delay · overload · resolve)",
-    source: 'scripted so the guided story is deterministic — labeled on every surface it touches',
+    layer: "Sarah's demo beats (lab delay · overload · resolve)",
+    source: 'scripted so the guided story is deterministic — labeled where it touches',
     status: 'synthetic',
   },
   {
-    layer: 'Money — HK$400/bed-hour (≈€47), recoverable shares per optimizer line',
-    source: 'stated assumptions; every plan line carries its own basis label',
+    layer: 'The action board — one move per journey (194 of 322), minutes per move',
+    source: 'journey scan; each move ≤ half its named queue step, capped 10–45 min — stated',
     status: 'assumption',
   },
   {
-    layer: "The patient agent — a stateful chain per patient; Sarah's remembers every beat",
-    source: 'Gemini 3.5 Flash via the Interactions API (previous_interaction_id); memory held server-side, shown only when keys are configured',
+    layer: 'Patient agents — a stateful chain per patient, memory held server-side',
+    source: 'Gemini 3.5 Flash · Interactions API (previous_interaction_id) — when keys are configured',
     status: 'live-model',
   },
   {
-    layer: 'The Ops Chief — pandas over the census CSV in a persistent sandbox',
-    source: 'antigravity-preview-05-2026, environment reused across runs (Day review → Run the Ops Chief)',
+    layer: 'The Ops Chief — real pandas over the census CSV in a persistent sandbox',
+    source: 'antigravity-preview-05-2026 · environment reused across runs (Day review)',
     status: 'live-model',
   },
   {
     layer: 'Next-12 h wait forecast (Administrator view)',
-    source: 'Nemotron 3 Nano 30B-A3B reading the real 48 h feed zero-shot — p10/p50/p90, labeled on the card',
+    source: 'Nemotron 3 Nano 30B-A3B, zero-shot over the real 48 h feed — p10/p50/p90',
     status: 'live-model',
   },
 ]
@@ -168,29 +159,17 @@ function AboutDialog({ onClose }: { onClose: () => void }) {
         </section>
 
         <section className="chrome-about__section">
-          <h3 className="chrome-about__h">How the twin is built</h3>
-          <ol className="chrome-about__pipeline">
-            <li>
-              <strong>fetch_hk.py</strong> pulls the live HA feed plus its full 15-minute archive
-              from data.gov.hk — 48 h at full resolution, 7 days hourly, all 18 A&amp;E sites.
-            </li>
-            <li>
-              <strong>build_mimic_stats.py</strong> extracts real patient-level distributions from
-              MIMIC-IV-ED: arrival hour weights, acuity mix, LOS quantiles by acuity ×
-              disposition, transport mix, triage-vitals quartiles.
-            </li>
-            <li>
-              <strong>build_seed.py</strong> (fixed seed 42) casts synthetic personas whose{' '}
-              <em>wait is a lognormal draw through the hospital's real published p50/p95 at their
-              arrival snapshot</em>, with MIMIC treatment tails — so scrubbing the clock replays
-              the hospital's actual day, person by person.
-            </li>
-            <li>
-              The browser runs a pure function <code>worldAt(t)</code> over that seed — fully
-              deterministic, perfectly reversible, no live API calls in this build. Before a demo,
-              one command re-fetches the feed and re-anchors the whole twin to "now".
-            </li>
-          </ol>
+          <h3 className="chrome-about__h">How it works — one picture</h3>
+          <ArchDiagram />
+          <p className="chrome-about__body">
+            Real public data becomes a deterministic twin — a pure function of the scrubbed
+            minute, so replaying the day can never desync. With API keys configured
+            (server-side only, behind the /api proxy), a <strong>live plane</strong> switches on
+            top of it: a stateful Gemini chain per patient, the Antigravity Ops Chief running
+            real pandas, and a Nemotron forecast of the real wait curve. Without keys, the twin
+            runs alone. <em>Gemini runs the agents. Nemotron forecasts the hospital. The feed
+            keeps it honest.</em>
+          </p>
         </section>
 
         <section className="chrome-about__section">
@@ -220,72 +199,37 @@ function AboutDialog({ onClose }: { onClose: () => void }) {
         </section>
 
         <section className="chrome-about__section">
-          <h3 className="chrome-about__h">Every model in this build, named</h3>
+          <h3 className="chrome-about__h">Every model, named</h3>
           <ul className="chrome-about__bullets">
             <li>
-              <strong>Wait sampler</strong> — a lognormal fitted through the feed's real median and
-              95th percentile per triage category, per 15-minute snapshot. Individual waits are
-              draws from the hospital's own published distribution.
+              <strong>Wait sampler</strong> — lognormal through the feed's real p50/p95 per triage
+              category, per 15-min snapshot: individual waits are draws from the hospital's own
+              published distribution.
             </li>
             <li>
-              <strong>FlowTwin ETA</strong> — empirical LOS quantiles (p10/p50/p80/p90) from{' '}
-              {cal.n} real MIMIC-IV-ED stays, keyed by pathway band; when a stay outruns an
-              estimate the prediction escalates up the quantile ladder, exactly as a live model
-              would. Calibration is in-sample on the demo subset — the out-of-sample readout needs
-              the full dataset and is labeled as such.
+              <strong>FlowTwin ETA</strong> — LOS quantiles from {cal.n} real MIMIC-IV-ED stays,
+              escalating up the quantile ladder when a stay outruns its estimate (calibration
+              in-sample on the demo subset, labeled).
             </li>
             <li>
               <strong>Arrival model</strong> — MIMIC's hour-of-day shape scaled to a stated ~
-              {adminKpis.hk.attendance_per_day_assumption}/day.
+              {adminKpis.hk.attendance_per_day_assumption}/day · <strong>risk states</strong> at
+              the pathway's p50/p80.
             </li>
             <li>
-              <strong>Risk states</strong> — on-track / at-risk / blocked when elapsed time crosses
-              the pathway's p50 / p80.
+              <strong>Board recommendations</strong> — journey scan; each move's minutes ≤ half
+              its named queue step, capped 10–45 per blocker (stated).
             </li>
             <li>
-              <strong>FlowTwin Optimizer</strong> — measured climbs and sequence gaps × labeled
-              "recoverable" shares × the HK$400/bed-hour assumption. Every line in the plan
-              carries its own basis tag.
+              <strong>Live plane</strong> — Gemini 3.5 Flash (Interactions chains) ·
+              antigravity-preview-05-2026 (Ops Chief) · Nemotron 3 Nano 30B-A3B (forecast) — all
+              labeled on the surfaces they touch.
             </li>
           </ul>
-        </section>
-
-        <section className="chrome-about__section">
-          <h3 className="chrome-about__h">Architecture — two planes (production design)</h3>
-          <div className="chrome-about__planes">
-            <div className="chrome-about__plane">
-              <div className="chrome-about__plane-title">On-prem, open models</div>
-              <ul className="chrome-about__plane-list">
-                <li>PersonaPlex — patient voice</li>
-                <li>Nemotron Nano — department sim + wait forecast</li>
-              </ul>
-              <Chip tone="accent" className="chrome-about__plane-chip">
-                voice + PHI never leave the building
-              </Chip>
-            </div>
-            <div className="chrome-about__arrow" aria-hidden="true" />
-            <div className="chrome-about__plane chrome-about__plane--cloud">
-              <div className="chrome-about__plane-title">Frontier cloud</div>
-              <ul className="chrome-about__plane-list">
-                <li>Gemini — stateful patient agents (Interactions chains)</li>
-                <li>Antigravity — Ops Chief analysis over the event log</li>
-              </ul>
-              <Chip tone="neutral" className="chrome-about__plane-chip">
-                sees de-identified operational metadata only
-              </Chip>
-            </div>
-            <p className="chrome-about__arrow-label">
-              timings · queue states · counts — no names, no clinical detail
-            </p>
-          </div>
-          <p className="chrome-about__planes-note">
-            Gemini runs the agents. Nemotron runs the hospital. In this prototype both are played
-            by the deterministic engine — the interfaces are what you are looking at.
-          </p>
           <p className="chrome-about__body">
-            Sovereignty roadmap: as on-device open models (Gemma) mature, the entire agent layer
-            runs fully in-hospital — swap the reasoning endpoint and nothing leaves the building.
-            The HA feed is already public; the patient layer never existed outside it.
+            Sovereignty: the frontier cloud sees de-identified operational metadata only — and
+            here even that layer is built from public + open data. As on-device open models
+            mature, the agent layer runs fully in-hospital.
           </p>
         </section>
 
@@ -304,7 +248,9 @@ function AboutDialog({ onClose }: { onClose: () => void }) {
         <p className="chrome-about__footer">
           RAISE hackathon prototype — Google DeepMind track × NVIDIA Nemotron. Live data: Hong
           Kong Hospital Authority A&amp;E waiting times (data.gov.hk). Patient statistics:
-          MIMIC-IV-ED (PhysioNet). Identities: Synthea. No live API calls in this build.
+          MIMIC-IV-ED (PhysioNet). Identities: Synthea. Live models (key-gated, server-side):
+          Gemini Interactions chains · Antigravity · Nemotron 3 Nano — the deterministic twin
+          runs fully without them.
         </p>
         </div>
       </div>
