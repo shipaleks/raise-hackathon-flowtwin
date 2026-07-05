@@ -251,9 +251,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 52 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -371,9 +371,9 @@
    "delay_risk": "on_track",
    "blocker": "imaging_queue",
    "recommendation": {
-    "action": "prioritize_imaging_slot",
-    "explanation": "Waiting on an imaging slot before treatment can proceed.",
-    "impact_min": 20
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 76 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -492,9 +492,9 @@
    "delay_risk": "on_track",
    "blocker": "imaging_queue",
    "recommendation": {
-    "action": "prioritize_imaging_slot",
-    "explanation": "Waiting on an imaging slot before treatment can proceed.",
-    "impact_min": 20
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 64 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -852,9 +852,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 55 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -978,9 +978,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 41 min — assume up to half avoidable (capped 25).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -1224,9 +1224,9 @@
    "delay_risk": "on_track",
    "blocker": "imaging_queue",
    "recommendation": {
-    "action": "prioritize_imaging_slot",
-    "explanation": "Waiting on an imaging slot before treatment can proceed.",
-    "impact_min": 20
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 51 min — assume up to half avoidable (capped 30).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -1452,9 +1452,9 @@
    "delay_risk": "on_track",
    "blocker": "awaiting_consult",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "In the waiting hall — wait drawn from the hospital's live published distribution.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 23 min — assume up to half avoidable (capped 25).",
+    "impact_min": 11
    },
    "signals": {
     "wearable": null,
@@ -1908,9 +1908,9 @@
    "delay_risk": "on_track",
    "blocker": "awaiting_consult",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "In the waiting hall — wait drawn from the hospital's live published distribution.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 31 min — assume up to half avoidable (capped 20).",
+    "impact_min": 15
    },
    "signals": {
     "wearable": null,
@@ -2515,9 +2515,9 @@
    "delay_risk": "on_track",
    "blocker": "labs_pending",
    "recommendation": {
-    "action": "chase_lab_result",
-    "explanation": "Awaiting lab result before disposition.",
-    "impact_min": 25
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 85 min — assume up to half avoidable (capped 45).",
+    "impact_min": 42
    },
    "signals": {
     "wearable": null,
@@ -2737,9 +2737,9 @@
    "delay_risk": "on_track",
    "blocker": "awaiting_consult",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "In the waiting hall — wait drawn from the hospital's live published distribution.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 32 min — assume up to half avoidable (capped 20).",
+    "impact_min": 16
    },
    "signals": {
     "wearable": null,
@@ -2965,9 +2965,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 67 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -3199,9 +3199,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 67 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -3301,9 +3301,9 @@
    "delay_risk": "on_track",
    "blocker": "awaiting_consult",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "In the waiting hall — wait drawn from the hospital's live published distribution.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 27 min — assume up to half avoidable (capped 30).",
+    "impact_min": 13
    },
    "signals": {
     "wearable": null,
@@ -3415,9 +3415,9 @@
    "delay_risk": "on_track",
    "blocker": "awaiting_consult",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "In the waiting hall — wait drawn from the hospital's live published distribution.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 104 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -3529,9 +3529,9 @@
    "delay_risk": "on_track",
    "blocker": "awaiting_consult",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "In the waiting hall — wait drawn from the hospital's live published distribution.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 63 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -3757,9 +3757,9 @@
    "delay_risk": "on_track",
    "blocker": "awaiting_consult",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "In the waiting hall — wait drawn from the hospital's live published distribution.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 37 min — assume up to half avoidable (capped 25).",
+    "impact_min": 18
    },
    "signals": {
     "wearable": null,
@@ -3883,9 +3883,9 @@
    "delay_risk": "on_track",
    "blocker": "awaiting_consult",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "In the waiting hall — wait drawn from the hospital's live published distribution.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 64 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -4345,9 +4345,9 @@
    "delay_risk": "on_track",
    "blocker": "awaiting_consult",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "In the waiting hall — wait drawn from the hospital's live published distribution.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 53 min — assume up to half avoidable (capped 30).",
+    "impact_min": 26
    },
    "signals": {
     "wearable": null,
@@ -7807,9 +7807,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 27 min — assume up to half avoidable (capped 20).",
+    "impact_min": 13
    },
    "signals": {
     "wearable": null,
@@ -8035,9 +8035,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 52 min — assume up to half avoidable (capped 30).",
+    "impact_min": 26
    },
    "signals": {
     "wearable": null,
@@ -8263,9 +8263,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 89 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -8503,9 +8503,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 62 min — assume up to half avoidable (capped 45).",
+    "impact_min": 31
    },
    "signals": {
     "wearable": null,
@@ -8851,9 +8851,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 29 min — assume up to half avoidable (capped 30).",
+    "impact_min": 14
    },
    "signals": {
     "wearable": null,
@@ -9073,9 +9073,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 79 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -9187,9 +9187,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 76 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -9307,9 +9307,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 53 min — assume up to half avoidable (capped 30).",
+    "impact_min": 26
    },
    "signals": {
     "wearable": null,
@@ -9421,9 +9421,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 72 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -9535,9 +9535,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 20 min — assume up to half avoidable (capped 20).",
+    "impact_min": 10
    },
    "signals": {
     "wearable": null,
@@ -9757,9 +9757,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 29 min — assume up to half avoidable (capped 20).",
+    "impact_min": 14
    },
    "signals": {
     "wearable": null,
@@ -9991,9 +9991,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 76 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -10237,9 +10237,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 67 min — assume up to half avoidable (capped 45).",
+    "impact_min": 33
    },
    "signals": {
     "wearable": null,
@@ -10453,9 +10453,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 59 min — assume up to half avoidable (capped 30).",
+    "impact_min": 29
    },
    "signals": {
     "wearable": null,
@@ -10561,9 +10561,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 24 min — assume up to half avoidable (capped 30).",
+    "impact_min": 12
    },
    "signals": {
     "wearable": null,
@@ -10675,9 +10675,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 70 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -10777,9 +10777,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 20 min — assume up to half avoidable (capped 30).",
+    "impact_min": 10
    },
    "signals": {
     "wearable": null,
@@ -10891,9 +10891,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 108 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -10999,9 +10999,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 38 min — assume up to half avoidable (capped 20).",
+    "impact_min": 19
    },
    "signals": {
     "wearable": null,
@@ -11113,9 +11113,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 25 min — assume up to half avoidable (capped 20).",
+    "impact_min": 12
    },
    "signals": {
     "wearable": null,
@@ -11449,9 +11449,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 23 min — assume up to half avoidable (capped 25).",
+    "impact_min": 11
    },
    "signals": {
     "wearable": null,
@@ -11563,9 +11563,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 22 min — assume up to half avoidable (capped 30).",
+    "impact_min": 11
    },
    "signals": {
     "wearable": null,
@@ -11677,9 +11677,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 61 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -11791,9 +11791,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 24 min — assume up to half avoidable (capped 20).",
+    "impact_min": 12
    },
    "signals": {
     "wearable": null,
@@ -11893,9 +11893,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 117 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -12229,9 +12229,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 28 min — assume up to half avoidable (capped 25).",
+    "impact_min": 14
    },
    "signals": {
     "wearable": null,
@@ -12457,9 +12457,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 70 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -12673,9 +12673,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 54 min — assume up to half avoidable (capped 30).",
+    "impact_min": 27
    },
    "signals": {
     "wearable": null,
@@ -12901,9 +12901,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 111 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -13009,9 +13009,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 56 min — assume up to half avoidable (capped 30).",
+    "impact_min": 28
    },
    "signals": {
     "wearable": null,
@@ -13129,9 +13129,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 42 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -13237,9 +13237,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 24 min — assume up to half avoidable (capped 25).",
+    "impact_min": 12
    },
    "signals": {
     "wearable": null,
@@ -13465,9 +13465,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 36 min — assume up to half avoidable (capped 20).",
+    "impact_min": 18
    },
    "signals": {
     "wearable": null,
@@ -13585,9 +13585,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 57 min — assume up to half avoidable (capped 30).",
+    "impact_min": 28
    },
    "signals": {
     "wearable": null,
@@ -13813,9 +13813,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 42 min — assume up to half avoidable (capped 25).",
+    "impact_min": 21
    },
    "signals": {
     "wearable": null,
@@ -13951,9 +13951,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 45 min — assume up to half avoidable (capped 45).",
+    "impact_min": 22
    },
    "signals": {
     "wearable": null,
@@ -14077,9 +14077,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 46 min — assume up to half avoidable (capped 30).",
+    "impact_min": 23
    },
    "signals": {
     "wearable": null,
@@ -14203,9 +14203,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 73 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -14761,9 +14761,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 47 min — assume up to half avoidable (capped 30).",
+    "impact_min": 23
    },
    "signals": {
     "wearable": null,
@@ -14875,9 +14875,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 68 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -15097,9 +15097,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 29 min — assume up to half avoidable (capped 25).",
+    "impact_min": 14
    },
    "signals": {
     "wearable": null,
@@ -15445,9 +15445,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 50 min — assume up to half avoidable (capped 30).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -15565,9 +15565,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 32 min — assume up to half avoidable (capped 20).",
+    "impact_min": 16
    },
    "signals": {
     "wearable": null,
@@ -15679,9 +15679,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 101 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -15793,9 +15793,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 56 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -15913,9 +15913,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 69 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -16027,9 +16027,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 38 min — assume up to half avoidable (capped 30).",
+    "impact_min": 19
    },
    "signals": {
     "wearable": null,
@@ -16141,9 +16141,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 88 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -16393,9 +16393,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 65 min — assume up to half avoidable (capped 45).",
+    "impact_min": 32
    },
    "signals": {
     "wearable": null,
@@ -16645,9 +16645,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 51 min — assume up to half avoidable (capped 45).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -16765,9 +16765,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 90 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -16981,9 +16981,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 20 min — assume up to half avoidable (capped 30).",
+    "impact_min": 10
    },
    "signals": {
     "wearable": null,
@@ -17095,9 +17095,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 32 min — assume up to half avoidable (capped 20).",
+    "impact_min": 16
    },
    "signals": {
     "wearable": null,
@@ -17221,9 +17221,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 47 min — assume up to half avoidable (capped 30).",
+    "impact_min": 23
    },
    "signals": {
     "wearable": null,
@@ -17425,9 +17425,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 91 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -17539,9 +17539,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 53 min — assume up to half avoidable (capped 30).",
+    "impact_min": 26
    },
    "signals": {
     "wearable": null,
@@ -17773,9 +17773,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 40 min — assume up to half avoidable (capped 30).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -17893,9 +17893,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 42 min — assume up to half avoidable (capped 25).",
+    "impact_min": 21
    },
    "signals": {
     "wearable": null,
@@ -18121,9 +18121,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 32 min — assume up to half avoidable (capped 20).",
+    "impact_min": 16
    },
    "signals": {
     "wearable": null,
@@ -18235,9 +18235,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 27 min — assume up to half avoidable (capped 30).",
+    "impact_min": 13
    },
    "signals": {
     "wearable": null,
@@ -18355,9 +18355,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 39 min — assume up to half avoidable (capped 25).",
+    "impact_min": 19
    },
    "signals": {
     "wearable": null,
@@ -18475,9 +18475,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 56 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -18607,9 +18607,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 55 min — assume up to half avoidable (capped 45).",
+    "impact_min": 27
    },
    "signals": {
     "wearable": null,
@@ -18847,9 +18847,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 32 min — assume up to half avoidable (capped 20).",
+    "impact_min": 16
    },
    "signals": {
     "wearable": null,
@@ -18955,9 +18955,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 46 min — assume up to half avoidable (capped 30).",
+    "impact_min": 23
    },
    "signals": {
     "wearable": null,
@@ -19093,9 +19093,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 45 min — assume up to half avoidable (capped 45).",
+    "impact_min": 22
    },
    "signals": {
     "wearable": null,
@@ -19207,9 +19207,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 98 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -19315,9 +19315,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 52 min — assume up to half avoidable (capped 30).",
+    "impact_min": 26
    },
    "signals": {
     "wearable": null,
@@ -19663,9 +19663,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 50 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -19993,9 +19993,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 23 min — assume up to half avoidable (capped 20).",
+    "impact_min": 11
    },
    "signals": {
     "wearable": null,
@@ -20203,9 +20203,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 27 min — assume up to half avoidable (capped 30).",
+    "impact_min": 13
    },
    "signals": {
     "wearable": null,
@@ -20335,9 +20335,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 53 min — assume up to half avoidable (capped 45).",
+    "impact_min": 26
    },
    "signals": {
     "wearable": null,
@@ -20461,9 +20461,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 43 min — assume up to half avoidable (capped 25).",
+    "impact_min": 21
    },
    "signals": {
     "wearable": null,
@@ -20575,9 +20575,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 71 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -20695,9 +20695,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 60 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -21037,9 +21037,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 49 min — assume up to half avoidable (capped 30).",
+    "impact_min": 24
    },
    "signals": {
     "wearable": null,
@@ -21157,9 +21157,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 84 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -21277,9 +21277,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 48 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -21517,9 +21517,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 55 min — assume up to half avoidable (capped 45).",
+    "impact_min": 27
    },
    "signals": {
     "wearable": null,
@@ -21631,9 +21631,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 39 min — assume up to half avoidable (capped 25).",
+    "impact_min": 19
    },
    "signals": {
     "wearable": null,
@@ -21973,9 +21973,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 82 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -22075,9 +22075,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 72 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -22315,9 +22315,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 52 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -22429,9 +22429,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 28 min — assume up to half avoidable (capped 30).",
+    "impact_min": 14
    },
    "signals": {
     "wearable": null,
@@ -22543,9 +22543,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 43 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -22657,9 +22657,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 91 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -22885,9 +22885,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 34 min — assume up to half avoidable (capped 30).",
+    "impact_min": 17
    },
    "signals": {
     "wearable": null,
@@ -23023,9 +23023,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 50 min — assume up to half avoidable (capped 45).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -23137,9 +23137,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 67 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -23263,9 +23263,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 46 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -23383,9 +23383,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 27 min — assume up to half avoidable (capped 20).",
+    "impact_min": 13
    },
    "signals": {
     "wearable": null,
@@ -23935,9 +23935,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 20 min — assume up to half avoidable (capped 30).",
+    "impact_min": 10
    },
    "signals": {
     "wearable": null,
@@ -24043,9 +24043,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 31 min — assume up to half avoidable (capped 25).",
+    "impact_min": 15
    },
    "signals": {
     "wearable": null,
@@ -24163,9 +24163,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 43 min — assume up to half avoidable (capped 30).",
+    "impact_min": 21
    },
    "signals": {
     "wearable": null,
@@ -24277,9 +24277,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 77 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -24613,9 +24613,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 21 min — assume up to half avoidable (capped 30).",
+    "impact_min": 10
    },
    "signals": {
     "wearable": null,
@@ -24733,9 +24733,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 67 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -24865,9 +24865,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 88 min — assume up to half avoidable (capped 45).",
+    "impact_min": 44
    },
    "signals": {
     "wearable": null,
@@ -24985,9 +24985,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 22 min — assume up to half avoidable (capped 25).",
+    "impact_min": 11
    },
    "signals": {
     "wearable": null,
@@ -25105,9 +25105,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 58 min — assume up to half avoidable (capped 30).",
+    "impact_min": 29
    },
    "signals": {
     "wearable": null,
@@ -25561,9 +25561,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 66 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -25801,9 +25801,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 59 min — assume up to half avoidable (capped 30).",
+    "impact_min": 29
    },
    "signals": {
     "wearable": null,
@@ -25921,9 +25921,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 66 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -26161,9 +26161,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 47 min — assume up to half avoidable (capped 25).",
+    "impact_min": 23
    },
    "signals": {
     "wearable": null,
@@ -26281,9 +26281,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 32 min — assume up to half avoidable (capped 25).",
+    "impact_min": 16
    },
    "signals": {
     "wearable": null,
@@ -26419,9 +26419,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 45 min — assume up to half avoidable (capped 45).",
+    "impact_min": 22
    },
    "signals": {
     "wearable": null,
@@ -26881,9 +26881,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 63 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -27001,9 +27001,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 49 min — assume up to half avoidable (capped 25).",
+    "impact_min": 24
    },
    "signals": {
     "wearable": null,
@@ -27109,9 +27109,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 20 min — assume up to half avoidable (capped 25).",
+    "impact_min": 10
    },
    "signals": {
     "wearable": null,
@@ -27229,9 +27229,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 56 min — assume up to half avoidable (capped 30).",
+    "impact_min": 28
    },
    "signals": {
     "wearable": null,
@@ -27337,9 +27337,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 58 min — assume up to half avoidable (capped 30).",
+    "impact_min": 29
    },
    "signals": {
     "wearable": null,
@@ -27457,9 +27457,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 55 min — assume up to half avoidable (capped 30).",
+    "impact_min": 27
    },
    "signals": {
     "wearable": null,
@@ -27679,9 +27679,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 33 min — assume up to half avoidable (capped 30).",
+    "impact_min": 16
    },
    "signals": {
     "wearable": null,
@@ -28129,9 +28129,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 21 min — assume up to half avoidable (capped 25).",
+    "impact_min": 10
    },
    "signals": {
     "wearable": null,
@@ -28573,9 +28573,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 79 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -28693,9 +28693,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 25 min — assume up to half avoidable (capped 25).",
+    "impact_min": 12
    },
    "signals": {
     "wearable": null,
@@ -28831,9 +28831,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 52 min — assume up to half avoidable (capped 45).",
+    "impact_min": 26
    },
    "signals": {
     "wearable": null,
@@ -28957,9 +28957,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 73 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -29173,9 +29173,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 55 min — assume up to half avoidable (capped 30).",
+    "impact_min": 27
    },
    "signals": {
     "wearable": null,
@@ -29287,9 +29287,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 59 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -29407,9 +29407,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 49 min — assume up to half avoidable (capped 30).",
+    "impact_min": 24
    },
    "signals": {
     "wearable": null,
@@ -29653,9 +29653,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 151 min — assume up to half avoidable (capped 45).",
+    "impact_min": 45
    },
    "signals": {
     "wearable": null,
@@ -29773,9 +29773,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 58 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -29899,9 +29899,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 49 min — assume up to half avoidable (capped 25).",
+    "impact_min": 24
    },
    "signals": {
     "wearable": null,
@@ -30031,9 +30031,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 54 min — assume up to half avoidable (capped 45).",
+    "impact_min": 27
    },
    "signals": {
     "wearable": null,
@@ -30145,9 +30145,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 23 min — assume up to half avoidable (capped 25).",
+    "impact_min": 11
    },
    "signals": {
     "wearable": null,
@@ -30265,9 +30265,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 45 min — assume up to half avoidable (capped 30).",
+    "impact_min": 22
    },
    "signals": {
     "wearable": null,
@@ -30385,9 +30385,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 47 min — assume up to half avoidable (capped 25).",
+    "impact_min": 23
    },
    "signals": {
     "wearable": null,
@@ -30499,9 +30499,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 25 min — assume up to half avoidable (capped 20).",
+    "impact_min": 12
    },
    "signals": {
     "wearable": null,
@@ -30607,9 +30607,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 44 min — assume up to half avoidable (capped 30).",
+    "impact_min": 22
    },
    "signals": {
     "wearable": null,
@@ -30955,9 +30955,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 38 min — assume up to half avoidable (capped 30).",
+    "impact_min": 19
    },
    "signals": {
     "wearable": null,
@@ -31303,9 +31303,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 43 min — assume up to half avoidable (capped 25).",
+    "impact_min": 21
    },
    "signals": {
     "wearable": null,
@@ -31441,9 +31441,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 72 min — assume up to half avoidable (capped 45).",
+    "impact_min": 36
    },
    "signals": {
     "wearable": null,
@@ -31567,9 +31567,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 57 min — assume up to half avoidable (capped 30).",
+    "impact_min": 28
    },
    "signals": {
     "wearable": null,
@@ -31669,9 +31669,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 20 min — assume up to half avoidable (capped 30).",
+    "impact_min": 10
    },
    "signals": {
     "wearable": null,
@@ -31789,9 +31789,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 61 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -32119,9 +32119,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 93 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -32245,9 +32245,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 41 min — assume up to half avoidable (capped 30).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -32359,9 +32359,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 26 min — assume up to half avoidable (capped 20).",
+    "impact_min": 13
    },
    "signals": {
     "wearable": null,
@@ -32587,9 +32587,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 39 min — assume up to half avoidable (capped 25).",
+    "impact_min": 19
    },
    "signals": {
     "wearable": null,
@@ -32695,9 +32695,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 78 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -33025,9 +33025,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 28 min — assume up to half avoidable (capped 25).",
+    "impact_min": 14
    },
    "signals": {
     "wearable": null,
@@ -33145,9 +33145,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 49 min — assume up to half avoidable (capped 25).",
+    "impact_min": 24
    },
    "signals": {
     "wearable": null,
@@ -33379,9 +33379,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 90 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -33493,9 +33493,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 23 min — assume up to half avoidable (capped 25).",
+    "impact_min": 11
    },
    "signals": {
     "wearable": null,
@@ -33613,9 +33613,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 63 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -33733,9 +33733,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 55 min — assume up to half avoidable (capped 30).",
+    "impact_min": 27
    },
    "signals": {
     "wearable": null,
@@ -33847,9 +33847,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 56 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -34081,9 +34081,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 37 min — assume up to half avoidable (capped 30).",
+    "impact_min": 18
    },
    "signals": {
     "wearable": null,
@@ -34303,9 +34303,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 31 min — assume up to half avoidable (capped 25).",
+    "impact_min": 15
    },
    "signals": {
     "wearable": null,
@@ -34519,9 +34519,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 65 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -34633,9 +34633,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 32 min — assume up to half avoidable (capped 25).",
+    "impact_min": 16
    },
    "signals": {
     "wearable": null,
@@ -35077,9 +35077,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 54 min — assume up to half avoidable (capped 25).",
+    "impact_min": 25
    },
    "signals": {
     "wearable": null,
@@ -35203,9 +35203,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 73 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -35335,9 +35335,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 75 min — assume up to half avoidable (capped 45).",
+    "impact_min": 37
    },
    "signals": {
     "wearable": null,
@@ -35683,9 +35683,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 43 min — assume up to half avoidable (capped 20).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -35803,9 +35803,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 81 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -36037,9 +36037,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 26 min — assume up to half avoidable (capped 20).",
+    "impact_min": 13
    },
    "signals": {
     "wearable": null,
@@ -36175,9 +36175,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 69 min — assume up to half avoidable (capped 45).",
+    "impact_min": 34
    },
    "signals": {
     "wearable": null,
@@ -36295,9 +36295,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 41 min — assume up to half avoidable (capped 30).",
+    "impact_min": 20
    },
    "signals": {
     "wearable": null,
@@ -36421,9 +36421,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 46 min — assume up to half avoidable (capped 30).",
+    "impact_min": 23
    },
    "signals": {
     "wearable": null,
@@ -36523,9 +36523,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "confirm_discharge_or_bed",
+    "explanation": "The disposition wait step ran 62 min — assume up to half avoidable (capped 30).",
+    "impact_min": 30
    },
    "signals": {
     "wearable": null,
@@ -36637,9 +36637,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "prioritize_imaging_slot",
+    "explanation": "The imaging queue step ran 22 min — assume up to half avoidable (capped 20).",
+    "impact_min": 11
    },
    "signals": {
     "wearable": null,
@@ -36877,9 +36877,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 36 min — assume up to half avoidable (capped 25).",
+    "impact_min": 18
    },
    "signals": {
     "wearable": null,
@@ -37123,9 +37123,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "chase_lab_result",
+    "explanation": "The lab turnaround step ran 42 min — assume up to half avoidable (capped 25).",
+    "impact_min": 21
    },
    "signals": {
     "wearable": null,
@@ -37363,9 +37363,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 156 min — assume up to half avoidable (capped 45).",
+    "impact_min": 45
    },
    "signals": {
     "wearable": null,
@@ -37495,9 +37495,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 215 min — assume up to half avoidable (capped 45).",
+    "impact_min": 45
    },
    "signals": {
     "wearable": null,
@@ -37627,9 +37627,9 @@
    "delay_risk": "on_track",
    "blocker": "none",
    "recommendation": {
-    "action": "monitor",
-    "explanation": "On the expected pathway.",
-    "impact_min": 0
+    "action": "escalate_consult",
+    "explanation": "The consult queue step ran 80 min — assume up to half avoidable (capped 45).",
+    "impact_min": 40
    },
    "signals": {
     "wearable": null,

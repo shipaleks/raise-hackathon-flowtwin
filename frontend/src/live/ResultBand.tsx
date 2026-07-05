@@ -8,6 +8,7 @@
    its own table below — the two are different claims and never mix. */
 
 import { boardLedger, type DayReview } from '../sim/engine'
+import { fmtDur } from '../sim/time'
 import { HERO_ID } from '../data/seed'
 import { useStore } from '../store'
 import { Chip } from '../components/ui/Chip'
@@ -34,13 +35,14 @@ export function ResultBand({ r }: { r: DayReview }) {
       <section className="live-band reg-ticks" aria-label="The goal">
         <p className="live-band__kicker">The goal — return the minutes the queues steal</p>
         <p className="live-band__total tnum">
-          {proposed.length + 1} operational moves on the board · ≈{proposedMin} min if executed
+          {proposed.length + 1} operational moves on the board · ≈{fmtDur(proposedMin)} if
+          executed
         </p>
         <p className="live-band__explain">
           FlowTwin watched every journey against the hospital's live feed and put one
-          bed-and-queue move on the board per blocker — Sarah's plus {proposed.length} more,
-          each listed below with its minutes. Execute the board to replay the same day with
-          FlowTwin acting.
+          bed-and-queue move on the board per compressible step — Sarah's plus{' '}
+          {proposed.length} more, each listed below with its minutes. Execute the board to
+          replay the same day with FlowTwin acting.
         </p>
         <button type="button" className="live-band__execute" onClick={optimizeAll}>
           Execute the board — replay the day with FlowTwin acting →
@@ -57,7 +59,7 @@ export function ResultBand({ r }: { r: DayReview }) {
     <section className="live-band reg-ticks" aria-label="The result">
       <p className="live-band__kicker">The result — the same day, with FlowTwin acting</p>
       <p className="live-band__total tnum">
-        {totalActions} moves executed · {totalMin} min of patient-time returned ·
+        {totalActions} moves executed · {fmtDur(totalMin)} of patient-time returned ·
         ≈{hkd(totalHkd)} of bed-time
       </p>
       <p className="live-band__explain">
@@ -75,9 +77,10 @@ export function ResultBand({ r }: { r: DayReview }) {
         )}
       </p>
       <p className="live-band__basis">
-        Basis: per-move minutes are stated per-blocker assumptions (20–45 min, in the seed)
-        the twin executes; bed-time priced at {hkd(r.assumptions.bed_hour_cost_hkd)}/bed-hour,
-        stated. Measured: the waits, the daily climb, and the arithmetic.{' '}
+        Basis: each move’s minutes are bounded by half its named queue step and capped per
+        blocker type (10–45 min — stated assumption); bed-time priced at{' '}
+        {hkd(r.assumptions.bed_hour_cost_hkd)}/bed-hour, stated. Measured: the waits, the
+        daily climb, and the arithmetic.{' '}
         <button type="button" className="live-band__undo" onClick={undoOptimize}>
           revert to the baseline day
         </button>

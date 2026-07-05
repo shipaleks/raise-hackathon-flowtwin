@@ -474,6 +474,39 @@ def _blocker_rec(cur):
                         "impact_min": 0}
     return "none", {"action": "monitor", "explanation": "On the expected pathway.", "impact_min": 0}
 
+
+# One move per journey: scan the WHOLE day's events (not just the 11:00
+# snapshot) for the longest compressible queue step. The claimed impact is
+# bounded by half that step's actual synthesized length and capped per
+# blocker type — never a flat figure detached from the journey it names.
+_COMPRESS = {
+    "consult_requested": ("escalate_consult", 45, "the consult queue"),
+    "labs_ordered": ("chase_lab_result", 25, "the lab turnaround"),
+    "imaging": ("prioritize_imaging_slot", 20, "the imaging queue"),
+    "observation": ("confirm_discharge_or_bed", 30, "the disposition wait"),
+    "decision": ("confirm_discharge_or_bed", 30, "the disposition wait"),
+    "telemetry": ("confirm_discharge_or_bed", 30, "the disposition wait"),
+    "recovery": ("confirm_discharge_or_bed", 30, "the disposition wait"),
+}
+_MIN_IMPACT = 10  # steps too short to plausibly compress stay monitor-only
+
+
+def _journey_rec(events):
+    best = None
+    for i, e in enumerate(events[:-1]):
+        rule = _COMPRESS.get(e["type"])
+        if not rule:
+            continue
+        step_min = (datetime.fromisoformat(events[i + 1]["t"])
+                    - datetime.fromisoformat(e["t"])).total_seconds() / 60
+        impact = min(rule[1], int(step_min * 0.5))
+        if impact >= _MIN_IMPACT and (best is None or impact > best["impact_min"]):
+            best = {"action": rule[0],
+                    "explanation": (f"{rule[2].capitalize()} step ran {int(step_min)} min — "
+                                    f"assume up to half avoidable (capped {rule[1]})."),
+                    "impact_min": impact}
+    return best
+
 def ops_state(pid, who, pathway, acuity, arrival, events, ed_los, mode, inpatient=False):
     spec = PATHWAYS[pathway]
     m = ETA_MODEL.get(pathway) or {"p10": int(ed_los * .7), "p50": ed_los,
@@ -486,7 +519,13 @@ def ops_state(pid, who, pathway, acuity, arrival, events, ed_los, mode, inpatien
     risk = "high" if elapsed > m["p80"] else ("elevated" if elapsed > m["p50"] else "on_track")
     if inpatient or cur["type"] == "admit":
         risk = "on_track"
+    # blocker describes the 11:00 snapshot (the sheet's "current blocker");
+    # the recommendation scans the whole journey so the action board covers
+    # every patient of the day, not just whoever was blocked at the anchor
     blocker, rec = _blocker_rec(cur)
+    journey_rec = _journey_rec(events)
+    if journey_rec and journey_rec["impact_min"] > rec["impact_min"]:
+        rec = journey_rec
     return {
         "patient_id": pid, "name": who["name"], "age": who["age"], "sex": who["sex"],
         "complaint": spec["complaint"], "pathway": pathway, "acuity": acuity,

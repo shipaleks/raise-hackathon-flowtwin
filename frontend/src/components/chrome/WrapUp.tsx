@@ -17,10 +17,16 @@ import './chrome.css'
 const hkd = (n: number) => `HK$${n.toLocaleString('en-US')}`
 const eur = (n: number) => `€${n.toLocaleString('en-US')}`
 
+/** Rows shown in full before the rest collapses into one summary line. */
+const BOARD_SHOWN = 10
+
 /** The board, move by move — the section the result band's numbers add up. */
 function BoardTable({ r, optimizedAtMin }: { r: DayReview; optimizedAtMin: number | null }) {
   const executed = r.globalOptimize != null
   const rows = boardLedger(optimizedAtMin)
+  const shown = rows.slice(0, BOARD_SHOWN)
+  const rest = rows.slice(BOARD_SHOWN)
+  const restMin = rest.reduce((s, a) => s + a.savedMin, 0)
   return (
     <section className="chrome-about__section">
       <h3 className="chrome-about__h">The board — every move, with its minutes</h3>
@@ -48,13 +54,20 @@ function BoardTable({ r, optimizedAtMin }: { r: DayReview; optimizedAtMin: numbe
               {executed && !r.sarah.resolved ? '—' : `${r.sarah.recoveredMin || 45} min`}
             </td>
           </tr>
-          {rows.map((a) => (
+          {shown.map((a) => (
             <tr key={a.id}>
               <td>{a.name}</td>
               <td>{a.title}</td>
               <td className="chrome-wrap__num tnum">{a.savedMin} min</td>
             </tr>
           ))}
+          {rest.length > 0 && (
+            <tr>
+              <td>… and {rest.length} more patients</td>
+              <td>same move types — consults, labs, imaging, dispositions</td>
+              <td className="chrome-wrap__num tnum">{fmtDur(restMin)}</td>
+            </tr>
+          )}
         </tbody>
         <tfoot>
           <tr>
@@ -71,7 +84,8 @@ function BoardTable({ r, optimizedAtMin }: { r: DayReview; optimizedAtMin: numbe
       </table>
       <p className="chrome-wrap__assumption">
         Personas are synthetic (the feed publishes no patient-level data); each move’s minutes
-        is the stated per-blocker assumption the twin executes.
+        is bounded by half its queue step’s length and capped per blocker type (10–45 min,
+        stated).
       </p>
     </section>
   )

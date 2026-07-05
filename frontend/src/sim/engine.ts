@@ -771,6 +771,7 @@ const RECOMMEND_TITLES: Record<string, string> = {
   monitor: 'Monitor — on pathway',
   done_monitor: 'Done — monitoring recovery',
   escalate_consult_or_move_to_observation: 'Escalate consult or move to the obs ward',
+  escalate_consult: 'Escalate the consult',
   chase_lab_result: 'Chase the pending lab result',
   prioritize_imaging_slot: 'Prioritize an imaging slot',
   confirm_discharge_or_bed: 'Confirm disposition to free the bed',
