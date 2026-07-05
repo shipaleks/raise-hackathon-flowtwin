@@ -10,7 +10,16 @@ import scenarioJson from '@seed/scenario.json'
 import kpisJson from '@seed/admin_kpis.json'
 import hkLiveJson from '@seed/hk_live.json'
 import hkHistoryJson from '@seed/hk_history.json'
-import type { AdminKpis, History7d, HkHistory, HkLive, PatientsToday, Scenario } from '../types'
+import tftForecastJson from '@seed/tft_forecast.json'
+import type {
+  AdminKpis,
+  History7d,
+  HkHistory,
+  HkLive,
+  PatientsToday,
+  Scenario,
+  TftForecast,
+} from '../types'
 
 export const patientsToday = patientsJson as unknown as PatientsToday
 export const history7d = historyJson as unknown as History7d
@@ -18,6 +27,9 @@ export const scenario = scenarioJson as unknown as Scenario
 export const adminKpis = kpisJson as unknown as AdminKpis
 export const hkLive = hkLiveJson as unknown as HkLive
 export const hkHistory = hkHistoryJson as unknown as HkHistory
+
+/** TFT forecast — trained offline on the real feed (data/tft/), committed. */
+export const tftForecast = tftForecastJson as unknown as TftForecast
 
 /** Everyone the twin tracks today: in-house at the anchor + scheduled arrivals. */
 export const todayCast = [...patientsToday.patients, ...patientsToday.arrivals_today]

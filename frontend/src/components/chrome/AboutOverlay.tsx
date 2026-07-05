@@ -21,7 +21,7 @@ const KEYS: Array<{ keys: string; does: string }> = [
   { keys: '1–4', does: 'presets' },
 ]
 
-type LedgerStatus = 'real' | 'real-stats' | 'synthetic' | 'assumption' | 'live-model'
+type LedgerStatus = 'real' | 'real-stats' | 'synthetic' | 'assumption' | 'live-model' | 'real-model'
 
 const STATUS_LABEL: Record<LedgerStatus, string> = {
   real: 'REAL · live',
@@ -29,6 +29,7 @@ const STATUS_LABEL: Record<LedgerStatus, string> = {
   synthetic: 'synthetic · labeled',
   assumption: 'stated assumption',
   'live-model': 'LIVE model call',
+  'real-model': 'TRAINED model',
 }
 
 const LEDGER: Array<{ layer: string; source: string; status: LedgerStatus }> = [
@@ -76,6 +77,11 @@ const LEDGER: Array<{ layer: string; source: string; status: LedgerStatus }> = [
     layer: 'Next-12 h wait forecast (Administrator view)',
     source: 'Nemotron 3 Nano 30B-A3B, zero-shot over the real 48 h feed — p10/p50/p90',
     status: 'live-model',
+  },
+  {
+    layer: 'Next-24 h wait forecast — trained, with a held-out backtest',
+    source: 'Temporal Fusion Transformer (NVIDIA TSPP reference model) trained offline on 60 days × 18 sites of the real feed',
+    status: 'real-model',
   },
 ]
 
@@ -222,9 +228,14 @@ function AboutDialog({ onClose }: { onClose: () => void }) {
               10–45 per blocker (benchmark + n cited per patient).
             </li>
             <li>
+              <strong>TFT forecast</strong> — a Temporal Fusion Transformer (NVIDIA TSPP's
+              reference model) trained offline on 60 days × 18 sites of the real feed; the
+              Administrator card shows its next-24 h quantiles and a held-out backtest MAE.
+            </li>
+            <li>
               <strong>Live plane</strong> — Gemini 3.5 Flash (Interactions chains) ·
-              antigravity-preview-05-2026 (Ops Chief) · Nemotron 3 Nano 30B-A3B (forecast) — all
-              labeled on the surfaces they touch.
+              antigravity-preview-05-2026 (Ops Chief) · Nemotron 3 Nano 30B-A3B (zero-shot
+              forecast) — all labeled on the surfaces they touch.
             </li>
           </ul>
           <p className="chrome-about__body">
