@@ -193,6 +193,7 @@ finished code.
 | Gemini patient agent | Stateful Interactions chain per patient when `FLOWTWIN_GEMINI_KEY` is configured | Built |
 | Antigravity Ops Chief | Persistent sandbox analyzing census CSV with pandas when Gemini key is configured | Built |
 | Nemotron forecast | `nvidia/nemotron-3-nano-30b-a3b` zero-shot forecast over real 48-hour wait series | Built |
+| TFT trained forecast | Temporal Fusion Transformer (NVIDIA TSPP reference model) trained on 60 days × 18 sites of the real feed, next-24 h p10/p50/p90 with a held-out backtest | Built |
 | Gemma patient voice | `gemma-4-31b-it` translates a Cantonese patient self-report and summarizes it for the intake desk (Intake tab), communication-only | Built |
 | Server-side key proxy | Vite dev proxy and nginx deploy proxy keep Gemini/NVIDIA keys out of the client | Built |
 
@@ -437,6 +438,34 @@ Nemotron 3 Nano reads the real trailing 48-hour cat-4/5 wait curve and returns
 the next 12 hours as p10/p50/p90. It is labeled as a zero-shot reasoning
 forecast because no hosted NVIDIA time-series foundation model is used here.
 
+### TFT trained-forecast pass
+
+Alongside the zero-shot Nemotron read, the Administrator view carries a second,
+purpose-trained forecaster: a **Temporal Fusion Transformer** — the reference
+model of [NVIDIA's Time Series Prediction Platform (TSPP)](https://catalog.ngc.nvidia.com/orgs/nvidia/resources/nvidia_tspp_notebooks).
+
+In plain terms: instead of asking an LLM to eyeball the wait curve, we trained
+a small dedicated time-series model on **60 days of the real published feed
+across all 18 Hong Kong A&E sites** and it forecasts the **next 24 hours** of
+cat-4/5 median waits, per hospital, with p10/p50/p90 uncertainty bands.
+
+Two things make it honest rather than decorative:
+
+- **A real backtest, not a claim.** The last 24 hours are held out and never
+  seen in training. The card shows the model's measured mean absolute error on
+  that window next to a same-hour-yesterday (seasonal-naive) baseline — in the
+  committed run, TFT ±55 min vs naive ±72 min averaged across all 18 sites.
+- **No GPU needed at demo time.** Training happens offline
+  (`data/tft/build_dataset.py` pulls the history, `data/tft/train_tft.py`
+  trains and backtests); the app reads only the committed
+  `data/seed/tft_forecast.json`, so the card always renders.
+
+The card is labeled "TFT — reference model of NVIDIA's TSPP", not "TSPP"
+itself, because it runs the same architecture via `pytorch-forecasting` on CPU
+rather than the TSPP GPU container. The dataset CSV is already TSPP-shaped, so
+the full container + Triton serving path is a drop-in upgrade — see
+`data/tft/README.md`.
+
 ---
 
 ## Why Each Primitive Exists
@@ -474,6 +503,7 @@ is real, while individual personas are synthetic and labeled.
 | Individual waits | Drawn through the hospital's real p50/p95 at arrival snapshot | Synthetic individual, real distribution |
 | Money and recoverable minutes | HK$400/bed-hour and per-line assumptions | Stated assumption |
 | Live Gemini / Antigravity / Nemotron outputs | Server-side key-gated model calls | Live model call when keys are present |
+| Next-24 h TFT forecast + backtest MAE | Temporal Fusion Transformer trained offline on 60 days of the real feed, last 24 h held out | Trained model, measured backtest |
 
 ```mermaid
 flowchart LR
@@ -757,7 +787,8 @@ raise-hackathon-flowtwin/
 │   ├── fetch_hk.py              # HA live feed + archive -> seed/hk_*.json
 │   ├── build_mimic_stats.py     # MIMIC-IV-ED -> distributions
 │   ├── build_seed.py            # deterministic cast calibrated to the feed
-│   └── seed/                    # committed demo backbone
+│   ├── tft/                     # TFT training pipeline (dataset + train + backtest)
+│   └── seed/                    # committed demo backbone (incl. tft_forecast.json)
 ├── frontend/
 │   ├── src/sim/                 # pure state engine, time, layout, demo beats
 │   ├── src/live/                # Gemini, Antigravity, Nemotron live plane
