@@ -6,6 +6,9 @@ import { SIM_END_MIN, clampSim } from './sim/time'
 export type View = 'doctor' | 'admin'
 export type SheetTab = 'flow' | 'predictions' | 'intake'
 
+/** 00:00 of the demo day, in sim-minutes (the anchor is 11:00). */
+const MIDNIGHT_MIN = -11 * 60
+
 interface FlowTwinState {
   view: View
   /** sim time in minutes relative to the 11:00 anchor (negative = the recorded past) */
@@ -22,8 +25,10 @@ interface FlowTwinState {
   showOptimized: boolean
   /** sim-minute the presenter tapped Resolve (null = not yet) */
   resolvedAtMin: number | null
-  /** sim-minute the presenter executed the whole action board (null = not yet) */
+  /** sim-minute the whole action board executes from (null = baseline day) */
   optimizedAtMin: number | null
+  /** Sarah's resolve was scheduled by optimizeAll, not tapped — undo clears it */
+  optimizeAutoResolved: boolean
   aboutOpen: boolean
   /** the Day review / Optimize-the-day overlay */
   wrapOpen: boolean
@@ -46,8 +51,10 @@ interface FlowTwinState {
   setSheetTab: (t: SheetTab) => void
   setShowOptimized: (v: boolean) => void
   resolveNow: () => void
-  /** execute every actionable board recommendation from this sim-minute on */
+  /** replay the day with every board recommendation executed as it surfaced */
   optimizeAll: () => void
+  /** back to the baseline day (keeps a manually tapped Resolve) */
+  undoOptimize: () => void
   setAboutOpen: (v: boolean) => void
   setWrapOpen: (v: boolean) => void
   setStackOpen: (v: boolean) => void
@@ -69,6 +76,7 @@ export const useStore = create<FlowTwinState>((set, get) => ({
   showOptimized: false,
   resolvedAtMin: null,
   optimizedAtMin: null,
+  optimizeAutoResolved: false,
   aboutOpen: false,
   wrapOpen: false,
   stackOpen: false,
@@ -120,11 +128,25 @@ export const useStore = create<FlowTwinState>((set, get) => ({
 
   optimizeAll: () => {
     if (get().optimizedAtMin != null) return
-    const t = get().simMin
-    // the board includes the hero's action — it executes the moment her
-    // bottleneck exists (the resolve beat), never preemptively
-    const resolvedAtMin = get().resolvedAtMin ?? Math.max(t, BEAT_MIN.resolveSuggested)
-    set({ optimizedAtMin: t, resolvedAtMin })
+    const autoResolve = get().resolvedAtMin == null
+    // one counterfactual, not a scrub-dependent one: the whole day replays
+    // with each action executed as it surfaced — the hero's at the resolve
+    // beat (her bottleneck doesn't exist earlier), the rest at their own
+    // moments (the engine pivots each at max(midnight, arrival))
+    set({
+      optimizedAtMin: MIDNIGHT_MIN,
+      resolvedAtMin: autoResolve ? BEAT_MIN.resolveSuggested : get().resolvedAtMin,
+      optimizeAutoResolved: autoResolve,
+    })
+  },
+
+  undoOptimize: () => {
+    if (get().optimizedAtMin == null) return
+    set({
+      optimizedAtMin: null,
+      resolvedAtMin: get().optimizeAutoResolved ? null : get().resolvedAtMin,
+      optimizeAutoResolved: false,
+    })
   },
 
   setAboutOpen: (aboutOpen) => set({ aboutOpen }),

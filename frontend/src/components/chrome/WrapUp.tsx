@@ -5,8 +5,8 @@
    in the Administrator view only. */
 
 import { useEffect, useRef } from 'react'
-import { dayReviewAt } from '../../sim/engine'
-import { fmtDay, fmtClock, fmtDur } from '../../sim/time'
+import { boardLedger, dayReviewAt, type DayReview } from '../../sim/engine'
+import { LIVE_MIN, fmtDay, fmtDur } from '../../sim/time'
 import { useStore } from '../../store'
 import { Chip, OpsOnlyBadge } from '../ui/Chip'
 import { AgentResultLine } from '../../live/AgentResultLine'
@@ -17,8 +17,61 @@ import './chrome.css'
 const hkd = (n: number) => `HK$${n.toLocaleString('en-US')}`
 const eur = (n: number) => `€${n.toLocaleString('en-US')}`
 
+/** The board, move by move — the section the result band's numbers add up. */
+function BoardTable({ r, optimizedAtMin }: { r: DayReview; optimizedAtMin: number | null }) {
+  const executed = r.globalOptimize != null
+  const rows = boardLedger(optimizedAtMin)
+  return (
+    <section className="chrome-about__section">
+      <h3 className="chrome-about__h">The board — every move, with its minutes</h3>
+      <table className="chrome-wrap__table">
+        <thead>
+          <tr>
+            <th scope="col">Patient</th>
+            <th scope="col">Move the agent proposed</th>
+            <th scope="col" className="chrome-wrap__num">
+              {executed ? 'Returned' : 'If executed'}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Sarah M. — the walked case</td>
+            <td>Obs-ward bed + escalated consult cover, at the 14:00 crunch</td>
+            <td className="chrome-wrap__num tnum">
+              {executed && !r.sarah.resolved ? '—' : `${r.sarah.recoveredMin || 45} min`}
+            </td>
+          </tr>
+          {rows.map((a) => (
+            <tr key={a.id}>
+              <td>{a.name}</td>
+              <td>{a.title}</td>
+              <td className="chrome-wrap__num tnum">{a.savedMin} min</td>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Total{executed ? ' — measured on the replayed day' : ' — proposed'}</td>
+            <td />
+            <td className="chrome-wrap__num tnum">
+              {fmtDur(
+                ((executed && !r.sarah.resolved ? 0 : r.sarah.recoveredMin || 45) as number) +
+                  rows.reduce((s, a) => s + a.savedMin, 0),
+              )}
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+      <p className="chrome-wrap__assumption">
+        Personas are synthetic (the feed publishes no patient-level data); each move’s minutes
+        is the stated per-blocker assumption the twin executes.
+      </p>
+    </section>
+  )
+}
+
 function WrapDialog({ onClose }: { onClose: () => void }) {
-  const simMin = useStore((s) => s.simMin)
   const resolvedAtMin = useStore((s) => s.resolvedAtMin)
   const optimizedAtMin = useStore((s) => s.optimizedAtMin)
   const cardRef = useRef<HTMLDivElement>(null)
@@ -47,7 +100,9 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
     }
   }
 
-  const r = dayReviewAt(simMin, resolvedAtMin, optimizedAtMin)
+  // the review judges the whole demo day, not the scrubbed instant — the
+  // only inputs that matter are which actions were taken
+  const r = dayReviewAt(LIVE_MIN, resolvedAtMin, optimizedAtMin)
   const plan = r.optimizePlan
 
   return (
@@ -75,16 +130,16 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
 
         <div className="chrome-about__scroll">
         <header className="chrome-wrap__head">
-          <p className="chrome-wrap__kicker">Day in review · as of {fmtClock(simMin)}</p>
-          <h2 className="chrome-wrap__title">
-            {fmtDay(Math.max(0, Math.min(simMin, 8 * 60)))} — {r.hospital}
-          </h2>
+          <p className="chrome-wrap__kicker">Day in review · the full day, to the live edge</p>
+          <h2 className="chrome-wrap__title">{fmtDay(240)} — {r.hospital}</h2>
           <p className="chrome-wrap__sub">
             {r.cluster} · {r.district} · numbers from the real HA feed + the calibrated twin
           </p>
         </header>
 
         <ResultBand r={r} />
+
+        <BoardTable r={r} optimizedAtMin={optimizedAtMin} />
 
         {/* ---------------- 1 · what happened ---------------- */}
         <section className="chrome-about__section">
@@ -104,7 +159,7 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
             </div>
             <div className="chrome-wrap__stat">
               <span className="chrome-wrap__stat-v tnum">{r.inBuilding}</span>
-              <span className="chrome-wrap__stat-l">in building now</span>
+              <span className="chrome-wrap__stat-l">in building at the live edge</span>
             </div>
           </div>
           <p className="chrome-about__body">
@@ -143,11 +198,7 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
                   {r.sarah.finalExit}
                 </span>
                 <span className="chrome-wrap__case-l">
-                  {r.sarah.resolved
-                    ? 'after one op action'
-                    : resolvedAtMin != null && simMin < resolvedAtMin
-                      ? `action lands ${fmtClock(resolvedAtMin)} — scrub forward`
-                      : 'no action taken this run'}
+                  {r.sarah.resolved ? 'after one op action' : 'no action taken this run'}
                 </span>
               </span>
               {r.sarah.resolved && (
@@ -167,14 +218,6 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
                   ? 'One operational move (obs-ward bed + escalated consult cover) recovered ~45 minutes and freed a monitored cubicle during the crunch.'
                   : 'The suggested move (obs-ward bed + escalated consult cover) would have recovered ~45 minutes — replay the Resolve beat to see it land.'}
               </li>
-              {r.globalOptimize && (
-                <li>
-                  The rest of the board executed at {r.globalOptimize.atClock}:{' '}
-                  {r.globalOptimize.actions} more actions of the same shape —{' '}
-                  {r.globalOptimize.minutesSaved} minutes returned,{' '}
-                  {r.globalOptimize.patientsOutEarlier} more patients out earlier.
-                </li>
-              )}
               <li>
                 Every suggestion stayed operational — time, beds, queues. Care decisions never left
                 the clinicians.

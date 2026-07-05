@@ -1275,6 +1275,35 @@ export function dayReviewAt(
   }
 }
 
+/** The board, action by action — every actionable recommendation the twin
+    holds for today's cast (hero excluded; her case renders separately).
+    Before execution savedMin is the stated per-blocker impact; after
+    execution it is the measured warp delta. Zero-effect rows are dropped. */
+export interface BoardAction {
+  id: string
+  name: string
+  title: string
+  savedMin: number
+}
+
+export function boardLedger(optimizedAtMin: number | null): BoardAction[] {
+  const cast = castFor(optimizedAtMin)
+  return todayTracks
+    .filter(isActionable)
+    .map((t) => {
+      const rec = t.patient!.recommendation!
+      return {
+        id: t.id,
+        name: t.name,
+        title: RECOMMEND_TITLES[rec.action] ?? rec.action.replace(/_/g, ' '),
+        savedMin:
+          optimizedAtMin == null ? rec.impact_min : (cast.savedById.get(t.id) ?? 0),
+      }
+    })
+    .filter((a) => a.savedMin > 0)
+    .sort((a, b) => b.savedMin - a.savedMin)
+}
+
 /** The action board — every actionable twin recommendation surfaced for
     patients seen so far today (the hero's is counted separately: hers is the
     one the demo executes). Monitor-only recommendations don't count. */

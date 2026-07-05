@@ -243,6 +243,29 @@
   color: var(--ink-3);
 }
 
+.live-band__explain {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+
+.live-band__undo {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--ink-3);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.live-band__undo:hover {
+  color: var(--ink);
+}
+
 .live-band__stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
