@@ -193,6 +193,7 @@ finished code.
 | Gemini patient agent | Stateful Interactions chain per patient when `FLOWTWIN_GEMINI_KEY` is configured | Built |
 | Antigravity Ops Chief | Persistent sandbox analyzing census CSV with pandas when Gemini key is configured | Built |
 | Nemotron forecast | `nvidia/nemotron-3-nano-30b-a3b` zero-shot forecast over real 48-hour wait series | Built |
+| Gemma patient voice | `gemma-4-31b-it` translates a Cantonese patient self-report and summarizes it for the intake desk (Intake tab), communication-only | Built |
 | Server-side key proxy | Vite dev proxy and nginx deploy proxy keep Gemini/NVIDIA keys out of the client | Built |
 
 ### On paper or roadmap
@@ -693,7 +694,14 @@ The near-term split:
   layer;
 - the app labels every live model call.
 
-The Gemma roadmap:
+Gemma is already load-bearing in the shipped build: `gemma-4-31b-it` runs the
+patient-voice feature, translating a Cantonese self-report and summarizing it
+for the intake desk (communication only, never clinical). It calls through the
+same server-side proxy as the frontier models, so the endpoint can later move
+on-prem without touching the client.
+
+The Gemma roadmap extends that call from cloud to local, and from translation to
+reasoning:
 
 - run patient-agent reasoning locally with Gemma or another hospital-approved
   open model;
