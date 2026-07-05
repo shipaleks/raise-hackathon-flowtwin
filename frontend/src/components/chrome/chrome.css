@@ -636,6 +636,10 @@
   color: var(--warn-text);
 }
 
+.chrome-about__status--live-model {
+  color: var(--accent-ink);
+}
+
 /* keyboard */
 
 .chrome-about__keys {

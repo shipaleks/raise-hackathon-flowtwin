@@ -12,6 +12,7 @@ import { fmtWait, heroPattern, heroWaitsAt, networkNow } from '../../data/live'
 import { simToDate } from '../../sim/time'
 import { useStore } from '../../store'
 import { ArrivalForecast } from './ArrivalForecast'
+import { NemotronForecastCard } from '../../live/NemotronForecastCard'
 import './admin.css'
 
 const hkd = (n: number) => `HK$${n.toLocaleString('en-US')}`
@@ -316,6 +317,7 @@ export function AdminView() {
           <div className="admin-col">
             <PlayCard vm={vm} onGoToDoctor={() => setView('doctor')} />
             <PatternCard simMin={simMin} />
+            <NemotronForecastCard />
             <CalibrationCard vm={vm} />
           </div>
           <div className="admin-col">

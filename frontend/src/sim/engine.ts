@@ -1171,6 +1171,32 @@ export function dayReviewAt(tMin: number, resolvedAtMin: number | null): DayRevi
   }
 }
 
+/** The action board — every actionable twin recommendation surfaced for
+    patients seen so far today (the hero's is counted separately: hers is the
+    one the demo executes). Monitor-only recommendations don't count. */
+export interface ActionBoard {
+  /** surfaced since midnight, up to the scrubbed moment */
+  count: number
+  totalMin: number
+  /** still on the floor right now */
+  openNow: number
+}
+
+export function actionBoardAt(tMin: number): ActionBoard {
+  let count = 0
+  let totalMin = 0
+  let openNow = 0
+  for (const t of todayTracks) {
+    if (t.id === HERO_ID || t.arrivalMin > tMin) continue
+    const rec = t.patient?.recommendation
+    if (!rec || rec.action === 'monitor' || !(rec.impact_min > 0)) continue
+    count++
+    totalMin += rec.impact_min
+    if (tMin < t.endMin) openNow++
+  }
+  return { count, totalMin, openNow }
+}
+
 // ---------------------------------------------------------------- world (memoized)
 
 export interface World {

@@ -5,6 +5,7 @@ import type { SheetVM } from '../../sim/engine'
 import { fmtClock, fmtDelta, fmtDur } from '../../sim/time'
 import { useStore } from '../../store'
 import { Chip, OpsOnlyBadge } from '../ui/Chip'
+import { LiveAgentPanel } from '../../live/LiveAgentPanel'
 
 /** |actual − p50| within this many minutes reads as "the model was close". */
 const DELTA_OK_MIN = 30
@@ -109,6 +110,8 @@ export function PredictionsTab({ vm }: { vm: SheetVM }) {
           </div>
         </div>
       )}
+
+      <LiveAgentPanel vm={vm} />
 
       <div className="sheet-pred__cal">
         <p className="sheet-pred__cal-line">{vm.calibrationLine}</p>

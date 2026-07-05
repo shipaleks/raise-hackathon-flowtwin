@@ -11,6 +11,11 @@ COPY data/seed/ /app/data/seed/
 RUN npm run build
 
 FROM nginx:alpine
-COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
+# live-plane proxies render from the template at boot: set
+# FLOWTWIN_GEMINI_KEY / FLOWTWIN_NVIDIA_KEY in the service env to go live;
+# without them /api/live-status reports both planes off (deterministic build)
+COPY deploy/nginx.conf.template /etc/nginx/templates/default.conf.template
+COPY deploy/15-flowtwin-env.sh /docker-entrypoint.d/15-flowtwin-env.sh
+RUN chmod +x /docker-entrypoint.d/15-flowtwin-env.sh && rm -f /etc/nginx/conf.d/default.conf
 COPY --from=build /app/frontend/dist /usr/share/nginx/html
 EXPOSE 8000

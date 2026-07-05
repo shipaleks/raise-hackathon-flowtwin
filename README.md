@@ -16,10 +16,28 @@ each persona's wait drawn from **the hospital's own published p50/p95
 distribution at their arrival snapshot**. Every layer is labeled in-app
 (About → honesty ledger).
 
-Built for the RAISE hackathon (Google DeepMind track × NVIDIA Nemotron). No
-live API calls in the browser build — the full live architecture (Gemini
-Interactions chains, Antigravity Ops Chief, PersonaPlex voice, NemoGuard
-gating) is specified in [PLAN.md](./PLAN.md).
+Built for the RAISE hackathon (Google DeepMind track × NVIDIA Nemotron). The
+deterministic twin always runs; with API keys configured the **live plane**
+switches on top of it:
+
+- **Patient agent** — one stateful **Gemini Interactions chain** per patient
+  (`gemini-3.5-flash` + `previous_interaction_id`); demo beats append as
+  events, the memory lives server-side, and the agent's own exit/blocker/
+  next-action renders beside the twin's (Predictions tab).
+- **Ops Chief** — **`antigravity-preview-05-2026`** with a persistent remote
+  sandbox: the census goes in as CSV, real pandas runs there, the insight
+  comes back (Day review → "Run the Ops Chief analysis").
+- **Nemotron forecast** — `nemotron-3-nano-30b-a3b` reads the last 48 h of
+  the real feed zero-shot and projects the next 12 h with p10/p50/p90
+  (Administrator view). No hosted NVIDIA time-series FM exists in the API
+  catalog, so the reasoning MoE does the forecasting — labeled as exactly that.
+
+Keys never reach the client: the dev server (vite proxy) and the deploy
+(nginx template) inject them server-side. Configure
+`frontend/.env.local` with `FLOWTWIN_GEMINI_KEY` / `FLOWTWIN_NVIDIA_KEY`
+(dev), or the same env vars on the service (deploy). Without keys the app is
+the pure deterministic build. Still on paper in [PLAN.md](./PLAN.md):
+Computer Use → MediTrack, PersonaPlex voice, Live Translate.
 
 **Live:** <https://divine-roch-grounded-bf796e9a.koyeb.app/> (auto-deploys
 from `main` — Dockerfile builds the frontend, nginx serves it on :8000).

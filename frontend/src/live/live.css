@@ -1,0 +1,321 @@
+/* Live plane — surfaces for the real model calls. Same folio language as the
+   rest of the app: quiet borders, mono microcopy, tone via the state colors. */
+
+.live-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--r-m);
+  background: var(--surface);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.live-panel__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.live-panel__title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.live-panel__model {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--accent);
+}
+
+.live-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  margin-right: 5px;
+  vertical-align: 1px;
+}
+
+.live-dot--thinking {
+  background: var(--warn);
+  animation: live-pulse 1.1s ease-in-out infinite;
+}
+
+.live-dot--error {
+  background: var(--crit);
+}
+
+@keyframes live-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.live-panel__exit {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.live-panel__exit-time {
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.live-panel__note {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.live-panel__action {
+  border-top: 1px dashed var(--border);
+  padding-top: 8px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.live-panel__action strong {
+  color: var(--ink);
+}
+
+.live-trail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  border-top: 1px dashed var(--border);
+  padding-top: 8px;
+}
+
+.live-trail__step {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.live-trail__arrow {
+  color: var(--ink-3);
+  margin-right: 2px;
+}
+
+.live-trail__exit {
+  font-family: var(--font-display);
+  font-size: 17px;
+  line-height: 1;
+}
+
+.live-trail__exit--low {
+  color: var(--ok-text);
+}
+
+.live-trail__exit--elevated {
+  color: var(--warn-text);
+}
+
+.live-trail__exit--high {
+  color: var(--crit-text);
+}
+
+.live-trail__phase {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.live-panel__foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.live-panel__meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-3);
+}
+
+.live-wake {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 6px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+
+.live-wake:hover {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+}
+
+.live-error {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--crit-text);
+  overflow-wrap: anywhere;
+}
+
+/* ---- Nemotron forecast card (admin) ---- */
+
+.live-fc__band {
+  fill: var(--accent-soft);
+  opacity: 0.8;
+}
+
+.live-fc__p50 {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  stroke-dasharray: 4 3;
+}
+
+.live-fc__hist {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.4;
+}
+
+.live-fc__nowline {
+  stroke: var(--border-strong);
+  stroke-dasharray: 2 3;
+}
+
+.live-fc__tick {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  fill: var(--ink-3);
+}
+
+/* ---- the global result band (wrap-up headline) ---- */
+
+.live-band {
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r-m);
+  background: var(--accent-soft);
+  padding: 14px 16px;
+  margin: 4px 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.live-band__kicker {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.live-band__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.live-band__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.live-band__v {
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.live-band__l {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+@media (max-width: 720px) {
+  .live-band__stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- live result line (wrap-up) ---- */
+
+.live-result {
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-m);
+  background: var(--surface);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.live-result .live-trail {
+  border-top: none;
+  padding-top: 0;
+}
+
+.live-result__kicker {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ---- Ops Chief (wrap-up) ---- */
+
+.live-chief__insight {
+  border-left: 2px solid var(--accent-line);
+  padding: 2px 0 2px 12px;
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink);
+  white-space: pre-wrap;
+}
+
+.live-chief__run {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 7px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.live-chief__run:hover {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+}
+
+.live-chief__run[disabled] {
+  opacity: 0.55;
+  cursor: default;
+}

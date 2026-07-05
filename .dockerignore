@@ -5,3 +5,6 @@ frontend/dist
 *.pdf
 *.docx
 data/raw
+.env
+.env.*
+**/.env.local

@@ -9,6 +9,9 @@ import { dayReviewAt } from '../../sim/engine'
 import { fmtDay, fmtClock, fmtDur } from '../../sim/time'
 import { useStore } from '../../store'
 import { Chip, OpsOnlyBadge } from '../ui/Chip'
+import { AgentResultLine } from '../../live/AgentResultLine'
+import { OpsChiefSection } from '../../live/OpsChiefSection'
+import { ResultBand } from '../../live/ResultBand'
 import './chrome.css'
 
 const hkd = (n: number) => `HK$${n.toLocaleString('en-US')}`
@@ -79,6 +82,8 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
             {r.cluster} · {r.district} · numbers from the real HA feed + the calibrated twin
           </p>
         </header>
+
+        <ResultBand r={r} />
 
         {/* ---------------- 1 · what happened ---------------- */}
         <section className="chrome-about__section">
@@ -161,6 +166,7 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
                 the clinicians.
               </li>
             </ul>
+            <AgentResultLine />
           </div>
         </section>
 
@@ -221,6 +227,8 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
           </table>
           <p className="chrome-wrap__assumption">{plan.assumption_note}</p>
         </section>
+
+        <OpsChiefSection />
 
         <footer className="chrome-about__footer chrome-wrap__footer">
           <OpsOnlyBadge />

@@ -20,13 +20,14 @@ const KEYS: Array<{ keys: string; does: string }> = [
   { keys: '1–4', does: 'presets' },
 ]
 
-type LedgerStatus = 'real' | 'real-stats' | 'synthetic' | 'assumption'
+type LedgerStatus = 'real' | 'real-stats' | 'synthetic' | 'assumption' | 'live-model'
 
 const STATUS_LABEL: Record<LedgerStatus, string> = {
   real: 'REAL · live',
   'real-stats': 'REAL statistics',
   synthetic: 'synthetic · labeled',
   assumption: 'stated assumption',
+  'live-model': 'LIVE model call',
 }
 
 const LEDGER: Array<{ layer: string; source: string; status: LedgerStatus }> = [
@@ -69,6 +70,21 @@ const LEDGER: Array<{ layer: string; source: string; status: LedgerStatus }> = [
     layer: 'Money — HK$400/bed-hour (≈€47), recoverable shares per optimizer line',
     source: 'stated assumptions; every plan line carries its own basis label',
     status: 'assumption',
+  },
+  {
+    layer: "The patient agent — a stateful chain per patient; Sarah's remembers every beat",
+    source: 'Gemini 3.5 Flash via the Interactions API (previous_interaction_id); memory held server-side, shown only when keys are configured',
+    status: 'live-model',
+  },
+  {
+    layer: 'The Ops Chief — pandas over the census CSV in a persistent sandbox',
+    source: 'antigravity-preview-05-2026, environment reused across runs (Day review → Run the Ops Chief)',
+    status: 'live-model',
+  },
+  {
+    layer: 'Next-12 h wait forecast (Administrator view)',
+    source: 'Nemotron 3 Nano 30B-A3B reading the real 48 h feed zero-shot — p10/p50/p90, labeled on the card',
+    status: 'live-model',
   },
 ]
 
@@ -241,8 +257,7 @@ function AboutDialog({ onClose }: { onClose: () => void }) {
               <div className="chrome-about__plane-title">On-prem, open models</div>
               <ul className="chrome-about__plane-list">
                 <li>PersonaPlex — patient voice</li>
-                <li>Nemotron Nano fleet — department sim</li>
-                <li>NemoGuard — ops-only topic gate</li>
+                <li>Nemotron Nano — department sim + wait forecast</li>
               </ul>
               <Chip tone="accent" className="chrome-about__plane-chip">
                 voice + PHI never leave the building

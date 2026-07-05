@@ -8,6 +8,7 @@ import { PatientSheet } from './components/sheet/PatientSheet'
 import { TimeScrubber } from './components/scrubber/TimeScrubber'
 import { escapeStep, useStore } from './store'
 import { PRESETS, SIM_END_MIN } from './sim/time'
+import { LiveBeatWatcher } from './live/LiveBeatWatcher'
 import './app.css'
 
 /** Advances the sim clock while playing. */
@@ -102,6 +103,7 @@ export default function App() {
       <TimeScrubber />
       <AboutOverlay />
       <WrapUpOverlay />
+      <LiveBeatWatcher />
     </div>
   )
 }
