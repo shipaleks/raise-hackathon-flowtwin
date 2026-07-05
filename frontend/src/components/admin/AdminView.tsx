@@ -259,11 +259,12 @@ function CalibrationCard({ vm }: { vm: AdminVM }) {
 export function AdminView() {
   const simMin = useStore((s) => s.simMin)
   const resolvedAtMin = useStore((s) => s.resolvedAtMin)
+  const optimizedAtMin = useStore((s) => s.optimizedAtMin)
   const setView = useStore((s) => s.setView)
   const setWrapOpen = useStore((s) => s.setWrapOpen)
 
-  const { agents, zones } = worldAt(simMin, resolvedAtMin)
-  const vm = adminModelAt(agents, zones, simMin, resolvedAtMin)
+  const { agents, zones } = worldAt(simMin, resolvedAtMin, optimizedAtMin)
+  const vm = adminModelAt(agents, zones, simMin, resolvedAtMin, optimizedAtMin)
   const w = heroWaitsAt(simMin)
 
   return (

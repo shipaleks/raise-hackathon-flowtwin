@@ -241,6 +241,7 @@ const plural = (n: number) => (n === 1 ? 'patient' : 'patients')
 export function MapView() {
   const simMin = useStore((s) => s.simMin)
   const resolvedAtMin = useStore((s) => s.resolvedAtMin)
+  const optimizedAtMin = useStore((s) => s.optimizedAtMin)
   const floorId = useStore((s) => s.floorId)
   const zoomPath = useStore((s) => s.zoomPath)
   const selectedId = useStore((s) => s.selectedId)
@@ -253,7 +254,7 @@ export function MapView() {
   const select = useStore((s) => s.select)
   const setHovered = useStore((s) => s.setHovered)
 
-  const world = worldAt(simMin, resolvedAtMin)
+  const world = worldAt(simMin, resolvedAtMin, optimizedAtMin)
   const view = viewTransform(zoomPath)
   const zoomed = zoomPath.length > 0
   const focusDept = zoomPath.length >= 1 ? zoomPath[0] : null
@@ -347,7 +348,7 @@ export function MapView() {
   const rank = (a: MapAgent) => (a.id === selectedId ? 2 : a.isHero ? 1 : 0)
   const orderedAgents = [...floorAgents].sort((a, b) => rank(a) - rank(b))
 
-  const trace = selectedId ? traceFor(selectedId, simMin, resolvedAtMin) : []
+  const trace = selectedId ? traceFor(selectedId, simMin, resolvedAtMin, optimizedAtMin) : []
   const floorTrace = trace.filter((l) => l.floor === floorId)
 
   const depts = deptsOnFloor(floorId)
@@ -791,7 +792,7 @@ export function MapView() {
       {floorAgents.length === 0 ? (
         <div className="map-quiet tnum" role="status">
           {simMin > 0
-            ? `Quiet floor · ${dischargedTodayCount(simMin)} discharged today`
+            ? `Quiet floor · ${dischargedTodayCount(simMin, optimizedAtMin)} discharged today`
             : 'Quiet floor'}
         </div>
       ) : null}

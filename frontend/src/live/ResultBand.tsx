@@ -15,24 +15,28 @@ const hkd = (n: number) => `HK$${Math.round(n).toLocaleString('en-US')}`
 
 export function ResultBand({ r }: { r: DayReview }) {
   const simMin = useStore((s) => s.simMin)
+  const optimizeAll = useStore((s) => s.optimizeAll)
   const snap = useLiveStore((s) => s.agents[HERO_ID])
   const liveRecovered = snap ? agentRecoveredMin(snap.history) : null
   const plan = r.optimizePlan
   const resolved = r.sarah.resolved
   const board = actionBoardAt(simMin)
+  const g = r.globalOptimize
 
   return (
     <section className="live-band reg-ticks" aria-label="The result">
       <p className="live-band__kicker">
-        The result — one action executed, a board full of them, one plan
+        {g
+          ? `The result — the whole board executed at ${g.atClock}`
+          : 'The result — one action executed, a board full of them, one plan'}
       </p>
       <div className="live-band__stats">
         <div className="live-band__stat">
           <span className="live-band__v tnum">{resolved ? `−${r.sarah.recoveredMin} min` : '—'}</span>
           <span className="live-band__l">
             {resolved
-              ? 'the executed action: Sarah to the obs ward — exit recovered, one monitored cubicle freed at the real 14:00 climb'
-              : 'replay the Resolve beat to land the action'}
+              ? 'the hero action: Sarah to the obs ward — exit recovered, one monitored cubicle freed at the real 14:00 climb'
+              : 'replay the Resolve beat to land the hero action'}
           </span>
           {resolved && liveRecovered != null && liveRecovered > 0 && (
             <Chip tone="ok" className="tnum">
@@ -41,14 +45,30 @@ export function ResultBand({ r }: { r: DayReview }) {
           )}
         </div>
         <div className="live-band__stat">
-          <span className="live-band__v tnum">
-            {board.count} more · {board.totalMin} min
-          </span>
-          <span className="live-band__l">
-            same-shape moves the twin surfaced today — imaging slots, discharge confirms, bed
-            assigns ({board.openNow} still open). Each is one tap in a real deployment; the demo
-            executes the hero’s.
-          </span>
+          {g ? (
+            <>
+              <span className="live-band__v tnum">
+                {g.actions} actions · −{g.minutesSaved} min
+              </span>
+              <span className="live-band__l">
+                the rest of the board, executed: {g.patientsOutEarlier} patients out up to 30 min
+                earlier, ≈{hkd(g.hkdFreed)} of bed-time returned today (HK$400/bed-hour, stated)
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="live-band__v tnum">
+                {board.count} more · {board.totalMin} min
+              </span>
+              <span className="live-band__l">
+                same-shape moves the twin surfaced today — imaging slots, discharge confirms, bed
+                assigns ({board.openNow} still open)
+              </span>
+              <button type="button" className="live-band__execute" onClick={optimizeAll}>
+                Execute the whole board →
+              </button>
+            </>
+          )}
         </div>
         <div className="live-band__stat">
           <span className="live-band__v tnum">{hkd(plan.total_hkd_per_day)}/day</span>

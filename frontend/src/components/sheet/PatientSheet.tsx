@@ -37,9 +37,10 @@ export function PatientSheet() {
   const selectedId = useStore((s) => s.selectedId)
   const simMin = useStore((s) => s.simMin)
   const resolvedAtMin = useStore((s) => s.resolvedAtMin)
+  const optimizedAtMin = useStore((s) => s.optimizedAtMin)
 
   if (view !== 'doctor' || !selectedId) return null
-  const vm = sheetModelFor(selectedId, simMin, resolvedAtMin)
+  const vm = sheetModelFor(selectedId, simMin, resolvedAtMin, optimizedAtMin)
   if (!vm) return null
 
   return <SheetPanel vm={vm} simMin={simMin} />

@@ -21,6 +21,7 @@ const plateZ = (i: number) => (FLOORS.length - 1 - i) * PLATE_GAP - PLATE_GAP
 export function BuildingView({ open }: { open: boolean }) {
   const simMin = useStore((s) => s.simMin)
   const resolvedAtMin = useStore((s) => s.resolvedAtMin)
+  const optimizedAtMin = useStore((s) => s.optimizedAtMin)
   const setFloor = useStore((s) => s.setFloor)
   const floorId = useStore((s) => s.floorId)
 
@@ -38,7 +39,7 @@ export function BuildingView({ open }: { open: boolean }) {
     }
   }, [open])
 
-  const world = worldAt(simMin, resolvedAtMin)
+  const world = worldAt(simMin, resolvedAtMin, optimizedAtMin)
 
   /** Project the three lift-core markers and draw the shaft polyline. */
   const drawShaft = () => {

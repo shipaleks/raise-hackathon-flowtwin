@@ -10,6 +10,7 @@ import './live.css'
 export function OpsChiefSection() {
   const simMin = useStore((s) => s.simMin)
   const resolvedAtMin = useStore((s) => s.resolvedAtMin)
+  const optimizedAtMin = useStore((s) => s.optimizedAtMin)
   const gemini = useLiveStore((s) => s.gemini)
   const chief = useLiveStore((s) => s.chief)
 
@@ -29,7 +30,7 @@ export function OpsChiefSection() {
           type="button"
           className="live-chief__run"
           disabled={chief.status === 'running'}
-          onClick={() => runOpsChief(simMin, resolvedAtMin)}
+          onClick={() => runOpsChief(simMin, resolvedAtMin, optimizedAtMin)}
         >
           {chief.status === 'running' ? 'Running pandas in the sandbox…' : 'Run the Ops Chief analysis'}
         </button>

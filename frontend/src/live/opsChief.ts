@@ -13,8 +13,12 @@ import { useLiveStore } from './liveStore'
 const ENV_KEY = 'flowtwin.antigravity.env'
 
 /** The floor as an event log — one row per person the twin tracks right now. */
-function censusCsv(simMin: number, resolvedAtMin: number | null): string {
-  const { agents } = worldAt(simMin, resolvedAtMin)
+function censusCsv(
+  simMin: number,
+  resolvedAtMin: number | null,
+  optimizedAtMin: number | null,
+): string {
+  const { agents } = worldAt(simMin, resolvedAtMin, optimizedAtMin)
   const rows = agents
     .filter((a) => a.kind === 'today')
     .map(
@@ -24,7 +28,11 @@ function censusCsv(simMin: number, resolvedAtMin: number | null): string {
   return ['patient_id,dept,area,triage_cat,wait_min,elapsed_min,risk,blocked', ...rows].join('\n')
 }
 
-export async function runOpsChief(simMin: number, resolvedAtMin: number | null): Promise<void> {
+export async function runOpsChief(
+  simMin: number,
+  resolvedAtMin: number | null,
+  optimizedAtMin: number | null = null,
+): Promise<void> {
   const { chief, setChief } = useLiveStore.getState()
   if (!liveFlags().gemini || chief.status === 'running') return
   setChief({ status: 'running', startedAtMs: Date.now(), error: undefined })
@@ -40,7 +48,7 @@ export async function runOpsChief(simMin: number, resolvedAtMin: number | null):
     feedLine,
     `Write the following census snapshot to census.csv in your environment (append a snapshot_time column = "${fmtClock(simMin)}" if the file already exists from an earlier snapshot), then analyze it with Python/pandas:`,
     '',
-    censusCsv(simMin, resolvedAtMin),
+    censusCsv(simMin, resolvedAtMin, optimizedAtMin),
     '',
     `1) rank departments by total waiting minutes currently accumulating;`,
     `2) identify the single department blocking the most patients (blocked=1);`,
@@ -66,7 +74,7 @@ export async function runOpsChief(simMin: number, resolvedAtMin: number | null):
     if (envId) {
       localStorage.removeItem(ENV_KEY)
       useLiveStore.getState().setChief({ status: 'idle' })
-      return runOpsChief(simMin, resolvedAtMin)
+      return runOpsChief(simMin, resolvedAtMin, optimizedAtMin)
     }
     useLiveStore.getState().setChief({ status: 'error', error: String(e) })
   }

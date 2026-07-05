@@ -82,6 +82,7 @@ export function TimeScrubber() {
   const speed = useStore((s) => s.speed)
   const view = useStore((s) => s.view)
   const selectedId = useStore((s) => s.selectedId)
+  const optimizedAtMin = useStore((s) => s.optimizedAtMin)
   const setPlaying = useStore((s) => s.setPlaying)
   const setSpeed = useStore((s) => s.setSpeed)
   const setSimMin = useStore((s) => s.setSimMin)
@@ -89,7 +90,7 @@ export function TimeScrubber() {
   const jumpToBeat = useStore((s) => s.jumpToBeat)
 
   // ---- per-patient scope: automatic while a sheet is open in Doctor view
-  const scopeTrack = selectedId && view === 'doctor' ? getTrack(selectedId) : null
+  const scopeTrack = selectedId && view === 'doctor' ? getTrack(selectedId, optimizedAtMin) : null
   const hi = scopeTrack
     ? Math.min(
         SIM_END_MIN,

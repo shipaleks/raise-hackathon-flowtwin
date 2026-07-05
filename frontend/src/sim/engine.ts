@@ -132,7 +132,57 @@ const trackById = new Map<string, Track>([
   ...historyTracks.map((t) => [t.id, t] as const),
 ])
 
-export const getTrack = (id: string) => trackById.get(id) ?? null
+// ---------------------------------------------------------------- optimize-all (the warped cast)
+
+/* When the presenter executes the whole action board (optimizedAtMin set),
+   every non-hero patient with an actionable recommendation has the remainder
+   of their journey compressed by its stated impact. Times at or before the
+   moment (and before the patient's own arrival) never move — the recorded
+   past stays exact, and scrubbing remains perfectly reversible. */
+
+const isActionable = (t: Track): boolean => {
+  const rec = t.patient?.recommendation
+  return t.id !== HERO_ID && !!rec && rec.action !== 'monitor' && rec.impact_min > 0
+}
+
+interface Cast {
+  tracks: Track[]
+  byId: Map<string, Track>
+  /** per-patient minutes actually recovered by the warp (last-event delta) */
+  savedById: Map<string, number>
+}
+
+const BASE_CAST: Cast = { tracks: todayTracks, byId: trackById, savedById: new Map() }
+let warpKey: number | null = null
+let warpedCast: Cast | null = null
+
+function castFor(optimizedAtMin: number | null): Cast {
+  if (optimizedAtMin == null) return BASE_CAST
+  if (warpedCast && warpKey === optimizedAtMin) return warpedCast
+  const savedById = new Map<string, number>()
+  const tracks = todayTracks.map((t) => {
+    if (!isActionable(t)) return t
+    const pivot = Math.max(optimizedAtMin, t.arrivalMin)
+    const last = t.events[t.events.length - 1]
+    if (last.tMin <= pivot) return t // journey already over — the past never changes
+    const impact = t.patient!.recommendation!.impact_min
+    const shift = (m: number) => (m <= pivot ? m : Math.max(pivot + 1, m - impact))
+    const events = t.events.map((e) => ({ ...e, tMin: shift(e.tMin) }))
+    const rule = endRuleFor(events, false, t.inpatient)
+    savedById.set(t.id, last.tMin - events[events.length - 1].tMin)
+    return { ...t, events, endMin: rule.endMin, admitted: rule.admitted, handoff: rule.handoff }
+  })
+  const byId = new Map<string, Track>([
+    ...tracks.map((t) => [t.id, t] as const),
+    ...historyTracks.map((t) => [t.id, t] as const),
+  ])
+  warpKey = optimizedAtMin
+  warpedCast = { tracks, byId, savedById }
+  return warpedCast
+}
+
+export const getTrack = (id: string, optimizedAtMin: number | null = null) =>
+  castFor(optimizedAtMin).byId.get(id) ?? null
 
 const quantiles = adminKpis.eta_model_quantiles_min
 
@@ -224,7 +274,11 @@ export const EXIT_GRACE_MIN = 8
 export const TRAVEL_MIN = 5
 
 /** All agents in the building at sim-minute t, positioned (all floors). */
-export function agentsAt(tMin: number, resolvedAtMin: number | null): MapAgent[] {
+export function agentsAt(
+  tMin: number,
+  resolvedAtMin: number | null,
+  optimizedAtMin: number | null = null,
+): MapAgent[] {
   const sarah = tMin >= 0 ? sarahAt(tMin, resolvedAtMin) : null
   interface RawAgent extends Omit<MapAgent, 'x' | 'y' | 'floorId' | 'walking'> {
     track: Track
@@ -233,7 +287,7 @@ export function agentsAt(tMin: number, resolvedAtMin: number | null): MapAgent[]
   }
   const raw: RawAgent[] = []
 
-  for (const track of [...todayTracks, ...historyTracks]) {
+  for (const track of [...castFor(optimizedAtMin).tracks, ...historyTracks]) {
     if (track.arrivalMin > tMin) continue
     const isHero = track.id === HERO_ID
 
@@ -394,8 +448,13 @@ export interface TraceLeg {
 
 /** The selected patient's way through the building: where they came from
     (solid) and where they are headed (dashed) — drawn on the map. */
-export function traceFor(id: string, tMin: number, resolvedAtMin: number | null): TraceLeg[] {
-  const track = trackById.get(id)
+export function traceFor(
+  id: string,
+  tMin: number,
+  resolvedAtMin: number | null,
+  optimizedAtMin: number | null = null,
+): TraceLeg[] {
+  const track = castFor(optimizedAtMin).byId.get(id)
   if (!track) return []
   let events = track.events
   if (id === HERO_ID && tMin >= 0) {
@@ -474,7 +533,12 @@ function loadOf(count: number, capacity: number, longest: number, outside: boole
   return { count, capacity, ratio, level, status, longestWaitMin: longest }
 }
 
-export function zoneLoadsAt(agents: MapAgent[], tMin: number, resolvedAtMin: number | null): ZoneLoads {
+export function zoneLoadsAt(
+  agents: MapAgent[],
+  tMin: number,
+  resolvedAtMin: number | null,
+  optimizedAtMin: number | null = null,
+): ZoneLoads {
   const areaCount = new Map<string, { count: number; longest: number }>()
   const deptCount = new Map<string, { count: number; longest: number }>()
   for (const a of agents) {
@@ -515,7 +579,7 @@ export function zoneLoadsAt(agents: MapAgent[], tMin: number, resolvedAtMin: num
     const got = deptCount.get(dept.id) ?? { count: 0, longest: 0 }
     const extra =
       dept.id === 'discharge' && tMin >= 0
-        ? `${dischargedTodayCount(tMin)} discharged today`
+        ? `${dischargedTodayCount(tMin, optimizedAtMin)} discharged today`
         : undefined
     const load = loadOf(got.count, cap, got.longest, !!dept.outside, extra)
     // a department with an over-capacity room is itself in trouble — the dept
@@ -534,13 +598,13 @@ export function zoneLoadsAt(agents: MapAgent[], tMin: number, resolvedAtMin: num
   return { depts, areas }
 }
 
-export function dischargedTodayCount(tMin: number): number {
+export function dischargedTodayCount(tMin: number, optimizedAtMin: number | null = null): number {
   if (tMin < 0) return 0
   const midnight = -11 * 60 // 00:00 of the demo day, in sim-minutes
   let n = 0
   // journeys that completed earlier today live in the history file — the
   // counter must see them too, or 11:00 opens on a bogus zero
-  for (const t of [...todayTracks, ...historyTracks]) {
+  for (const t of [...castFor(optimizedAtMin).tracks, ...historyTracks]) {
     if (t.inpatient) continue
     if (t.endMin <= tMin && t.endMin >= midnight) n++
   }
@@ -755,8 +819,13 @@ function buildSegments(events: TrackEvent[], upTo: number | null, notes?: Map<nu
   return segs.filter((s) => s.minutes > 0 || s.current)
 }
 
-export function sheetModelFor(id: string, tMin: number, resolvedAtMin: number | null): SheetVM | null {
-  const track = trackById.get(id)
+export function sheetModelFor(
+  id: string,
+  tMin: number,
+  resolvedAtMin: number | null,
+  optimizedAtMin: number | null = null,
+): SheetVM | null {
+  const track = castFor(optimizedAtMin).byId.get(id)
   if (!track) return null
   const p = track.patient
   const isHero = id === HERO_ID
@@ -1049,6 +1118,7 @@ export function adminModelAt(
   zones: ZoneLoads,
   tMin: number,
   resolvedAtMin: number | null,
+  optimizedAtMin: number | null = null,
 ): AdminVM {
   let beds = 0
   let bedCap = 0
@@ -1082,7 +1152,7 @@ export function adminModelAt(
   return {
     censusNow: present.length,
     bedOccupancyPct: bedCap ? Math.round((beds / bedCap) * 100) : 0,
-    dischargedToday: dischargedTodayCount(tMin),
+    dischargedToday: dischargedTodayCount(tMin, optimizedAtMin),
     avgWaitNowMin: Math.round(avgWait),
     waitingHall: zones.areas.get('emergency/waiting-hall')?.count ?? 0,
     arrivalForecast: forecast,
@@ -1131,20 +1201,53 @@ export interface DayReview {
   }
   optimizePlan: typeof adminKpis.optimize_plan
   assumptions: typeof adminKpis.assumptions
+  /** set once the whole action board has been executed */
+  globalOptimize: {
+    atClock: string
+    actions: number
+    minutesSaved: number
+    patientsOutEarlier: number
+    hkdFreed: number
+  } | null
 }
 
-export function dayReviewAt(tMin: number, resolvedAtMin: number | null): DayReview {
+export function dayReviewAt(
+  tMin: number,
+  resolvedAtMin: number | null,
+  optimizedAtMin: number | null = null,
+): DayReview {
   const midnight = -11 * 60
+  const cast = castFor(optimizedAtMin)
   let arrived = 0
   let admitted = 0
-  for (const t of todayTracks) {
+  for (const t of cast.tracks) {
     if (t.arrivalMin >= midnight && t.arrivalMin <= tMin) {
       arrived++
       if (t.admitted && t.events[t.events.length - 1].tMin <= tMin) admitted++
     }
   }
   const resolved = resolvedAtMin != null && tMin >= resolvedAtMin
-  const world = worldAt(tMin, resolvedAtMin)
+  const world = worldAt(tMin, resolvedAtMin, optimizedAtMin)
+
+  let globalOptimize: DayReview['globalOptimize'] = null
+  if (optimizedAtMin != null) {
+    let actions = 0
+    let minutesSaved = 0
+    let patientsOutEarlier = 0
+    for (const [id, saved] of cast.savedById) {
+      if (saved <= 0) continue
+      actions++
+      minutesSaved += saved
+      if (!trackById.get(id)?.admitted) patientsOutEarlier++
+    }
+    globalOptimize = {
+      atClock: fmtClock(optimizedAtMin),
+      actions,
+      minutesSaved,
+      patientsOutEarlier,
+      hkdFreed: Math.round((minutesSaved / 60) * adminKpis.assumptions.bed_hour_cost_hkd),
+    }
+  }
   return {
     hospital: adminKpis.hk.hospital,
     cluster: adminKpis.hk.cluster,
@@ -1168,6 +1271,7 @@ export function dayReviewAt(tMin: number, resolvedAtMin: number | null): DayRevi
     },
     optimizePlan: adminKpis.optimize_plan,
     assumptions: adminKpis.assumptions,
+    globalOptimize,
   }
 }
 
@@ -1208,12 +1312,17 @@ export interface World {
 let lastKey = ''
 let lastWorld: World | null = null
 
-/** One computation per (t, resolvedAt) pair — every component reads the same world. */
-export function worldAt(tMin: number, resolvedAtMin: number | null): World {
-  const key = `${Math.round(tMin * 10)}:${resolvedAtMin ?? 'x'}`
+/** One computation per (t, resolvedAt, optimizedAt) tuple — every component
+    reads the same world. */
+export function worldAt(
+  tMin: number,
+  resolvedAtMin: number | null,
+  optimizedAtMin: number | null = null,
+): World {
+  const key = `${Math.round(tMin * 10)}:${resolvedAtMin ?? 'x'}:${optimizedAtMin ?? 'x'}`
   if (lastWorld && key === lastKey) return lastWorld
-  const agents = agentsAt(tMin, resolvedAtMin)
-  const zones = zoneLoadsAt(agents, tMin, resolvedAtMin)
+  const agents = agentsAt(tMin, resolvedAtMin, optimizedAtMin)
+  const zones = zoneLoadsAt(agents, tMin, resolvedAtMin, optimizedAtMin)
   const status = hospitalStatusAt(agents, zones)
   lastKey = key
   lastWorld = { agents, zones, status }

@@ -22,6 +22,8 @@ interface FlowTwinState {
   showOptimized: boolean
   /** sim-minute the presenter tapped Resolve (null = not yet) */
   resolvedAtMin: number | null
+  /** sim-minute the presenter executed the whole action board (null = not yet) */
+  optimizedAtMin: number | null
   aboutOpen: boolean
   /** the Day review / Optimize-the-day overlay */
   wrapOpen: boolean
@@ -44,6 +46,8 @@ interface FlowTwinState {
   setSheetTab: (t: SheetTab) => void
   setShowOptimized: (v: boolean) => void
   resolveNow: () => void
+  /** execute every actionable board recommendation from this sim-minute on */
+  optimizeAll: () => void
   setAboutOpen: (v: boolean) => void
   setWrapOpen: (v: boolean) => void
   setStackOpen: (v: boolean) => void
@@ -64,6 +68,7 @@ export const useStore = create<FlowTwinState>((set, get) => ({
   sheetTab: 'flow',
   showOptimized: false,
   resolvedAtMin: null,
+  optimizedAtMin: null,
   aboutOpen: false,
   wrapOpen: false,
   stackOpen: false,
@@ -109,6 +114,10 @@ export const useStore = create<FlowTwinState>((set, get) => ({
     if (t >= BEAT_MIN.overload && get().resolvedAtMin == null) {
       set({ resolvedAtMin: t })
     }
+  },
+
+  optimizeAll: () => {
+    if (get().optimizedAtMin == null) set({ optimizedAtMin: get().simMin })
   },
 
   setAboutOpen: (aboutOpen) => set({ aboutOpen }),

@@ -82,7 +82,8 @@ function Breadcrumb() {
 function StatusLine() {
   const simMin = useStore((s) => s.simMin)
   const resolvedAtMin = useStore((s) => s.resolvedAtMin)
-  const { status } = worldAt(simMin, resolvedAtMin)
+  const optimizedAtMin = useStore((s) => s.optimizedAtMin)
+  const { status } = worldAt(simMin, resolvedAtMin, optimizedAtMin)
   const w = heroWaitsAt(simMin)
   const live = simMin >= LIVE_MIN - 8
   return (

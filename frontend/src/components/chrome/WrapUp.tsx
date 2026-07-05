@@ -20,6 +20,7 @@ const eur = (n: number) => `€${n.toLocaleString('en-US')}`
 function WrapDialog({ onClose }: { onClose: () => void }) {
   const simMin = useStore((s) => s.simMin)
   const resolvedAtMin = useStore((s) => s.resolvedAtMin)
+  const optimizedAtMin = useStore((s) => s.optimizedAtMin)
   const cardRef = useRef<HTMLDivElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
 
@@ -46,7 +47,7 @@ function WrapDialog({ onClose }: { onClose: () => void }) {
     }
   }
 
-  const r = dayReviewAt(simMin, resolvedAtMin)
+  const r = dayReviewAt(simMin, resolvedAtMin, optimizedAtMin)
   const plan = r.optimizePlan
 
   return (

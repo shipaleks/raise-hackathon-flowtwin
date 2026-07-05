@@ -253,6 +253,24 @@
   color: var(--ink-2);
 }
 
+.live-band__execute {
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 6px 12px;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--accent);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.live-band__execute:hover {
+  background: var(--accent-soft);
+}
+
 @media (max-width: 720px) {
   .live-band__stats {
     grid-template-columns: 1fr;
