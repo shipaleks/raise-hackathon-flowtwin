@@ -1,5 +1,7 @@
 # FlowTwin
 
+> 🏆 **1st place — Google DeepMind track · [RAISE Summit 2026](https://www.raisesummit.com/) hackathon** · built by team **low cortisol**.
+
 **A stateful operations twin for any hospital.**
 
 FlowTwin turns hospital flow into a live agent system: every patient journey,
@@ -633,6 +635,8 @@ cleanly to the production deployment path. This section separates **built** from
 **integration path**.
 
 ### Google DeepMind: the main track
+
+> 🏆 **This is the track FlowTwin won — 1st place at the RAISE Summit 2026 hackathon (team low cortisol).**
 
 **Built:** persistent state with Gemini Interactions chains and Antigravity.
 
